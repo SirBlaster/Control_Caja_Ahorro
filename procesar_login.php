@@ -4,7 +4,7 @@ session_start();
 require 'includes/conexion.php'; // Traemos la conexión
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $correo = $_POST['Institucional'];
+    $correo = $_POST['correo'];
     $password = $_POST['password'];
 
     // Buscar al usuario por su correo institucional

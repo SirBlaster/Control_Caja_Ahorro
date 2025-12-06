@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Iniciar Sesión - SETDITSX</title>
 
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilo.css">
     </head>
     <body>
 
     <div class="page-header">
 
-        <img src="../img/NewLogo - 1.png" alt="logo" class="brand-logo" />
+        <img src="img/NewLogo - 1.png" alt="logo" class="brand-logo" />
         <div>
             <div style="font-weight:700;color:#153b52;">SETDITSX - Sindicato ITSX</div>
         </div>
@@ -40,6 +40,6 @@
     </main>
 
     
-    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
     </body>
 </html>
