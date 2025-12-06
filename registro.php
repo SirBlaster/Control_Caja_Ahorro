@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro - SETDITSX</title>
-    <link rel="stylesheet" href="../css/registrar.css">
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css ">
+    <link rel="stylesheet" href="css/registrar.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -52,9 +52,6 @@
                 </div>
                 <div class="col-md-6">
                     <input type="email" name="correo_institucional" class="form-control" placeholder="Correo institucional" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="number" name="no_empleado" class="form-control" placeholder="No. de Empleado" required>
                 </div>
             </div>
 
@@ -113,7 +110,7 @@
         </form>
     </div>
 
-    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="js/registro.js"></script>
 </body>
 </html>
