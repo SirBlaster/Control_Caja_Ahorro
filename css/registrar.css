@@ -1,0 +1,49 @@
+
+        body {
+            background: #f5f7fa;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background: linear-gradient(to bottom, #ffffff, #e8edf5);
+            padding: 20px 40px;
+            border-bottom: 2px solid #2a3472;
+        }
+        .header h4 {
+            color: #2a3472;
+            font-weight: bold;
+        }
+        .card-form {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            color: #2a3472;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: bold;
+            color: #2a3472;
+            margin-top: 20px;
+        }
+        .btn-registro {
+            background-color: #d18819;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 20px;
+            
+        }
+        .btn-registro:hover {
+            background-color: #b37715;
+        }
+        .form-check-label {
+            font-size: 14px;
+        }

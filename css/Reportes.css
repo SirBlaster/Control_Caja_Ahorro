@@ -1,0 +1,137 @@
+body {
+    background-color: #e8ecf1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER */
+.header {
+    background-color: #1e2b58;
+    padding: 10px 30px;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.brand-area img {
+    border-radius: 50%;
+    background: white;
+}
+
+.header-center-title h2 {
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+}
+
+.user-info {
+    font-size: 0.9rem;
+}
+
+.user-icon {
+    font-size: 1.5rem;
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.btn-logout {
+    background-color: #2a4a85;
+    color: white;
+    border: 1px solid white;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+.btn-logout:hover {
+    background-color: #3b5fa3;
+    color: white;
+}
+
+/* CONTENIDO */
+.page-title {
+    text-align: center;
+    color: #1e2b58;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 2.5rem;
+}
+
+.card-container {
+    max-width: 950px; /* Ancho ajustado para que quepan bien los elementos en línea */
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+}
+
+.back-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.content-card {
+    background: white;
+    border-radius: 8px;
+    padding: 40px 50px; /* Más padding interno para dar aire */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.card-heading {
+    color: #1e2b58;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+}
+
+/* ESPACIADO ENTRE SECCIONES */
+.form-section {
+    margin-bottom: 35px; /* Separa los bloques 1, 2 y 3 */
+}
+
+.section-label {
+    color: #1e2b58;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.custom-input {
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    border-radius: 4px;
+    height: 40px; /* Altura fija para uniformidad */
+}
+
+.bg-light-gray {
+    background-color: #e9ecef;
+}
+
+/* BOTÓN GRANDE */
+.btn-export-large {
+    background-color: #d48d22;
+    color: white;
+    border: none;
+    padding: 12px 0; /* Padding vertical */
+    width: 300px;    /* Ancho fijo para el botón */
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-export-large:hover {
+    background-color: #b5761a;
+    color: white;
+}

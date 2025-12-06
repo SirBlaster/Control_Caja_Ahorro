@@ -1,0 +1,9 @@
+# Ignorar carpeta de base de datos de Docker
+datos_mysql/
+
+# Ignorar archivos del sistema
+Thumbs.db
+.DS_Store
+
+# Opcional: Ignorar uploads de prueba si pesan mucho
+# uploads/

@@ -1,0 +1,135 @@
+/* ahorro-nomina.css
+   Coloca en: C:/laragon/www/Proyecto Caja/css/ahorro-nomina.css (o la ruta relativa que corresponda)
+*/
+
+/* Paleta: --gold #d18819  --deep-blue #2a3472  --soft-yellow #ffde59 */
+:root{
+  --gold: #d18819;
+  --deep-blue: #2a3472;
+  --soft-yellow: #ffde59;
+  --bg: #eef1f3;
+  --card: #ffffff;
+  --muted: #6c757d;
+}
+
+/* Body / fondo */
+body{
+  background: var(--bg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #102535;
+}
+
+/* Header */
+.pn-header{
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  padding: 12px 0;
+}
+.pn-logo{
+  width:150px;
+  height:56px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-right: 6px;
+}
+.pn-brand{
+  font-weight:700;
+  color: var(--deep-blue);
+  font-size:1.05rem;
+}
+.pn-user{ color:#23383f; font-weight:600; }
+
+/* Card principal */
+.pn-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+  border-radius: 8px;
+  border: 1px solid rgba(33,37,41,0.04);
+  box-shadow: 0 10px 20px rgba(2,6,23,0.03);
+}
+
+/* Título */
+.pn-title{
+  color: var(--deep-blue);
+  font-weight:800;
+  font-size:1.8rem;
+}
+
+/* Inputs */
+.pn-input-amount{
+  font-weight:700;
+  font-size:1.2rem;
+  border-radius:8px;
+  height:56px;
+  box-shadow:none;
+  border:1px solid rgba(0,0,0,0.06);
+}
+
+/* Upload box */
+.upload-box{
+  background: #fff;
+  border-radius:8px;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 6px 14px rgba(2,6,23,0.03);
+  max-width:420px;
+}
+.upload-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:150px;
+}
+.upload-icon{
+  font-size:48px;
+  color: var(--deep-blue);
+}
+.upload-inner p{ color:var(--muted); margin:0; }
+
+/* boton seleccionar dentro del recuadro */
+.btn-select{
+  background: var(--deep-blue);
+  color: #fff;
+  border-radius:6px;
+  padding:8px 12px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-block;
+}
+
+/* Botones inferiores */
+.btn-generate{
+  background: linear-gradient(180deg,var(--soft-yellow), var(--gold));
+  color: #102535;
+  font-weight:700;
+  border-radius:8px;
+  padding:12px 20px;
+  border:none;
+  box-shadow: 0 6px 14px rgba(209,143,24,0.12);
+}
+
+.btn-confirm{
+  background: var(--deep-blue);
+  color:#fff;
+  font-weight:700;
+  border-radius:8px;
+  padding:12px 22px;
+  border:none;
+}
+
+/* Alineación especial: en pantallas grandes mantén botones a la izquierda y el confirmar a la derecha */
+@media (min-width: 992px){
+  /* el contenedor .d-flex en el HTML usa ms-auto para empujar el botón confirmar a la derecha.
+     Si quieres que ambos queden pegados en la izquierda (como en la imagen),
+     elimina `ms-auto` del HTML y usa la regla siguiente para centrar ambos:
+  */
+}
+
+/* Responsividad */
+@media (max-width: 767.98px){
+  .pn-title{ font-size:1.4rem; text-align:center; }
+  .upload-inner{ min-height:130px; }
+  .upload-box{ max-width:100%; }
+  .btn-generate, .btn-confirm{ width:100%; }
+  .btn-confirm{ margin-top:6px; }
+}

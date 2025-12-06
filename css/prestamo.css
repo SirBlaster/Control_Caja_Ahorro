@@ -1,0 +1,130 @@
+/* prestamo.css
+   Paleta: --gold #d18819  --deep-blue #2a3472  --soft-yellow #ffde59
+*/
+
+:root{
+  --gold: #d18819;
+  --deep-blue: #2a3472;
+  --soft-yellow: #ffde59;
+  --bg: #eef1f3;
+  --muted: #6c757d;
+}
+
+/* Page */
+body{
+  background: var(--bg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #102535;
+  margin: 0;
+}
+
+/* Header */
+.app-header{
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.header-logo{
+    width:150px;
+  height:56px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-right: 6px;
+}
+.brand-name{ font-weight:700; color:var(--deep-blue); }
+.user-name{ color:#23383f; font-weight:600; }
+
+/* Card */
+.main-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+  border-radius: 10px;
+  border: 1px solid rgba(33,37,41,0.04);
+  box-shadow: 0 10px 24px rgba(2,6,23,0.04);
+}
+
+/* Title */
+.card-title{
+  color: var(--deep-blue);
+  font-weight:800;
+  font-size:1.7rem;
+}
+
+/* Input amount */
+.input-amount{
+  font-weight:700;
+  font-size:1.05rem;
+  border-radius:8px;
+  height:56px;
+  box-shadow:none;
+  border:1px solid rgba(0,0,0,0.06);
+}
+
+/* Term pill + note */
+.term-pill{
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight:700;
+  color:var(--gold);
+  box-shadow: 0 6px 12px rgba(209,143,24,0.08);
+}
+
+.text-warning-note{
+  color: var(--gold);
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.95rem;
+}
+
+/* Estimate box */
+.estimate-box{
+  background: #eaf6fb;
+  border:1px solid rgba(38,132,171,0.15);
+  border-radius:6px;
+}
+.estimate-box .small-muted{
+  color:var(--deep-blue);
+  font-weight:700;
+  padding:8px 12px 0 12px;
+}
+.estimate-amount{
+  color:var(--gold);
+  font-weight:800;
+  font-size:1.4rem;
+  padding:8px 12px 12px 12px;
+}
+
+/* Buttons */
+.btn-cancel{
+  background: transparent;
+  border: 2px solid var(--deep-blue);
+  color: var(--deep-blue);
+  padding: 10px 18px;
+  border-radius:10px;
+  font-weight:700;
+}
+.btn-cancel:hover{ background: rgba(39,67,95,0.04); }
+
+.btn-submit{
+  background: linear-gradient(180deg,var(--soft-yellow), var(--gold));
+  color: #102535;
+  padding: 10px 18px;
+  border-radius:10px;
+  font-weight:800;
+  border: none;
+  min-width: 160px;
+  box-shadow: 0 6px 14px rgba(209,143,24,0.12);
+}
+
+/* Layout tweaks */
+@media (max-width: 767.98px){
+  .card-title{ font-size:1.3rem; text-align:center; }
+  .term-pill{ margin-bottom:6px; }
+  .text-warning-note{ font-size:0.9rem; }
+  .estimate-amount{ font-size:1.2rem; }
+  .btn-submit{ width:100%; }
+  .btn-cancel{ width:100%; }
+  .btn-submit.ms-auto{ margin-top:6px; }
+}

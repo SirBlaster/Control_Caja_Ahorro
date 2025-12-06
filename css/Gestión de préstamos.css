@@ -1,0 +1,192 @@
+body {
+    background-color: #e8ecf1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #1e2b58;
+    padding: 10px 30px;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.brand-area img {
+    border-radius: 50%;
+    background: white;
+}
+
+.header-center-title h2 {
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+}
+
+.user-info {
+    font-size: 0.9rem;
+}
+
+.user-icon {
+    font-size: 1.5rem;
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.btn-logout {
+    background-color: #2a4a85;
+    color: white;
+    border: 1px solid white;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+.btn-logout:hover {
+    background-color: #3b5fa3;
+    color: white;
+}
+
+.page-title {
+    text-align: center;
+    color: #1e2b58;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 2.5rem;
+}
+
+.card-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+}
+
+.back-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.content-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.card-heading {
+    color: #1e2b58;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.custom-table thead th {
+    background-color: #1964a3;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-weight: 600;
+    border: none;
+    vertical-align: middle;
+}
+
+.custom-table thead th:first-child { border-top-left-radius: 4px; }
+.custom-table thead th:last-child { border-top-right-radius: 4px; }
+
+.custom-table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 15px 10px;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.status-pending {
+    background-color: #ffc107 !important;
+    color: #333 !important;
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    margin: 0 auto;
+}
+
+.btn-action {
+    border: none;
+    color: white;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-approve {
+    background-color: #3aa64b;
+}
+
+.btn-reject {
+    background-color: #e63946;
+}
+
+.btn-details {
+    background-color: #1964a3;
+    margin-top: 2px;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.btn-page {
+    background-color: #5b9bd5;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-page:hover {
+    background-color: #4a8ac4;
+}
+
+.btn-page.active {
+    background-color: #1e4f8a;
+}

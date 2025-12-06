@@ -1,0 +1,117 @@
+:root {
+  --gold: #d18819;
+  --deep-blue: #2a3472;
+  --soft-yellow: #ffde59;
+  --bg: #eef1f3;
+}
+
+/* Fondo general */
+body {
+  background: var(--bg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #102535;
+}
+
+/* Header */
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.header-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.brand-name {
+  font-weight: 700;
+  color: var(--deep-blue);
+}
+.user-name {
+  font-weight: 600;
+  color: #1f2f38;
+}
+
+/* Card */
+.main-card {
+  background: #ffffffee;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+}
+
+/* Título principal */
+.titulo-pagina {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--deep-blue);
+}
+
+/* Bloque totales */
+.resumen-box {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.item-total {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.item-total .label {
+  color: #102535;
+}
+
+.valor {
+  margin-left: 8px;
+}
+
+.rojo {
+  color: #b02a37;
+}
+
+.dorado {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.verde {
+  color: #1f7a3a;
+}
+
+/* Caja con borde rojo */
+.saldo-box {
+  border: 2px solid #c55740;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+/* Título historial */
+.historial-title {
+  color: var(--deep-blue);
+}
+
+/* Tabla */
+.table-wrap {
+  margin-top: 10px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+}
+
+.table-head {
+  background: var(--deep-blue);
+  color: white;
+  font-weight: 700;
+}
+
+.table tbody td {
+  background: white;
+  padding: 10px 12px;
+  border-top: 2px solid rgba(0,0,0,0.05);
+  font-size: 0.95rem;
+}
