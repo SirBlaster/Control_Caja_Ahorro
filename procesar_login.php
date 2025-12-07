@@ -7,11 +7,6 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-// Si ya está logueado, redirigir según su rol
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    redirectByRole($_SESSION['id_rol']);
-    exit();
-}
 
 // Procesar el formulario si se envió
 $error = '';
