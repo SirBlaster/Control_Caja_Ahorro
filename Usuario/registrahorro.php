@@ -6,11 +6,11 @@
 <title>Solicitud Ahorro - registrar nómina</title>
 
 <!-- Bootstrap (opcional, ayuda con grid y utilidades) -->
-<link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-<link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
 
 <!-- Estilos locales -->
-<link rel="stylesheet" href="../../css/ahorro-nomina.css">
+<link rel="stylesheet" href="../css/ahorro-nomina.css">
 
 </head>
 <body>
@@ -19,7 +19,7 @@
   <header class="pn-header">
     <div class="container d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-3">
-        <img src="../../img/LogoHorizontal - 2.png" alt="logo" class="pn-logo">
+        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="pn-logo">
         <span class="pn-brand">SETDITSX - Sindicato ITSX</span>
       </div>
       <div class="d-flex align-items-center gap-3">
@@ -31,7 +31,7 @@
 
   <main class="container my-5">
     <!-- BOTÓN REGRESAR -->
-      <a href="panelAhorrador.html" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
+      <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="row justify-content-center">
       <div class="col-lg-9">
 
@@ -89,6 +89,6 @@
     </div>
   </main>
 
-<script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

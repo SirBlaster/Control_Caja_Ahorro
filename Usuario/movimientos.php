@@ -6,11 +6,11 @@
   <title>Movimientos - Caja de Ahorro</title>
 
   <!-- Bootstrap (local en tu proyecto) -->
-  <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
-
+  <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   <!-- Estilos locales -->
-  <link rel="stylesheet" href="../../css/movimientos.css">
+  <link rel="stylesheet" href="../css/movimientos.css">
+
 </head>
 <body>
 
@@ -18,7 +18,7 @@
   <header class="app-header">
     <div class="container d-flex align-items-center justify-content-between py-3">
       <div class="d-flex align-items-center gap-3">
-        <img src="../../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
+        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
         <span class="brand-name">SETDITSX - Sindicato ITSX</span>
       </div>
       <div class="d-flex align-items-center gap-3">
@@ -30,7 +30,7 @@
 
   <!-- Main -->
   <main class="container my-5">
-    <a href="panelAhorrador.html" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
+    <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="card main-card p-4">
       <h1 class="mb-4 movimientos-title">Movimientos</h1>
 
@@ -115,6 +115,6 @@
     </div>
   </main>
 
-<script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

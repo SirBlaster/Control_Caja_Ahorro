@@ -6,8 +6,8 @@
     <title>Historial de Movimientos</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
   </head>
 
   <body>
@@ -15,7 +15,7 @@
     <header class="app-header">
       <div class="container d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
-          <img src="../../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
+          <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
           <span class="brand-name">SETDITSX - Sindicato ITSX</span>
         </div>
 
@@ -30,7 +30,7 @@
       <h4 class="mb-3 fw-bold">Historial completo de movimientos</h4>
 
       <!-- BOTÓN REGRESAR -->
-      <a href="panelAhorrador.html" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
+      <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
 
       <!-- TABLA COMPLETA -->
       <div class="table-wrap mt-2">
@@ -87,6 +87,6 @@
       </div>
     </main>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
   </body>
 </html>

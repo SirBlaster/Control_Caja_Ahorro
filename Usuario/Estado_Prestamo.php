@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Estado de Préstamo</title>
 
-  <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
 
-  <link rel="stylesheet" href="../../css/estado_prestamo.css">
+  <link rel="stylesheet" href="../css/estado_prestamo.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
 <header class="app-header">
   <div class="container d-flex align-items-center justify-content-between py-3">
     <div class="d-flex align-items-center gap-3">
-      <img src="../../img/NewLogo - 1.png" class="header-logo">
+      <img src="../img/NewLogo%20-%201.png" class="header-logo">
       <span class="brand-name">SETDITSX - Sindicato ITSX</span>
     </div>
 
@@ -99,6 +99,6 @@
   </div>
 </main>
 
-<script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -6,9 +6,9 @@
   <title>Panel - Ahorrador</title>
 
   <!-- Bootstrap (opcional, ayuda con grid y utilidades) -->
-  <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   <!-- Estilos locales -->
-  <link rel="stylesheet" href="../../css/dashboard.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
       <div class="d-flex align-items-center gap-3">
         <!-- RUTA LOCAL (entorno): /mnt/data/menuprincipal_Ahorrador.jpg
           En tu proyecto apunta a: img/logo.png o img/menuprincipal_Ahorrador.jpg según donde la guardes -->
-        <img src="../../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
+        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
         <span class="brand-name">SETDITSX - Sindicato ITSX</span>
       </div>
 
@@ -35,7 +35,7 @@
           <h6 class="card-sub">CAJA DE AHORRO</h6>
           <div class="card-amount text-success">$16,751.00 MXN</div>
           <div class="muted">Saldo total disponible</div>
-          <a href="movimientos.html" class="btn btn-outline-primary mt-3 btn-sm"> Ver movimientos </a>
+          <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm"> Ver movimientos </a>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
           <h6 class="card-sub">PRÉSTAMO ACTIVO</h6>
           <div class="card-amount loan-amount">$15,000.00 MXN</div>
           <div class="muted">Saldo pendiente</div>
-          <a href="Estado_Prestamo.html" class="btn btn-outline-primary mt-3 btn-sm"> Consultar estado de préstamo</a>
+          <a href="Estado_Prestamo.php" class="btn btn-outline-primary mt-3 btn-sm"> Consultar estado de préstamo</a>
         </div>
       </div>
     </div>
@@ -52,8 +52,8 @@
     <section class="actions mb-4">
       <h6 class="section-title">ACCIONES DEL AHORRADOR</h6>
         <div class="d-flex justify-content-center gap-3 flex-wrap my-3">
-          <a href="solicitud-prestamo.html" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo </a>
-          <a href="registrahorro.html" class="btn btn-warning px-4 rounded-pill"> Solicitar ahorro / Registrar nómina </a>
+          <a href="solicitud-prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo </a>
+          <a href="registrahorro.php" class="btn btn-warning px-4 rounded-pill"> Solicitar ahorro / Registrar nómina </a>
         </div>
 
     </section>
@@ -81,13 +81,13 @@
           </tbody>
         </table>
         <div class="mt-2">
-          <a href="historial-completo.html" class="text-primary fw-bold"> Ver historial completo</a>
+          <a href="historial-completo.php" class="text-primary fw-bold"> Ver historial completo</a>
         </div>
 
       </div>
     </section>
   </main>
 
-  <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

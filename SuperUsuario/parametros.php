@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración de Parámetros - SETDITSX</title>
-    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../../css/Super.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/Super.css">
 </head>
 <body>
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
+            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
         
@@ -92,6 +92,6 @@
         </div>
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -4,18 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Usuario</title>
-    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css" />
     <link
-      rel="stylesheet"
-      href="../../css/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css"
     />
-    <link rel="stylesheet" href="../../css/Super.css" />
+    <link rel="stylesheet" href="../css/Super.css" />
   </head>
   <body>
     <div class="header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <img
-          src="../../img/NewLogo - 1.png"
+          src="../img/NewLogo - 1.png"
           alt="SETDITSX"
           width="70"
           class="me-3"

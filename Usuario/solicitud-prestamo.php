@@ -6,11 +6,10 @@
   <title>Solicitud de Préstamo</title>
 
   <!-- Bootstrap (local en tu proyecto) -->
-  <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
-
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
   <!-- Estilos locales -->
-  <link rel="stylesheet" href="../../css/prestamo.css">
+  <link rel="stylesheet" href="../css/prestamo.css">
 </head>
 <body>
 
@@ -18,7 +17,7 @@
   <header class="app-header">
     <div class="container d-flex align-items-center justify-content-between py-3">
       <div class="d-flex align-items-center gap-3">
-        <img src="../../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
+        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
         <span class="brand-name">SETDITSX - Sindicato ITSX</span>
       </div>
       <div class="d-flex align-items-center gap-3">
@@ -74,7 +73,7 @@
 
             <!-- Buttons -->
             <div class="col-12 d-flex gap-3 flex-wrap align-items-center">
-                <a href="panelAhorrador.html" class="btn btn-outline-dark btn-cancel">Cancelar</a>
+                <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel">Cancelar</a>
               <button type="submit" class="btn btn-submit ms-auto">Enviar solicitud</button>
             </div>
 
@@ -84,6 +83,6 @@
     </div>
   </main>
 
-  <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>
