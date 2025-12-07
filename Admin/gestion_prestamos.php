@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Préstamos - Administrador</title>
-    <link rel="stylesheet" href="Prestamos.css" />
+    <link rel="stylesheet" href="../css/prestamos.css" />
   </head>
   <body>
     <div class="header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center brand-area">
         <img
-          src="imagenes/NewLogo - 1.png"
+          src="../img/NewLogo - 1.png"
           alt="SETDITSX"
           width="60"
           class="me-2"
