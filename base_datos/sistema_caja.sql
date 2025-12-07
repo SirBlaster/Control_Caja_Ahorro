@@ -451,6 +451,25 @@ ALTER TABLE `Usuarios`
   ADD CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`Id_Rol`) REFERENCES `Rol` (`Id_Rol`);
 COMMIT;
 
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Tabla para auditoría del sistema
+CREATE TABLE auditoria_sistema (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    fecha_hora DATETIME NOT NULL,
+    accion VARCHAR(255) NOT NULL,
+    detalle TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    
+    -- Índices para mejor performance
+    INDEX idx_fecha_hora (fecha_hora),
+    INDEX idx_usuario_id (usuario_id),
+    INDEX idx_accion (accion),
+    
+    -- Clave foránea opcional (si quieres integridad referencial)
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(Id_Ahorrador) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
