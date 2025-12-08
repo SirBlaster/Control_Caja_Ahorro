@@ -1,3 +1,12 @@
+<?php
+// SuperUsuario/Inicio.php
+require_once '../includes/init.php';
+secure_session_start();
+check_login(2);
+
+// Obtener actividades recientes
+$actividades = obtener_actividades_recientes(10);
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -22,8 +31,8 @@
       </div>
 
       <div class="user-actions d-flex align-items-center gap-3">
-        <div class="user-name">Sánchez Cortes Felipe Martin ▾</div>
-        <button class="btn btn-outline-primary btn-sm">Cerrar Sesión</button>
+          <p class="user-name"><?php echo get_user_name(); ?></p>
+          <small class="text-muted"><?php echo get_user_role_text(); ?></small>
       </div>
     </div>
   </header>
@@ -48,12 +57,14 @@
         </div>
       </div>
     </div>
+    
 
     <section class="actions mb-4">
       <h6 class="section-title">ACCIONES DEL AHORRADOR</h6>
         <div class="d-flex justify-content-center gap-3 flex-wrap my-3">
           <a href="solicitud-prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo </a>
           <a href="registrahorro.php" class="btn btn-warning px-4 rounded-pill"> Solicitar ahorro / Registrar nómina </a>
+          <a href="estados_solicitudes.php" class="btn btn-warning px-4 rounded-pill"> Consultar el estado de las solicitudes </a>
         </div>
 
     </section>
