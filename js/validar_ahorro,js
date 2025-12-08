@@ -1,0 +1,43 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const inputSueldo = document.getElementById('sueldo');
+    const inputMonto = document.getElementById('monto');
+    const errorMsg = document.getElementById('errorMonto');
+    const spanTope = document.getElementById('topeMax');
+    const btnEnviar = document.getElementById('btnEnviar');
+
+    function validarMontos() {
+        const sueldo = parseFloat(inputSueldo.value) || 0;
+        const monto = parseFloat(inputMonto.value) || 0;
+        
+        // Regla: 30% del sueldo
+        const maximoPermitido = sueldo * 0.30;
+        spanTope.textContent = maximoPermitido.toFixed(2);
+
+        // Si el monto supera el 30% Y hay un sueldo escrito
+        if (monto > maximoPermitido && sueldo > 0) {
+            errorMsg.style.display = 'block';
+            btnEnviar.disabled = true; // Bloqueamos el botón
+            btnEnviar.style.opacity = '0.5';
+        } else {
+            errorMsg.style.display = 'none';
+            btnEnviar.disabled = false; // Activamos el botón
+            btnEnviar.style.opacity = '1';
+        }
+    }
+
+    // Función para bloquear letras (Solo números y punto decimal)
+    function soloNumeros(e) {
+        const charCode = (e.which) ? e.which : e.keyCode;
+        // Permitir: números (48-57) y punto (46)
+        if ((charCode < 48 || charCode > 57) && charCode !== 46) {
+            e.preventDefault();
+        }
+    }
+
+    // Eventos
+    inputSueldo.addEventListener('input', validarMontos);
+    inputMonto.addEventListener('input', validarMontos);
+    
+    inputSueldo.addEventListener('keypress', soloNumeros);
+    inputMonto.addEventListener('keypress', soloNumeros);
+});

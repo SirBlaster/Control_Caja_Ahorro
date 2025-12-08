@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db
--- Tiempo de generación: 06-12-2025 a las 22:29:01
+-- Tiempo de generación: 08-12-2025 a las 02:28:21
 -- Versión del servidor: 8.0.44
 -- Versión de PHP: 8.3.26
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `sistema_caja`
 --
-CREATE DATABASE IF NOT EXISTS `sistema_caja` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `sistema_caja`;
 
 -- --------------------------------------------------------
 
@@ -34,6 +32,13 @@ CREATE TABLE `Ahorro` (
   `MontoAhorrado` decimal(10,2) NOT NULL DEFAULT '0.00',
   `Id_Ahorrador` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `Ahorro`
+--
+
+INSERT INTO `Ahorro` (`Id_Ahorro`, `MontoAhorrado`, `Id_Ahorrador`) VALUES
+(1, 0.00, 2);
 
 -- --------------------------------------------------------
 
@@ -50,6 +55,25 @@ CREATE TABLE `AuditodiaSolicitudes` (
   `ValorNuevo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `UsuarioResponsable` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `FechaCambio` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `AuditoriaUsuarios`
+--
+
+CREATE TABLE `AuditoriaUsuarios` (
+  `Id_Auditoria` int NOT NULL,
+  `Id_Ahorrador` int NOT NULL,
+  `Accion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `CampoModificado` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ValorAnterior` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ValorNuevo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `UsuarioResponsable` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FechaCambio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IpAddress` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `UserAgent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -167,6 +191,7 @@ CREATE TABLE `Solicitud_Ahorro` (
   `Id_SolicitudAhorro` int NOT NULL,
   `Fecha` datetime DEFAULT CURRENT_TIMESTAMP,
   `Monto` decimal(10,2) DEFAULT NULL,
+  `Nomina` decimal(10,2) NOT NULL,
   `ArchivoNomina` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ArchivoSolicitud` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Id_Ahorrador` int NOT NULL,
@@ -264,11 +289,45 @@ CREATE TABLE `Usuarios` (
 --
 
 INSERT INTO `Usuarios` (`Id_Ahorrador`, `Nombre`, `Paterno`, `Materno`, `Institucional`, `Personal`, `RFC`, `CURP`, `Telefono`, `Contrasena`, `Tarjeta`, `Id_Rol`) VALUES
-(1, 'Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 1);
+(1, 'Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 1),
+(2, 'Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 2);
 
 --
 -- Disparadores `Usuarios`
 --
+DELIMITER $$
+CREATE TRIGGER `auditar_cambio_rol` AFTER UPDATE ON `Usuarios` FOR EACH ROW BEGIN
+
+  IF OLD.Id_Rol IS NULL AND NEW.Id_Rol IS NOT NULL OR OLD.Id_Rol <> NEW.Id_Rol THEN
+    INSERT INTO `AuditoriaUsuarios`
+      (`Id_Ahorrador`, `Accion`, `CampoModificado`, `ValorAnterior`, `ValorNuevo`, `UsuarioResponsable`)
+    VALUES
+      (NEW.Id_Ahorrador,
+       'UPDATE',
+       'Id_Rol',
+       CAST(OLD.Id_Rol AS CHAR),
+       CAST(NEW.Id_Rol AS CHAR),
+       CURRENT_USER());
+  END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `auditar_eliminacion_usuario` BEFORE DELETE ON `Usuarios` FOR EACH ROW BEGIN
+  INSERT INTO `AuditoriaUsuarios`
+    (`Id_Ahorrador`, `Accion`, `CampoModificado`, `ValorAnterior`, `ValorNuevo`, `UsuarioResponsable`)
+  VALUES
+    (
+      OLD.Id_Ahorrador,
+      'DELETE',
+      'Usuario',
+      CONCAT('Nombre=', IFNULL(OLD.Nombre,''), '; Paterno=', IFNULL(OLD.Paterno,''), '; Materno=', IFNULL(OLD.Materno,''), '; Institucional=', IFNULL(OLD.Institucional,'')),
+      NULL,
+      CURRENT_USER()
+    );
+END
+$$
+DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `crear_cuenta_ahorro` AFTER INSERT ON `Usuarios` FOR EACH ROW BEGIN
     INSERT INTO Ahorro (MontoAhorrado, Id_Ahorrador) VALUES (0.00, NEW.Id_Ahorrador);
@@ -292,6 +351,14 @@ ALTER TABLE `Ahorro`
 --
 ALTER TABLE `AuditodiaSolicitudes`
   ADD PRIMARY KEY (`Id_Auditoria`);
+
+--
+-- Indices de la tabla `AuditoriaUsuarios`
+--
+ALTER TABLE `AuditoriaUsuarios`
+  ADD PRIMARY KEY (`Id_Auditoria`),
+  ADD KEY `idx_audit_user` (`Id_Ahorrador`),
+  ADD KEY `idx_fecha_audit` (`FechaCambio`);
 
 --
 -- Indices de la tabla `DatosSistema`
@@ -357,12 +424,18 @@ ALTER TABLE `Usuarios`
 -- AUTO_INCREMENT de la tabla `Ahorro`
 --
 ALTER TABLE `Ahorro`
-  MODIFY `Id_Ahorro` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_Ahorro` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `AuditodiaSolicitudes`
 --
 ALTER TABLE `AuditodiaSolicitudes`
+  MODIFY `Id_Auditoria` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `AuditoriaUsuarios`
+--
+ALTER TABLE `AuditoriaUsuarios`
   MODIFY `Id_Auditoria` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -411,7 +484,7 @@ ALTER TABLE `TipoMovimiento`
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
-  MODIFY `Id_Ahorrador` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id_Ahorrador` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
@@ -451,25 +524,6 @@ ALTER TABLE `Usuarios`
   ADD CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`Id_Rol`) REFERENCES `Rol` (`Id_Rol`);
 COMMIT;
 
-
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
--- Tabla para auditoría del sistema
-CREATE TABLE auditoria_sistema (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id INT NOT NULL,
-    fecha_hora DATETIME NOT NULL,
-    accion VARCHAR(255) NOT NULL,
-    detalle TEXT,
-    ip_address VARCHAR(45),
-    user_agent TEXT,
-    
-    -- Índices para mejor performance
-    INDEX idx_fecha_hora (fecha_hora),
-    INDEX idx_usuario_id (usuario_id),
-    INDEX idx_accion (accion),
-    
-    -- Clave foránea opcional (si quieres integridad referencial)
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(Id_Ahorrador) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
