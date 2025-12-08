@@ -6,6 +6,10 @@
 -- Tiempo de generación: 08-12-2025 a las 02:28:21
 -- Versión del servidor: 8.0.44
 -- Versión de PHP: 8.3.26
+CREATE DATABASE IF NOT EXISTS `sistema_caja`
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE `sistema_caja`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
