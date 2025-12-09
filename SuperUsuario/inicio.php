@@ -30,7 +30,7 @@ $actividades = obtener_actividades_recientes(10);
             <i class="bi bi-person-square user-icon"></i>
             <div class="user-details">
                 <p class="user-name"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small> <!-- Cambiar para colocar el nombre del inicio de sesión -->
+                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
             </div>
             <form action="../logout.php" method="POST" style="display: inline;">
                 <button type="submit" class="btn btn-logout">
@@ -48,20 +48,39 @@ $actividades = obtener_actividades_recientes(10);
             <div class="management-card">
                 <h5 class="section-title">Gestión de Usuarios</h5>
                 <p class="mb-3">Administrar roles, permisos y cuentas</p>
-                <button class="btn btn-manage">Gestionar</button>
+                <a href="../SuperUsuario/usuarios.php">
+                    <button class="btn btn-manage">Gestionar</button>
+                </a>
             </div>
 
             <!-- Parámetros del sistema -->
             <div class="management-card">
                 <h5 class="section-title">Parámetros del sistema</h5>
                 <p class="mb-3">Configurar tasas, montos, límite y variables</p>
-                <button class="btn btn-manage">Gestionar</button>
+                <a href="../SuperUsuario/parametros.php">
+                    <button class="btn btn-manage">Gestionar</button>
+                </a>
             </div>
 
             <hr class="divider">
 
             <!-- Actividad reciente del sistema -->
             <h5 class="section-title">Actividad reciente del sistema</h5>
+            
+            <?php if (empty($actividades)): ?>
+                <!-- Mensaje cuando NO hay actividades -->
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay actividades registradas en el sistema.
+                    <small class="d-block mt-1">
+                        Esto puede significar que: 
+                        <br>1. No hay datos en la tabla auditoria_usuario
+                        <br>2. Hay un error en la consulta
+                        <br>3. Los triggers no están funcionando
+                    </small>
+                </div>
+            <?php endif; ?>
+            
             <div class="table-container">
                 <table class="table table-striped table-hover">
                     <thead>
@@ -76,15 +95,28 @@ $actividades = obtener_actividades_recientes(10);
                         <?php if (empty($actividades)): ?>
                             <tr>
                                 <td colspan="4" class="text-center text-muted">
+                                    <i class="bi bi-database-slash me-2"></i>
                                     No hay actividades registradas
                                 </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($actividades as $actividad): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($actividad['fecha_hora']); ?></td>
+                                    <td><?php echo htmlspecialchars($actividad['fecha_hora'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($actividad['usuario_nombre'] ?? 'Sistema'); ?></td>
-                                    <td><?php echo htmlspecialchars($actividad['accion']); ?></td>
+                                    <td>
+                                        <span class="badge 
+                                            <?php 
+                                            $accion = strtoupper($actividad['accion'] ?? '');
+                                            if (in_array($accion, ['CREATE', 'INSERT'])) echo 'bg-success';
+                                            elseif (in_array($accion, ['UPDATE', 'MODIFY'])) echo 'bg-warning text-dark';
+                                            elseif (in_array($accion, ['DELETE', 'REMOVE'])) echo 'bg-danger';
+                                            elseif (in_array($accion, ['LOGIN', 'LOGOUT'])) echo 'bg-primary';
+                                            else echo 'bg-secondary';
+                                            ?>">
+                                            <?php echo htmlspecialchars($actividad['accion'] ?? 'N/A'); ?>
+                                        </span>
+                                    </td>
                                     <td><?php echo htmlspecialchars($actividad['detalle'] ?? ''); ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -93,13 +125,23 @@ $actividades = obtener_actividades_recientes(10);
                 </table>
             </div>
 
-            <!-- <a href="#" class="view-history">
-                <i class="bi bi-clock-history me-1"></i> Ver historial completo
-            </a> -->
+            <!-- Opcional: Enlace para ver más actividades -->
+            <?php if (!empty($actividades)): ?>
+                <div class="text-end mt-3">
+                    <a href="../SuperUsuario/auditoria_completa.php" class="view-history">
+                        <i class="bi bi-clock-history me-1"></i> Ver historial completo
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
     <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para depuración en consola -->
+    <script>
+        console.log("Actividades obtenidas: <?php echo count($actividades); ?>");
+    </script>
 </body>
 
 </html>
