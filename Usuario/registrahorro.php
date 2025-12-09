@@ -96,7 +96,7 @@ if ($ultima_solicitud) {
 
           <?php if ($puede_solicitar): ?>
 
-              <form class="row g-4" id="formAhorro" action="procesar_ahorro.php" method="POST" enctype="multipart/form-data">
+              <form class="row g-4" id="formAhorro" action="../includes/Usuario/procesar_ahorro.php" method="POST" enctype="multipart/form-data">
                 
                 <div class="col-12">
                   <label class="form-label fw-bold">Registre su nómina (Sueldo Neto MXN)</label>
