@@ -1,174 +1,152 @@
 <?php
-// includes/audit_functions.php
+// includes/audit_functions.php - VERSIÓN SIMPLE Y SEGURA
 
 /**
- * Registra una acción en el sistema de auditoría
- * 
- * @param string $accion Descripción de la acción realizada
- * @param string $detalle Detalles adicionales (opcional)
- * @param int $usuario_id ID del usuario (si es null, usa el de sesión)
- * @return bool True si se registró correctamente
+ * Obtiene las actividades recientes del sistema - VERSIÓN SIMPLE
  */
-function registrar_auditoria($accion, $detalle = '', $usuario_id = null)
-{
-    global $pdo; // Asumiendo que $pdo está disponible desde conexion.php
-
-    try {
-        // Si no se especifica usuario, usar el de sesión
-        if ($usuario_id === null) {
-            $usuario_id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 0;
-        }
-
-        // Preparar la consulta
-        $sql = "INSERT INTO auditoria_sistema 
-                (usuario_id, fecha_hora, accion, detalle, ip_address, user_agent) 
-                VALUES (:usuario_id, NOW(), :accion, :detalle, :ip, :ua)";
-
-        $stmt = $pdo->prepare($sql);
-
-        // Ejecutar con parámetros
-        return $stmt->execute([
-            ':usuario_id' => $usuario_id,
-            ':accion' => $accion,
-            ':detalle' => $detalle,
-            ':ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
-            ':ua' => $_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido'
-        ]);
-
-    } catch (PDOException $e) {
-        // En desarrollo, mostrar error; en producción, solo log
-        if (defined('IS_DEV') && IS_DEV) {
-            error_log("Error en auditoría: " . $e->getMessage());
-        }
-        return false;
-    }
-}
-
-/**
- * Obtiene las actividades recientes del sistema
- * 
- * @param int $limite Cantidad de registros a obtener (por defecto 10)
- * @return array Array con las actividades
- */
-function obtener_actividades_recientes($limite = 10)
-{
+function obtener_actividades_recientes($limite = 10) {
     global $pdo;
 
     try {
+        // CONSULTA MÁS SIMPLE - usa EXACTAMENTE los campos de tu tabla
         $sql = "SELECT 
-                    a.fecha_hora,
-                    CONCAT(u.Nombre, ' ', u.Paterno) as usuario_nombre,
-                    a.accion,
-                    a.detalle
-                FROM auditoria_sistema a
-                LEFT JOIN Usuarios u ON a.usuario_id = u.Id_Ahorrador
-                ORDER BY a.fecha_hora DESC
+                    fecha_cambio as fecha_hora,
+                    COALESCE(usuario_responsable, 'Sistema') as usuario_nombre,
+                    accion,
+                    CASE 
+                        WHEN campo_modificado IS NOT NULL AND campo_modificado != ''
+                        THEN CONCAT(campo_modificado, ': ', 
+                                   COALESCE(valor_anterior, ''), 
+                                   CASE 
+                                       WHEN valor_anterior IS NOT NULL AND valor_nuevo IS NOT NULL 
+                                       THEN ' → ' 
+                                       ELSE ''
+                                   END,
+                                   COALESCE(valor_nuevo, ''))
+                        ELSE COALESCE(valor_nuevo, valor_anterior, accion)
+                    END as detalle
+                FROM auditoria_usuario 
+                ORDER BY fecha_cambio DESC 
                 LIMIT :limite";
 
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->bindValue(':limite', (int)$limite, PDO::PARAM_INT);
         $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Formatear fecha si es necesario
+        foreach ($resultados as &$fila) {
+            if (!empty($fila['fecha_hora'])) {
+                $fila['fecha_hora'] = date('Y-m-d H:i:s', strtotime($fila['fecha_hora']));
+            }
+        }
+        
+        return $resultados;
 
     } catch (PDOException $e) {
+        // Para depuración
+        echo "<!-- Error en obtener_actividades_recientes: " . htmlspecialchars($e->getMessage()) . " -->";
         error_log("Error obteniendo actividades: " . $e->getMessage());
         return [];
     }
 }
 
 /**
- * Obtiene actividades filtradas por usuario
+ * Función de auditoría SIMPLE - compatible con tu código actual
  */
-function obtener_actividades_por_usuario($usuario_id, $limite = 20)
-{
+function registrar_auditoria($accion, $detalle = '', $usuario_id = null) {
     global $pdo;
-
+    
     try {
-        $sql = "SELECT * FROM auditoria_sistema 
-                WHERE usuario_id = :usuario_id
-                ORDER BY fecha_hora DESC
-                LIMIT :limite";
-
+        // Si no hay usuario, usar 0 (Sistema)
+        if ($usuario_id === null) {
+            $usuario_id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 0;
+        }
+        
+        // Determinar responsable
+        $responsable = 'Sistema';
+        if ($usuario_id > 0) {
+            // Intentar obtener nombre
+            try {
+                $stmt = $pdo->prepare("SELECT nombre, apellido_paterno FROM usuario WHERE id_usuario = ?");
+                $stmt->execute([$usuario_id]);
+                if ($usuario = $stmt->fetch()) {
+                    $responsable = $usuario['nombre'] . ' ' . $usuario['apellido_paterno'];
+                }
+            } catch (Exception $e) {
+                // Si falla, usar ID
+                $responsable = "Usuario ID: $usuario_id";
+            }
+        }
+        
+        // Insertar en auditoría - usando campos exactos de tu tabla
+        $sql = "INSERT INTO auditoria_usuario 
+                (id_usuario, accion, campo_modificado, valor_anterior, valor_nuevo, 
+                 usuario_responsable, ip_address, user_agent, fecha_cambio) 
+                VALUES (:id_usuario, :accion, '', '', :detalle, 
+                        :responsable, :ip, :ua, NOW())";
+        
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
-        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-        error_log("Error obteniendo actividades por usuario: " . $e->getMessage());
-        return [];
+        
+        return $stmt->execute([
+            ':id_usuario' => $usuario_id,
+            ':accion' => $accion,
+            ':detalle' => $detalle,
+            ':responsable' => $responsable,
+            ':ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+            ':ua' => $_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido'
+        ]);
+        
+    } catch (Exception $e) {
+        error_log("Error en registrar_auditoria: " . $e->getMessage());
+        return false;
     }
 }
 
 /**
- * Busca actividades por rango de fechas
+ * Para auditoria_completa.php - obtener TODAS las actividades
  */
-function buscar_actividades_por_fecha($fecha_inicio, $fecha_fin)
-{
+function obtener_actividades_completas() {
     global $pdo;
-
+    
     try {
         $sql = "SELECT 
-                    a.*,
-                    CONCAT(u.Nombre, ' ', u.Paterno) as usuario_nombre
-                FROM auditoria_sistema a
-                LEFT JOIN Usuarios u ON a.usuario_id = u.Id_Ahorrador
-                WHERE DATE(a.fecha_hora) BETWEEN :fecha_inicio AND :fecha_fin
-                ORDER BY a.fecha_hora DESC";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':fecha_inicio' => $fecha_inicio,
-            ':fecha_fin' => $fecha_fin
-        ]);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-        error_log("Error buscando actividades por fecha: " . $e->getMessage());
-        return [];
-    }
-}
-/**
- * Registra la creación de un nuevo usuario
- */
-function auditar_registro_usuario($datos_usuario, $exitoso = true, $error = '')
-{
-    global $pdo;
-
-    try {
-        $accion = $exitoso ? 'Registro de nuevo usuario' : 'Error en registro de usuario';
-
-        if ($exitoso) {
-            $detalle = sprintf(
-                "Nuevo usuario registrado: %s %s %s (ID: %d, Correo: %s, Tel: %s, Rol: %d)",
-                $datos_usuario['nombre'],
-                $datos_usuario['paterno'],
-                $datos_usuario['materno'],
-                $datos_usuario['id'],
-                $datos_usuario['institucional'],
-                $datos_usuario['telefono'],
-                $datos_usuario['id_rol']
-            );
-        } else {
-            $detalle = sprintf(
-                "Intento fallido de registro: %s %s %s (Correo: %s) - Error: %s",
-                $datos_usuario['nombre'] ?? '',
-                $datos_usuario['paterno'] ?? '',
-                $datos_usuario['materno'] ?? '',
-                $datos_usuario['institucional'] ?? '',
-                $error
-            );
+                    fecha_cambio as fecha_hora,
+                    COALESCE(usuario_responsable, 'Sistema') as usuario_nombre,
+                    accion,
+                    CASE 
+                        WHEN campo_modificado IS NOT NULL AND campo_modificado != ''
+                        THEN CONCAT(campo_modificado, ': ', 
+                                   COALESCE(valor_anterior, ''), 
+                                   CASE 
+                                       WHEN valor_anterior IS NOT NULL AND valor_nuevo IS NOT NULL 
+                                       THEN ' → ' 
+                                       ELSE ''
+                                   END,
+                                   COALESCE(valor_nuevo, ''))
+                        ELSE COALESCE(valor_nuevo, valor_anterior, accion)
+                    END as detalle,
+                    ip_address,
+                    user_agent
+                FROM auditoria_usuario 
+                ORDER BY fecha_cambio DESC";
+        
+        $stmt = $pdo->query($sql);
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Formatear fechas
+        foreach ($resultados as &$fila) {
+            if (!empty($fila['fecha_hora'])) {
+                $fila['fecha_hora'] = date('Y-m-d H:i:s', strtotime($fila['fecha_hora']));
+            }
         }
-
-        return registrar_auditoria($accion, $detalle);
-
+        
+        return $resultados;
+        
     } catch (Exception $e) {
-        error_log("Error en auditoría de registro: " . $e->getMessage());
-        return false;
+        error_log("Error en obtener_actividades_completas: " . $e->getMessage());
+        return [];
     }
 }
 ?>
