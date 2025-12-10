@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS usuario (
     tarjeta VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     habilitado TINYINT NOT NULL DEFAULT 1,
     id_rol INT NOT NULL,
+    UNIQUE (correo_institucional),
+    UNIQUE (correo_personal),
     PRIMARY KEY (id_usuario),
     CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol)
         REFERENCES rol(id_rol)
@@ -144,6 +146,7 @@ CREATE TABLE IF NOT EXISTS datos_sistema (
     nombre_director VARCHAR(200) DEFAULT NULL,
     periodo VARCHAR(50) DEFAULT NULL,
     nombre_enc_personal VARCHAR(200) DEFAULT NULL,
+    correo_soporte COLLATE utf8mb4_unicode_ci DEFAULT UNIQUE,
     PRIMARY KEY (id_datos)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -317,3 +320,45 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+-- Tabla para tasas de interes globales
+CREATE TABLE IF NOT EXISTS tasas_interes (
+    id_tasa INT NOT NULL AUTO_INCREMENT,
+    tipo VARCHAR(20) NOT NULL, -- 'ahorro' o 'prestamo'
+    tasa DECIMAL(5,2) NOT NULL, -- porcentaje
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE DEFAULT NULL, -- NULL = aún vigente
+    PRIMARY KEY(id_tasa)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tabla para historial 
+CREATE TABLE IF NOT EXISTS historial_tasas_usuario (
+    id_historial INT NOT NULL AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    tasa DECIMAL(5,2) NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_historial),
+    CONSTRAINT fk_historial_usuario FOREIGN KEY(id_usuario)
+        REFERENCES usuario(id_usuario)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+--- Trigger historial de tasa de usuario
+
+DELIMITER $$
+
+CREATE TRIGGER auditar_cambio_tasa
+AFTER UPDATE ON usuario
+FOR EACH ROW
+BEGIN
+    IF OLD.tasa_interes <> NEW.tasa_interes THEN
+        INSERT INTO historial_tasas_usuario(id_usuario, tasa)
+        VALUES (NEW.id_usuario, NEW.tasa_interes);
+    END IF;
+END $$
+
+DELIMITER ;
+
+
