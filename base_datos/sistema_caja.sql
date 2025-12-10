@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     contrasena VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     tarjeta VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     habilitado TINYINT NOT NULL DEFAULT 1,
+    tasa_interes DECIMAL(5,2) NOT NULL DEFAULT 0.00,
     id_rol INT NOT NULL,
     UNIQUE (correo_institucional),
     UNIQUE (correo_personal),
