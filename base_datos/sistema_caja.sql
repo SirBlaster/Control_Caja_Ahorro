@@ -147,7 +147,8 @@ CREATE TABLE IF NOT EXISTS datos_sistema (
     nombre_director VARCHAR(200) DEFAULT NULL,
     periodo VARCHAR(50) DEFAULT NULL,
     nombre_enc_personal VARCHAR(200) DEFAULT NULL,
-    correo_soporte COLLATE utf8mb4_unicode_ci DEFAULT UNIQUE,
+    correo_soporte VARCHAR(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    UNIQUE (correo_soporte),
     PRIMARY KEY (id_datos)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -361,5 +362,3 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-

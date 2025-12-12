@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // 4. Verificar duplicados
-    $checkSql = "SELECT Id_Ahorrador FROM Usuarios WHERE Institucional = ? OR CURP = ? OR RFC = ?";
+    $checkSql = "SELECT id_usuario FROM usuario WHERE correo_institucional = ? OR curp = ? OR rfc = ?";
     $stmtCheck = $pdo->prepare($checkSql);
     $stmtCheck->execute([$institucional, $curp, $rfc]);
 
@@ -94,8 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_hash = $password; // Para desarrollo
 
     // 6. INSERTAR en la base de datos
-    $sql = "INSERT INTO Usuarios 
-            (Nombre, Paterno, Materno, Institucional, Personal, RFC, CURP, Telefono, Contrasena, Tarjeta, Id_Rol) 
+    $sql = "INSERT INTO usuario 
+            (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2)";
     
     $stmt = $pdo->prepare($sql);

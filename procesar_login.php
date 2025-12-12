@@ -23,14 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 4. CONSULTA A LA BASE DE DATOS
     // Usamos $pdo que viene incluido en 'init.php'
-    $sql = "SELECT * FROM Usuarios WHERE Institucional = :correo LIMIT 1";
+    $sql = "SELECT * FROM usuario WHERE correo_institucional = :correo LIMIT 1";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':correo' => $correo]);
     $usuario = $stmt->fetch();
 
     // 5. VERIFICACIÓN DE CONTRASEÑA
     // (Asegúrate si las contraseñas están en texto plano o encriptadas. Aquí asumo texto plano como en tus ejemplos)
-    if ($usuario && $usuario['Contrasena'] == $password) {
+    if ($usuario && $usuario['contrasena'] == $password) {
         
         // --- ¡ÉXITO! ---
         
@@ -40,12 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // B. Guardamos variables de sesión
-        $_SESSION['id_usuario'] = $usuario['Id_Ahorrador'];
-        $_SESSION['nombre'] = $usuario['Nombre'];
-        $_SESSION['paterno'] = $usuario['Paterno'] ?? '';
-        $_SESSION['materno'] = $usuario['Materno'] ?? '';
-        $_SESSION['correo'] = $usuario['Institucional'];
-        $_SESSION['id_rol'] = $usuario['Id_Rol'];
+        $_SESSION['id_usuario'] = $usuario['id_usuario'];
+        $_SESSION['nombre'] = $usuario['nombre'];
+        $_SESSION['paterno'] = $usuario['apellido_paterno'] ?? '';
+        $_SESSION['materno'] = $usuario['apellido_materno'] ?? '';
+        $_SESSION['correo'] = $usuario['correo_institucional'];
+        $_SESSION['id_rol'] = $usuario['id_rol'];
         $_SESSION['logged_in'] = true;
         $_SESSION['login_time'] = time();
 
@@ -53,12 +53,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (function_exists('registrar_auditoria')) {
             registrar_auditoria(
                 'Inicio de sesión',
-                'Usuario ' . $usuario['Nombre'] . ' ingresó al sistema'
+                'Usuario ' . $usuario['nombre'] . ' ingresó al sistema'
             );
         }
 
         // D. REDIRECCIÓN SEGÚN ROL
-        switch ($usuario['Id_Rol']) {
+        switch ($usuario['id_rol']) {
             case 1: // Admin
                 header("Location: Admin/Inicio.php");
                 break;
