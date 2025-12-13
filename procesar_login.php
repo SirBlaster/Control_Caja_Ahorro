@@ -2,12 +2,8 @@
 // ============ SECCIÓN PHP (AL INICIO) ============
 session_start(); // Añade esto al inicio
 
-require_once 'includes/conexion.php'; // Asegúrate de incluir la conexión
-
-// Incluir funciones
-if (file_exists('includes/audit_functions.php')) {
-    require_once 'includes/audit_functions.php';
-}
+// 1. INCLUIR FUNCIONES Y CONEXIÓN (Lo que hizo tu amigo)
+require_once 'init.php'; 
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
@@ -70,14 +66,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // DEBUG: Log de sesión
                     error_log("DEBUG: Sesión creada - ID: " . $_SESSION['id_usuario'] . ", Rol: " . $_SESSION['id_rol']);
 
-                    // AUDITORÍA: Registrar inicio de sesión
-                    if (function_exists('registrar_auditoria')) {
-                        registrar_auditoria(
-                            'Inicio de sesión',
-                            'Usuario ' . $usuario['nombre'] . ' inició sesión correctamente',
-                            $usuario['id_usuario']
-                        );
-                    }
+        // D. REDIRECCIÓN SEGÚN ROL
+<<<<<<< HEAD
+        switch ($usuario['id_rol']) {
+            case 1: // Ahorrador
+                header("Location: Usuario/panelAhorrador.php");
+=======
+        switch ($usuario['Id_Rol']) {
+            case 1: // Admin
+                header("Location: ../Admin/Inicio.php");
+                break;
+            case 2: // Ahorrador
+                header("Location: ../Usuario/panelAhorrador.php");
+>>>>>>> fd404ec8bdd6abfd3e6bb8a42ba96cf72f68b447
+                break;
+            case 2: // Admin
+                header("Location: Admin/Inicio.php");
+                break;
+            case 3: // SuperUsuario
+                header("Location: ../SuperUsuario/Inicio.php");
+                break;
+            default:
+                // Rol desconocido
+                session_destroy();
+                header("Location: login.php?error=Tu usuario no tiene un rol válido");
+        }
+        exit();
 
                     // Redireccionar según el ROL
                     redirectByRole($_SESSION['id_rol']);
@@ -117,13 +131,13 @@ function redirectByRole($role)
     error_log("DEBUG redirectByRole: Redirigiendo rol $role");
     
     switch ($role) {
-        case 1: // Admin
-            error_log("DEBUG: Redirigiendo a Admin/Inicio.php");
-            header("Location: Admin/Inicio.php");
-            break;
-        case 2: // Ahorrador
+        case 1: // Ahorrador
             error_log("DEBUG: Redirigiendo a Usuario/panelAhorrador.php");
             header("Location: Usuario/panelAhorrador.php");
+            break;
+        case 2: // Admin
+            error_log("DEBUG: Redirigiendo a Admin/Inicio.php");
+            header("Location: Admin/Inicio.php");
             break;
         case 3: // SuperUsuario
             error_log("DEBUG: Redirigiendo a SuperUsuario/Inicio.php");

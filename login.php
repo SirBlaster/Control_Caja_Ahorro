@@ -29,6 +29,7 @@
 
         <form action="procesar_login.php" method="POST">
             
+            
             <?php if(isset($_GET['error'])): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?php echo htmlspecialchars($_GET['error']); ?>

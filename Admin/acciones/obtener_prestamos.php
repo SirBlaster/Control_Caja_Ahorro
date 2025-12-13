@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../includes/conexion.php';
+require_once __DIR__ . '/../../includes/init.php';
 
 // Estado pendiente
 $estado_pendiente = 1;
