@@ -59,11 +59,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // D. REDIRECCIÓN SEGÚN ROL
         switch ($usuario['id_rol']) {
-            case 1: // Admin
-                header("Location: Admin/Inicio.php");
-                break;
-            case 2: // Ahorrador
+            case 1: // Ahorrador
                 header("Location: Usuario/panelAhorrador.php");
+                break;
+            case 2: // Admin
+                header("Location: Admin/Inicio.php");
                 break;
             case 3: // SuperUsuario
                 header("Location: SuperUsuario/Inicio.php");
