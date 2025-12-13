@@ -1,3 +1,8 @@
+<?php
+require_once '../includes/init.php';
+secure_session_start();
+check_login(2);
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -16,20 +21,34 @@
 
   <!-- Header -->
   <header class="app-header">
-    <div class="container d-flex align-items-center justify-content-between py-3">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
-        <span class="brand-name">SETDITSX - Sindicato ITSX</span>
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <div class="user-name">Sánchez Cortes Felipe Martin ▾</div>
-        <button class="btn btn-sm btn-outline-primary">Cerrar Sesión</button>
-      </div>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
+                <span class="fw-bold text-dark">Historial de Solicitudes</span>
+            </a>
+
+            <div class="d-flex align-items-center gap-4">
+                <div class="d-none d-md-block text-end">
+                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
+                        <?php echo get_user_name(); ?>
+                    </div>
+                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+                </div>
+                <form action="../logout.php" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-logout">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+                </form>
+                
+            </div>
+        </div>
+    </nav>
   </header>
 
   <!-- Main -->
   <main class="container my-5">
+    <br>
     <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="card main-card p-4">
       <h1 class="mb-4 movimientos-title">Movimientos</h1>
