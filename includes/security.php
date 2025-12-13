@@ -123,4 +123,5 @@ function get_full_name() {
     
     return trim("$nombre $paterno $materno");
 }
+
 ?>

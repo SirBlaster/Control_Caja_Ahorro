@@ -1,6 +1,6 @@
 <?php
 // procesar_registro.php
-require_once 'includes/init.php'; // Cambiado a init.php para tener todas las funciones
+require_once 'includes/init.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -66,37 +66,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($errores)) {
         $mensaje_error = implode("\\n", $errores);
         // Auditar intento fallido de registro
-        registrar_auditoria(
-            'Intento fallido de registro',
-            'Validación fallida para: ' . $institucional . ' - Errores: ' . implode(', ', $errores)
-        );
+        if (function_exists('registrar_auditoria')) {
+            registrar_auditoria(
+                'Intento fallido de registro',
+                'Validación fallida para: ' . $institucional . ' - Errores: ' . implode(', ', $errores)
+            );
+        }
         die("<script>alert('$mensaje_error'); window.history.back();</script>");
     }
 
-    // 4. Verificar duplicados
-    $checkSql = "SELECT id_usuario FROM usuario WHERE correo_institucional = ? OR curp = ? OR rfc = ?";
+    // 4. Verificar duplicados - CORRECCIÓN: Tabla 'usuario' y campos nuevos
+    $checkSql = "SELECT id_usuario FROM usuario WHERE correo_institucional = ? OR CURP = ? OR RFC = ?";
     $stmtCheck = $pdo->prepare($checkSql);
     $stmtCheck->execute([$institucional, $curp, $rfc]);
 
     if ($stmtCheck->rowCount() > 0) {
         $usuario_existente = $stmtCheck->fetch();
         // Auditar intento de registro duplicado
-        registrar_auditoria(
-            'Intento de registro duplicado',
-            'Datos duplicados para: ' . $institucional . ' - CURP: ' . $curp . ' - RFC: ' . $rfc . ' - IP: ' . ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0')
-        );
+        if (function_exists('registrar_auditoria')) {
+            registrar_auditoria(
+                'Intento de registro duplicado',
+                'Datos duplicados para: ' . $institucional . ' - CURP: ' . $curp . ' - RFC: ' . $rfc . ' - IP: ' . ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0')
+            );
+        }
         die("<script>alert('El correo institucional, CURP o RFC ya está registrado.'); window.history.back();</script>");
     }
 
-    // 5. Encriptar contraseña (IMPORTANTE para producción)
-    // Para desarrollo, mantenemos texto plano. Para producción descomenta:
-    // $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $password_hash = $password; // Para desarrollo
+    // 5. Encriptar contraseña
+    $password_hash = $password; // Para desarrollo - texto plano
+    // Para producción: $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    // 6. INSERTAR en la base de datos
+    // 6. INSERTAR en la base de datos - CORRECCIÓN: Campos nuevos
     $sql = "INSERT INTO usuario 
-            (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2)";
+            (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol, habilitado) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 1)";
     
     $stmt = $pdo->prepare($sql);
     
@@ -119,20 +122,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nuevo_id = $pdo->lastInsertId();
             
             // AUDITORÍA: Registrar creación de usuario exitosa
-            registrar_auditoria(
-                'Registro de nuevo usuario',
-                sprintf(
-                    "Nuevo usuario registrado: %s %s %s (ID: %d, Correo: %s, Tel: %s, CURP: %s)",
-                    $nombre,
-                    $paterno,
-                    $materno,
-                    $nuevo_id,
-                    $institucional,
-                    $telefono,
-                    $curp
-                ),
-                $nuevo_id // Usamos el ID del nuevo usuario como quien realiza la acción
-            );
+            if (function_exists('registrar_auditoria')) {
+                registrar_auditoria(
+                    'Registro de nuevo usuario',
+                    sprintf(
+                        "Nuevo usuario registrado: %s %s %s (ID: %d, Correo: %s, Tel: %s, CURP: %s)",
+                        $nombre,
+                        $paterno,
+                        $materno,
+                        $nuevo_id,
+                        $institucional,
+                        $telefono,
+                        $curp
+                    ),
+                    $nuevo_id
+                );
+            }
             
             // Mostrar mensaje de éxito
             echo "<script>
@@ -146,12 +151,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
     } catch (PDOException $e) {
         // Auditar error en registro
-        registrar_auditoria(
-            'Error en registro de usuario',
-            'Error de base de datos para: ' . $institucional . ' - ' . $e->getMessage()
-        );
+        if (function_exists('registrar_auditoria')) {
+            registrar_auditoria(
+                'Error en registro de usuario',
+                'Error de base de datos para: ' . $institucional . ' - ' . $e->getMessage()
+            );
+        }
         
-        // Mostrar error
         echo "<script>
             alert('Error al guardar en la base de datos.\\nPor favor, intenta nuevamente.');
             window.history.back();
@@ -159,11 +165,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         error_log("Error en registro: " . $e->getMessage());
         
     } catch (Exception $e) {
-        // Auditar error general
-        registrar_auditoria(
-            'Error en registro de usuario',
-            'Error general para: ' . $institucional . ' - ' . $e->getMessage()
-        );
+        if (function_exists('registrar_auditoria')) {
+            registrar_auditoria(
+                'Error en registro de usuario',
+                'Error general para: ' . $institucional . ' - ' . $e->getMessage()
+            );
+        }
         
         echo "<script>
             alert('Ocurrió un error inesperado.\\nPor favor, intenta nuevamente.');
@@ -173,7 +180,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
 } else {
-    // Si no es POST, redirigir al formulario
     header("Location: registro.php");
     exit();
 }
