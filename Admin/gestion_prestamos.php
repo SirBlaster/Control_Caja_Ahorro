@@ -1,159 +1,132 @@
+<?php
+// Página actual
+$pagina = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($pagina < 1) $pagina = 1;
+
+// Registros por página
+$por_pagina = 20;
+$offset = ($pagina - 1) * $por_pagina;
+
+// Obtener préstamos
+require_once __DIR__ . '/acciones/obtener_prestamos.php';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
     <title>Gestión de Préstamos - Administrador</title>
-    <!-- Bootstrap (local en tu proyecto) -->
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="../css/admin.css" />
+
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <body>
+
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 
-        <div class="header-center-title">
+        <div>
             <h2 class="mb-0">Administrador</h2>
         </div>
 
         <div class="user-info d-flex align-items-center">
             <i class="bi bi-person-circle user-icon me-2"></i>
-            <span class="user-name me-3">Sánchez Cortes Felipe Martin</span>
-            <button class="btn btn-logout" id="btnLogout">
+            <span class="me-3">Administrador</span>
+            <button class="btn btn-danger btn-sm" id="btnLogout">
                 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
             </button>
-
-            <script>
-            document.getElementById("btnLogout").addEventListener("click", function() {
-                if (confirm("¿Deseas cerrar sesión?")) {
-                    window.location.href = "../logout.php";
-                }
-            });
-            </script>
         </div>
     </div>
 
-    <div class="container-fluid main-content">
+    <div class="container-fluid mt-4">
 
-        <h1 class="page-title">Gestión de Préstamos</h1>
+        <a href="./inicio.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
 
-        <div class="card-container">
-            <div class="mb-3">
-                <a href="./inicio.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
-                </a>
-            </div>
+        <h2 class="mb-3">Solicitudes de préstamos pendientes</h2>
 
-            <div class="content-card">
-                <h4 class="card-heading">Solicitudes de préstamos pendientes</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Solicitante</th>
+                        <th>Fecha</th>
+                        <th>Monto solicitado</th>
+                        <th>Total a pagar</th>
+                        <th>Plazo (quincenas)</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                <div class="table-responsive">
-                    <table class="table custom-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Solicitante</th>
-                                <th>Fecha de solicitud</th>
-                                <th>Monto solicitado</th>
-                                <th>Plazo (Quincenas)</th>
-                                <th>Capacidad de pago</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1A</td>
-                                <td>Joaquín Cázares</td>
-                                <td>24/11/2025</td>
-                                <td>$5,000.00</td>
-                                <td>10</td>
-                                <td>Suficiente</td>
-                                <td><span class="badge status-pending">Pendiente</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <div class="d-flex gap-1 mb-1 justify-content-center">
-                                            <button class="btn-action btn-approve">Aprobar</button>
-                                            <button class="btn-action btn-reject">Rechazar</button>
-                                        </div>
-                                        <button class="btn-action btn-details w-100">Ver detalles</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2B</td>
-                                <td>Diego Huerta</td>
-                                <td>23/11/2025</td>
-                                <td>$4,000.00</td>
-                                <td>5</td>
-                                <td>Límite</td>
-                                <td><span class="badge status-pending">Pendiente</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <div class="d-flex gap-1 mb-1 justify-content-center">
-                                            <button class="btn-action btn-approve">Aprobar</button>
-                                            <button class="btn-action btn-reject">Rechazar</button>
-                                        </div>
-                                        <button class="btn-action btn-details w-100">Ver detalles</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3C</td>
-                                <td>Ángel Hernández</td>
-                                <td>22/11/2025</td>
-                                <td>$3,000.00</td>
-                                <td>20</td>
-                                <td>Suficiente</td>
-                                <td><span class="badge status-pending">Pendiente</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <div class="d-flex gap-1 mb-1 justify-content-center">
-                                            <button class="btn-action btn-approve">Aprobar</button>
-                                            <button class="btn-action btn-reject">Rechazar</button>
-                                        </div>
-                                        <button class="btn-action btn-details w-100">Ver detalles</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4D</td>
-                                <td>Juan Bello</td>
-                                <td>21/11/2025</td>
-                                <td>$2,000.00</td>
-                                <td>15</td>
-                                <td>Suficiente</td>
-                                <td><span class="badge status-pending">Pendiente</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <div class="d-flex gap-1 mb-1 justify-content-center">
-                                            <button class="btn-action btn-approve">Aprobar</button>
-                                            <button class="btn-action btn-reject">Rechazar</button>
-                                        </div>
-                                        <button class="btn-action btn-details w-100">Ver detalles</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <?php if (count($prestamos) > 0): ?>
+                    <?php foreach ($prestamos as $p): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($p['solicitante']) ?></td>
+                        <td><?= date('d/m/Y', strtotime($p['fecha_solicitud'])) ?></td>
+                        <td>$<?= number_format($p['monto_solicitado'], 2) ?></td>
+                        <td><strong>$<?= number_format($p['total_a_pagar'], 2) ?></strong></td>
+                        <td><?= $p['plazo_quincenas'] ?></td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                <?= htmlspecialchars($p['estado']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-center">
+                                <form action="acciones/aprobar_prestamo.php" method="POST">
+                                    <input type="hidden" name="id" value="<?= $p['id_solicitud_prestamo'] ?>">
+                                    <button class="btn btn-success btn-sm">Aprobar</button>
+                                </form>
 
-                <div class="pagination-container">
-                    <button class="btn-page"><i class="bi bi-caret-left-fill"></i>⏪</button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page"><i class="bi bi-caret-right-fill"></i>⏩</button>
-                </div>
+                                <form action="acciones/rechazar_prestamo.php" method="POST">
+                                    <input type="hidden" name="id" value="<?= $p['id_solicitud_prestamo'] ?>">
+                                    <button class="btn btn-danger btn-sm">Rechazar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="7">No hay solicitudes pendientes</td>
+                    </tr>
+                    <?php endif; ?>
 
-            </div>
+                </tbody>
+            </table>
         </div>
+
+        <!-- PAGINACIÓN -->
+        <nav>
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item <?= $pagina <= 1 ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?page=<?= $pagina - 1 ?>">Anterior</a>
+                </li>
+
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                <li class="page-item <?= $i == $pagina ? 'active' : '' ?>">
+                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                </li>
+                <?php endfor; ?>
+
+                <li class="page-item <?= $pagina >= $total_paginas ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?page=<?= $pagina + 1 ?>">Siguiente</a>
+                </li>
+
+            </ul>
+        </nav>
+
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
