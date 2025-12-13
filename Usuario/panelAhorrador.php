@@ -23,17 +23,23 @@ $actividades = obtener_actividades_recientes(10);
 <body>
 
     <header class="app-header">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-                <!-- RUTA LOCAL (entorno): /mnt/data/menuprincipal_Ahorrador.jpg
-          En tu proyecto apunta a: img/logo.png o img/menuprincipal_Ahorrador.jpg según donde la guardes -->
-                <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
-                <span class="brand-name">SETDITSX - Sindicato ITSX</span>
+        <div class="header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
+                <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
             </div>
 
-            <div class="user-actions d-flex align-items-center gap-3">
-                <p class="user-name"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            <div class="user-info">
+                <i class="bi bi-person-square user-icon"></i>
+                <div class="user-details">
+                    <p class="user-name"><?php echo get_user_name(); ?></p>
+                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+                </div>
+                <form action="../logout.php" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-logout">
+                        <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
     </header>

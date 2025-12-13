@@ -55,7 +55,7 @@
             </div>
 
             <button type="submit" class="btn btn-golden">Ingresar</button>
-            <a href="./includes/registro.php" class="register-link">Registrarme</a>
+            <a href="registro.php" class="register-link">Registrarme</a>
         </form>
     </main>
 
