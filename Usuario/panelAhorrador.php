@@ -1,7 +1,6 @@
 <?php
 require_once '../includes/init.php';
 secure_session_start();
-check_login(2);
 require_once '../includes/Usuario/logica_panel.php';
 ?>
 <!doctype html>

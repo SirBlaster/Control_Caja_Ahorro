@@ -3,7 +3,7 @@ session_start();
 require_once '../includes/init.php';
 
 // 1. Seguridad
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
+if (!isset($_SESSION['id_usuario']) ) {
     header("Location: ../login.php");
     exit();
 }

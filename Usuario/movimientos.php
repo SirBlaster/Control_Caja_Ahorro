@@ -1,7 +1,6 @@
 <?php
 require_once '../includes/init.php';
 secure_session_start();
-check_login(2);
 ?>
 <!doctype html>
 <html lang="es">
