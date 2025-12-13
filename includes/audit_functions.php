@@ -4,7 +4,7 @@
 /**
  * Obtiene las actividades recientes del sistema - VERSIÓN SIMPLE
  */
-function obtener_actividades_recientes($limite = 10) {
+function obtener_actividades_recientes($limite = 5) {
     global $pdo;
 
     try {
