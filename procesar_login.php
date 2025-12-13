@@ -122,13 +122,13 @@ function redirectByRole($role)
     error_log("DEBUG redirectByRole: Redirigiendo rol $role");
     
     switch ($role) {
-        case 1: // Admin
-            error_log("DEBUG: Redirigiendo a Admin/Inicio.php");
-            header("Location: Admin/Inicio.php");
-            break;
-        case 2: // Ahorrador
+        case 1: // Ahorrador
             error_log("DEBUG: Redirigiendo a Usuario/panelAhorrador.php");
             header("Location: Usuario/panelAhorrador.php");
+            break;
+        case 2: // Admin
+            error_log("DEBUG: Redirigiendo a Admin/Inicio.php");
+            header("Location: Admin/Inicio.php");
             break;
         case 3: // SuperUsuario
             error_log("DEBUG: Redirigiendo a SuperUsuario/Inicio.php");
