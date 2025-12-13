@@ -67,18 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     error_log("DEBUG: Sesión creada - ID: " . $_SESSION['id_usuario'] . ", Rol: " . $_SESSION['id_rol']);
 
         // D. REDIRECCIÓN SEGÚN ROL
-<<<<<<< HEAD
         switch ($usuario['id_rol']) {
             case 1: // Ahorrador
                 header("Location: Usuario/panelAhorrador.php");
-=======
-        switch ($usuario['Id_Rol']) {
-            case 1: // Admin
-                header("Location: ../Admin/Inicio.php");
-                break;
-            case 2: // Ahorrador
-                header("Location: ../Usuario/panelAhorrador.php");
->>>>>>> fd404ec8bdd6abfd3e6bb8a42ba96cf72f68b447
                 break;
             case 2: // Admin
                 header("Location: Admin/Inicio.php");
