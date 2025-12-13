@@ -1,6 +1,6 @@
 <?php
 // ================== PROCESAR REGISTRO ==================
-require_once __DIR__ . '/init.php';
+require_once '/init.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../registro.php");

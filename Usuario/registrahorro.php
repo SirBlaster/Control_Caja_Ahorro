@@ -3,7 +3,7 @@ session_start();
 require_once '../includes/init.php';
 
 // 1. Seguridad
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
+if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../login.php");
     exit();
 }
@@ -11,22 +11,20 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
 $id_usuario = $_SESSION['id_usuario'];
 
 // 2. Obtener datos del usuario
-$stmt = $pdo->prepare("SELECT Nombre, Paterno, Materno FROM Usuarios WHERE Id_Ahorrador = ?");
+$stmt = $pdo->prepare("SELECT nombre, apellido_paterno, apellido_materno FROM usuario WHERE id_usuario = ?");
 $stmt->execute([$id_usuario]);
 $user = $stmt->fetch();
-$nombre_completo = $user['Nombre'] . " " . $user['Paterno'] . " " . $user['Materno'];
+$nombre_completo = $user['nombre'] . " " . $user['apellido_paterno'] . " " . $user['apellido_materno'];
 
-// ==========================================
-// 3. VERIFICACIÓN DE ESTADO (Lógica Nueva)
-// ==========================================
+
 $puede_solicitar = true;
 $mensaje_estado = "";
 $clase_alerta = "";
 
 // Buscamos la ÚLTIMA solicitud hecha por este usuario
 $sqlEstado = "SELECT Id_Estado, Fecha FROM Solicitud_Ahorro 
-              WHERE Id_Ahorrador = ? 
-              ORDER BY Id_SolicitudAhorro DESC LIMIT 1";
+              WHERE id_usuario = ? 
+              ORDER BY id_solicitud_ahorro DESC LIMIT 1";
 $stmtEstado = $pdo->prepare($sqlEstado);
 $stmtEstado->execute([$id_usuario]);
 $ultima_solicitud = $stmtEstado->fetch();

@@ -1,7 +1,6 @@
 <?php
 require_once '../includes/init.php'; 
 secure_session_start(); 
-check_login(2); // Rol 2 = Ahorrador (Si pones 3 te saldrá error de permisos)
 require_once '..\includes\Usuario\logica_solicitudes.php';
 ?>
 <!DOCTYPE html>
