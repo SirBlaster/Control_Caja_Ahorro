@@ -64,7 +64,7 @@ $actividades = obtener_actividades_recientes(10);
         <section class="actions mb-4">
             <h6 class="section-title">ACCIONES DEL AHORRADOR</h6>
             <div class="d-flex justify-content-center gap-3 flex-wrap my-3">
-                <a href="solicitud-prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo
+                <a href="solicitud_prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo
                 </a>
                 <a href="registrahorro.php" class="btn btn-warning px-4 rounded-pill"> Solicitar ahorro / Registrar
                     nómina </a>
