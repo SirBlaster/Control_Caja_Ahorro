@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../includes/conexion.php';
+require_once __DIR__ . '/../../includes/init.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id'])) {
     header('Location: ../gestion_prestamos.php');

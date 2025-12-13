@@ -9,6 +9,11 @@ $offset = ($pagina - 1) * $por_pagina;
 
 // Obtener préstamos
 require_once __DIR__ . '/acciones/obtener_prestamos.php';
+
+require_once '../includes/init.php';
+
+secure_session_start();
+check_login(2);
 ?>
 
 <!DOCTYPE html>
@@ -35,12 +40,25 @@ require_once __DIR__ . '/acciones/obtener_prestamos.php';
             <h2 class="mb-0">Administrador</h2>
         </div>
 
-        <div class="user-info d-flex align-items-center">
-            <i class="bi bi-person-circle user-icon me-2"></i>
-            <span class="me-3">Administrador</span>
-            <button class="btn btn-danger btn-sm" id="btnLogout">
-                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-            </button>
+        <div class="user-info">
+            <i class="bi bi-person-square user-icon"></i>
+
+            <div class="user-details">
+                <p class="user-name">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
+            </div>
+
+            <!-- CERRAR SESIÓN -->
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    Cerrar Sesión
+                </button>
+            </form>
         </div>
     </div>
 
