@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // Mostrar mensaje de éxito
             echo "<script>
-                alert('¡Registro Exitoso!\\nTu cuenta ha sido creada correctamente.\\nID de usuario: $nuevo_id');
+                alert('¡Registro Exitoso!\\nTu cuenta ha sido creada correctamente.');
                 window.location.href = 'login.php';
             </script>";
             
