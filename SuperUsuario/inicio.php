@@ -5,7 +5,7 @@ secure_session_start();
 check_login(3);
 
 // Obtener actividades recientes
-$actividades = obtener_actividades_recientes(10);
+$actividades = obtener_actividades_recientes(5);
 ?>
 <!DOCTYPE html>
 <html lang="en">
