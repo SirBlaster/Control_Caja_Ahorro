@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS usuario (
 
 
 INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) VALUES
-('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 1),
-('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 2);
+('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 2),
+('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 1);
 
 CREATE TABLE IF NOT EXISTS ahorro (
     id_ahorro INT NOT NULL AUTO_INCREMENT,

@@ -16,26 +16,18 @@ require_once '../includes/Usuario/logica_panel.php';
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
-                <span class="fw-bold text-dark">Historial de Solicitudes</span>
-            </a>
+    <header class="app-header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <!-- RUTA LOCAL (entorno): /mnt/data/menuprincipal_Ahorrador.jpg
+          En tu proyecto apunta a: img/logo.png o img/menuprincipal_Ahorrador.jpg según donde la guardes -->
+                <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
+                <span class="brand-name">SETDITSX - Sindicato ITSX</span>
+            </div>
 
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-none d-md-block text-end">
-                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
-                        <?php echo get_user_name(); ?>
-                    </div>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-                </form>
-                
+            <div class="user-actions d-flex align-items-center gap-3">
+                <p class="user-name"><?php echo get_user_name(); ?></p>
+                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
             </div>
         </div>
     </nav>
