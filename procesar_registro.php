@@ -1,6 +1,6 @@
 <?php
 // procesar_registro.php
-require_once 'includes/init.php';
+require_once 'init.php'; // Cambiado a init.php para tener todas las funciones
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     

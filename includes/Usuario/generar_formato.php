@@ -1,11 +1,10 @@
 <?php
-// Usuario/generar_formato.php
-ob_start(); // Iniciar buffer para evitar errores
-require('../includes/fpdf/fpdf.php');
-require('../includes/conexion.php');
+// includes/Usuario/generar_formato.php
+ob_start();
+require('../fpdf/fpdf.php');
+require('../conexion.php');
 session_start();
 
-// Ocultar errores para que no salgan en el PDF
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 ini_set('display_errors', 0);
 
@@ -37,17 +36,19 @@ $fecha_texto = "Xalapa, Ver. a " . date('d') . " de " . $meses[date('n')-1] . " 
 function num2letras($num) {
     if (class_exists('NumberFormatter')) {
        $fmt = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-       return strtoupper($fmt->format($num)) . "";
+       return strtoupper($fmt->format($num));
     }
-    return "CANTIDAD EN LETRAS M.N.";
+    return "CANTIDAD EN LETRAS";
 }
 $monto_letras = num2letras($data['Monto']);
 function c($t) { return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $t); }
 
-// --- GENERACIÓN DEL PDF ---
+// --- PDF ---
 class PDF extends FPDF {
     function Header() {
-        if(file_exists('../img/NewLogo - 1.png')) $this->Image('../img/NewLogo - 1.png', 10, 5, 25);
+        if(file_exists('../../img/NewLogo - 1.png')) {
+            $this->Image('../../img/NewLogo - 1.png', 10, 5, 25);
+        }
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 4, 'SETDITSX', 0, 1, 'C');
         $this->SetFont('Arial', '', 8);
@@ -82,8 +83,11 @@ $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(40, 10, "$ " . $monto_numerico, 1, 0, 'C'); 
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(5);
-$pdf->MultiCell(0, 10, c( $monto_letras . " pesos quincenales, con el concepto CAJA DE AHORRO SETDITSX"), 0, 'L');
+$pdf->MultiCell(0, 10, c("( " . $monto_letras . " PESOS 00/100 M.N. )"), 0, 'L');
 $pdf->Ln(2);
+$pdf->SetFont('Arial', '', 11);
+$pdf->Cell(0, 10, c("pesos quincenales, con el concepto CAJA DE AHORRO SETDITSX"), 0, 1, 'L');
+$pdf->Ln(5);
 $pdf->MultiCell(0, 7, c("Acepto que el descuento sea efectivo inmediato a partir de la primera quincena de diciembre de 2025."), 0, 'J');
 $pdf->Ln(2);
 $pdf->MultiCell(0, 7, c("No omito mencionar que la presente solicitud se hace de manera voluntaria, sin error, dolo o mala fe y que el (ella) consiente lo que la presente contiene."), 0, 'J');
@@ -104,74 +108,79 @@ $pdf->Cell(0, 4, c('D5 Comité de Administración de la Caja de Ahorro SETDITSX.
 
 
 // ==========================================
-// AQUÍ ESTÁ LA LÓGICA DE GUARDADO Y REDIRECCIÓN
+// 2. GUARDADO FÍSICO
 // ==========================================
-
-// 1. Preparar ruta
 $nombre_pdf = 'Solicitud_' . $id_solicitud . '_' . $data['RFC'] . '.pdf';
-$ruta_guardado = '../uploads/solicitudes/' . $nombre_pdf;
 
-if (!file_exists('../uploads/solicitudes/')) {
-    mkdir('../uploads/solicitudes/', 0777, true);
-}
+// Ruta Disco Duro (Para PHP)
+$ruta_raiz = dirname(dirname(__DIR__)); 
+$ruta_fisica = $ruta_raiz . '/uploads/solicitudes/' . $nombre_pdf;
+$carpeta_solicitudes = $ruta_raiz . '/uploads/solicitudes/';
 
-// 2. Guardar el archivo FÍSICAMENTE en el servidor
-$pdf->Output('F', $ruta_guardado);
+if (!file_exists($carpeta_solicitudes)) mkdir($carpeta_solicitudes, 0777, true);
 
-// 3. ACTUALIZAR BASE DE DATOS (Quitamos el "GENERANDO...")
+$pdf->Output('F', $ruta_fisica); // Guardar en disco
+
+// Actualizar BD
 $sqlUpdate = "UPDATE Solicitud_Ahorro SET ArchivoSolicitud = ? WHERE Id_SolicitudAhorro = ?";
 $stmtUp = $pdo->prepare($sqlUpdate);
 $stmtUp->execute([$nombre_pdf, $id_solicitud]);
 
-// 4. GENERAR PÁGINA HTML DE ÉXITO (Puente)
-ob_end_clean(); // Limpiamos cualquier basura anterior
+
+// ==========================================
+// 3. RUTA WEB PARA DESCARGA (CORREGIDA)
+// ==========================================
+// En lugar de ../../ usamos la ruta absoluta del proyecto.
+// Esto asume que tu carpeta en Laragon se llama "ControlCajadeAhorro"
+$ruta_web = '/ControlCajadeAhorro/uploads/solicitudes/' . $nombre_pdf;
+
+ob_end_clean(); 
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Solicitud Exitosa</title>
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <title>Procesando Solicitud</title>
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
     <style>
-        body { background-color: #f4f6f9; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .card-success { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
-        .icon-box { color: #28a745; font-size: 60px; margin-bottom: 20px; }
+        body { background: #f0f2f5; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+        .card-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 100%; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #d18819; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="card-success">
-        <div class="icon-box">
-            <i class="bi bi-check-circle-fill"></i> &#10004; </div>
-        <h2 class="mb-3">¡Solicitud Enviada!</h2>
-        <p class="text-muted">Hemos guardado tu información y tu formato se está descargando automáticamente.</p>
+    <div class="card-box">
+        <div class="spinner"></div>
+        <h3 class="text-success mb-3">¡Solicitud Exitosa!</h3>
+        <p class="text-muted mb-4">El archivo se ha generado en el servidor.</p>
         
-        <div class="alert alert-info mt-4">
-            Redirigiendo al menú principal en <span id="contador">3</span> segundos...
-        </div>
-
-        <a id="linkDescarga" href="<?php echo $ruta_guardado; ?>" download="<?php echo $nombre_pdf; ?>" style="display:none;"></a>
+        <a id="btnDescarga" href="<?php echo $ruta_web; ?>" download="<?php echo $nombre_pdf; ?>" target="_blank" class="btn btn-primary w-100 mb-3">
+            <i class="bi bi-download"></i> DESCARGAR AHORA
+        </a>
+        
+        <small class="text-muted d-block mt-3">Redirigiendo al menú en <span id="segundos">5</span> segundos...</small>
     </div>
 
     <script>
-        // Paso A: Descargar el archivo inmediatamente
-        document.getElementById('linkDescarga').click();
+        // 1. INTENTO DE CLIC AUTOMÁTICO
+        setTimeout(() => {
+            const btn = document.getElementById('btnDescarga');
+            btn.click();
+        }, 1000);
 
-        // Paso B: Cuenta regresiva y redirección
-        let segundos = 3;
-        const spanContador = document.getElementById('contador');
-        
-        const intervalo = setInterval(() => {
-            segundos--;
-            spanContador.textContent = segundos;
-            
-            if (segundos <= 0) {
-                clearInterval(intervalo);
-                // Paso C: ¡AQUÍ TE REGRESA AL MENÚ!
-                window.location.href = 'panelAhorrador.php'; 
+        // 2. REDIRECCIÓN AL MENÚ
+        let count = 5;
+        const display = document.getElementById('segundos');
+        const timer = setInterval(() => {
+            count--;
+            display.textContent = count;
+            if (count <= 0) {
+                clearInterval(timer);
+                window.location.href = '../../Usuario/panelAhorrador.php'; 
             }
         }, 1000);
     </script>
-
 </body>
 </html>
