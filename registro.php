@@ -20,7 +20,7 @@
         
         <h2 class="text-center mb-4">Registro de Nuevo Socio</h2>
 
-        <form action="includes/procesar_registro.php" method="POST">
+        <form action="procesar_registro.php" method="POST">
 
             <h5 class="section-title border-bottom pb-2 mb-3">Datos Personales</h5>
             <div class="row g-3 mb-3">
