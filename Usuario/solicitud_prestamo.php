@@ -3,7 +3,7 @@
 require_once '../includes/init.php';
 
 // 1. Seguridad: Verificar sesión y rol (Ahorrador o SuperUsuario)
-if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [2, 3])) {
+if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [1])) {
     header("Location: ../login.php");
     exit();
 }
