@@ -1,12 +1,13 @@
 <?php
 // includes/admin_user_handlers.php
+// Funciones para la gestión general de usuarios
 
 /**
  * Obtiene todos los usuarios excepto superadministradores (rol 3)
  */
 function obtener_usuarios_admin()
 {
-    global $pdo; // Cambié $conn por $pdo (según tu conexión)
+    global $pdo;
 
     $sql = "SELECT u.id_usuario as id, 
                    u.nombre, 
@@ -17,13 +18,13 @@ function obtener_usuarios_admin()
                    u.correo_personal as email_personal,
                    u.telefono,
                    u.id_rol as rol_id,
-                   r.rol as nombre_rol,
+                   COALESCE(r.rol, 'No asignado') as nombre_rol,
                    u.rfc,
                    u.curp,
                    u.tarjeta,
                    u.habilitado
             FROM usuario u
-            INNER JOIN rol r ON u.id_rol = r.id_rol
+            LEFT JOIN rol r ON u.id_rol = r.id_rol
             WHERE u.id_rol IN (1, 2)  -- Solo administradores (1) y ahorradores (2)
             ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre";
     
@@ -42,7 +43,7 @@ function obtener_usuarios_admin()
  */
 function cambiar_estado_usuario($id_usuario)
 {
-    global $pdo; // Cambié $conn por $pdo
+    global $pdo;
 
     try {
         // Obtener estado actual
@@ -86,7 +87,7 @@ function cambiar_estado_usuario($id_usuario)
  */
 function cambiar_rol_usuario($id_usuario)
 {
-    global $pdo; // Cambié $conn por $pdo
+    global $pdo;
 
     try {
         // Obtener rol actual
@@ -97,6 +98,11 @@ function cambiar_rol_usuario($id_usuario)
 
         if (!$usuario) {
             return ['success' => false, 'message' => 'Usuario no encontrado'];
+        }
+
+        // Verificar que no sea SuperUsuario (rol 3)
+        if ($usuario['id_rol'] == 3) {
+            return ['success' => false, 'message' => 'No se puede cambiar el rol de un SuperUsuario'];
         }
 
         // Cambiar entre rol 1 (Administrador) y 2 (Ahorrador)
@@ -128,21 +134,32 @@ function cambiar_rol_usuario($id_usuario)
 }
 
 /**
- * Obtiene los datos de un usuario por ID
+ * Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
  */
 function obtener_usuario_por_id($id_usuario)
 {
-    global $pdo; // Cambié $conn por $pdo
+    global $pdo;
 
-    $sql = "SELECT u.*, r.rol as nombre_rol 
+    $sql = "SELECT u.*, COALESCE(r.rol, 'No asignado') as nombre_rol 
             FROM usuario u 
-            INNER JOIN rol r ON u.id_rol = r.id_rol 
-            WHERE u.id_usuario = ?";
+            LEFT JOIN rol r ON u.id_rol = r.id_rol 
+            WHERE u.id_usuario = ? AND u.id_rol != 3";
 
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id_usuario]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Si el rol viene vacío, asignar manualmente
+        if ($usuario && empty($usuario['nombre_rol']) && isset($usuario['id_rol'])) {
+            if ($usuario['id_rol'] == 1) {
+                $usuario['nombre_rol'] = 'Administrador';
+            } elseif ($usuario['id_rol'] == 2) {
+                $usuario['nombre_rol'] = 'Ahorrador';
+            }
+        }
+        
+        return $usuario;
     } catch (PDOException $e) {
         error_log("Error al obtener usuario: " . $e->getMessage());
         return null;
@@ -150,46 +167,77 @@ function obtener_usuario_por_id($id_usuario)
 }
 
 /**
- * Actualiza los datos de un usuario
+ * Actualiza los datos de un usuario (versión mejorada)
  */
-function actualizar_usuario($id_usuario, $datos)
+function actualizar_usuario_general($id_usuario, $datos)
 {
-    global $pdo; // Cambié $conn por $pdo
+    global $pdo;
 
     try {
-        $sql = "UPDATE usuario SET 
-                nombre = :nombre,
-                apellido_paterno = :paterno,
-                apellido_materno = :materno,
-                correo_institucional = :email,
-                correo_personal = :email_personal,
-                telefono = :telefono,
-                rfc = :rfc,
-                curp = :curp,
-                tarjeta = :tarjeta,
-                id_rol = :rol_id,
-                habilitado = :habilitado
-                WHERE id_usuario = :id";
+        // Validar datos requeridos
+        if (empty($datos['nombre']) || empty($datos['paterno']) || 
+            empty($datos['correo_institucional']) || !isset($datos['id_rol'])) {
+            return ['success' => false, 'message' => 'Datos requeridos faltantes'];
+        }
+
+        // Verificar que no sea SuperUsuario
+        $usuario_actual = obtener_usuario_por_id($id_usuario);
+        if (!$usuario_actual) {
+            return ['success' => false, 'message' => 'Usuario no encontrado o es SuperUsuario'];
+        }
+
+        // Verificar correo único si cambió
+        if ($datos['correo_institucional'] != $usuario_actual['correo_institucional']) {
+            $stmt = $pdo->prepare("SELECT id_usuario FROM usuario WHERE correo_institucional = ? AND id_usuario != ?");
+            $stmt->execute([$datos['correo_institucional'], $id_usuario]);
+            if ($stmt->rowCount() > 0) {
+                return ['success' => false, 'message' => 'El correo institucional ya está en uso'];
+            }
+        }
+
+        // Construir SQL dinámico
+        $campos = [
+            'nombre = :nombre',
+            'apellido_paterno = :paterno',
+            'apellido_materno = :materno',
+            'correo_institucional = :email',
+            'correo_personal = :email_personal',
+            'telefono = :telefono',
+            'rfc = :rfc',
+            'curp = :curp',
+            'id_rol = :rol_id',
+            'habilitado = :habilitado'
+        ];
+
+        $sql = "UPDATE usuario SET " . implode(', ', $campos) . " WHERE id_usuario = :id";
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([
+        
+        // Ejecutar con valores por defecto si no existen
+        $resultado = $stmt->execute([
             ':nombre' => $datos['nombre'],
             ':paterno' => $datos['paterno'],
-            ':materno' => $datos['materno'],
-            ':email' => $datos['email'],
-            ':email_personal' => $datos['email_personal'],
-            ':telefono' => $datos['telefono'],
-            ':rfc' => $datos['rfc'],
-            ':curp' => $datos['curp'],
-            ':tarjeta' => $datos['tarjeta'],
-            ':rol_id' => $datos['rol_id'],
-            ':habilitado' => $datos['habilitado'],
+            ':materno' => $datos['materno'] ?? '',
+            ':email' => $datos['correo_institucional'],
+            ':email_personal' => $datos['correo_personal'] ?? '',
+            ':telefono' => $datos['telefono'] ?? '',
+            ':rfc' => $datos['rfc'] ?? '',
+            ':curp' => $datos['curp'] ?? '',
+            ':rol_id' => $datos['id_rol'],
+            ':habilitado' => $datos['habilitado'] ?? 1,
             ':id' => $id_usuario
         ]);
 
+        if (!$resultado) {
+            return ['success' => false, 'message' => 'Error al ejecutar la consulta'];
+        }
+
         // Registrar actividad
         if (function_exists('registrar_auditoria')) {
-            $detalle = "Datos modificados para usuario ID: $id_usuario";
+            $detalle = "Usuario ID: $id_usuario actualizado - " . 
+                      "Nombre: " . $datos['nombre'] . " " . $datos['paterno'] . 
+                      ", Rol: " . $datos['id_rol'] . 
+                      ", Estado: " . ($datos['habilitado'] ?? 1);
             registrar_auditoria("Usuario actualizado", $detalle, $_SESSION['id_usuario'] ?? null);
         }
 
@@ -198,6 +246,48 @@ function actualizar_usuario($id_usuario, $datos)
     } catch (PDOException $e) {
         error_log("Error al actualizar usuario: " . $e->getMessage());
         return ['success' => false, 'message' => 'Error al actualizar usuario: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Función segura para obtener datos de usuario con todos los campos
+ */
+function obtener_usuario_completo($id_usuario)
+{
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                u.*, 
+                COALESCE(r.rol, 'No asignado') as rol,
+                COALESCE(u.telefono, '') as telefono,
+                COALESCE(u.rfc, '') as rfc,
+                COALESCE(u.curp, '') as curp,
+                COALESCE(u.correo_personal, '') as correo_personal,
+                COALESCE(u.correo_institucional, '') as correo_institucional,
+                COALESCE(u.tarjeta, '') as tarjeta
+            FROM usuario u 
+            LEFT JOIN rol r ON u.id_rol = r.id_rol 
+            WHERE u.id_usuario = ? AND u.id_rol != 3
+        ");
+        $stmt->execute([$id_usuario]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Si no hay rol asignado en la BD, asignar manualmente
+        if ($usuario && $usuario['rol'] == 'No asignado' && isset($usuario['id_rol'])) {
+            if ($usuario['id_rol'] == 1) {
+                $usuario['rol'] = 'Administrador';
+            } elseif ($usuario['id_rol'] == 2) {
+                $usuario['rol'] = 'Ahorrador';
+            }
+        }
+        
+        return $usuario;
+        
+    } catch (PDOException $e) {
+        error_log("Error en obtener_usuario_completo: " . $e->getMessage());
+        return null;
     }
 }
 ?>
