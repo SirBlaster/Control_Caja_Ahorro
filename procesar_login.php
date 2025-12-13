@@ -2,7 +2,7 @@
 // procesar_login.php
 
 // 1. INCLUIR FUNCIONES Y CONEXIÓN (Lo que hizo tu amigo)
-require_once 'init.php'; 
+require_once 'includes/init.php'; 
 
 // Headers de seguridad básicos
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -60,13 +60,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // D. REDIRECCIÓN SEGÚN ROL
         switch ($usuario['Id_Rol']) {
             case 1: // Admin
-                header("Location: ../Admin/Inicio.php");
+                header("Location: Admin/Inicio.php");
                 break;
             case 2: // Ahorrador
-                header("Location: ../Usuario/panelAhorrador.php");
+                header("Location: Usuario\panelAhorrador.php");
                 break;
             case 3: // SuperUsuario
-                header("Location: ../SuperUsuario/Inicio.php");
+                header("Location: SuperUsuario/Inicio.php");
                 break;
             default:
                 // Rol desconocido

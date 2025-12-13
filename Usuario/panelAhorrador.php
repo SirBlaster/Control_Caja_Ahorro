@@ -119,7 +119,7 @@ require_once '../includes/Usuario/logica_panel.php';
                   </tbody>
                 </table>
         <div class="mt-2">
-          <a href="historial-completo.php" class="text-primary fw-bold"> Ver historial completo</a>
+          <a href="historial_completo.php" class="text-primary fw-bold"> Ver historial completo</a>
         </div>
 
       </div>
