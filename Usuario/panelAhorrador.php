@@ -12,24 +12,53 @@ require_once '../includes/Usuario/logica_panel.php';
 
   <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
 <body>
-
-    <header class="app-header">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-                <!-- RUTA LOCAL (entorno): /mnt/data/menuprincipal_Ahorrador.jpg
-          En tu proyecto apunta a: img/logo.png o img/menuprincipal_Ahorrador.jpg según donde la guardes -->
-                <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
-                <span class="brand-name">SETDITSX - Sindicato ITSX</span>
+  <?php if (isset($_GET['msg'])): ?>
+    <div class="container mt-4">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-left: 5px solid #28a745;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Aviso del sistema</strong><br>
+                    <?php echo htmlspecialchars($_GET['msg']); ?>
+                </div>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+<?php endif; ?>
 
-            <div class="user-actions d-flex align-items-center gap-3">
+<?php if (isset($_GET['error'])): ?>
+    <div class="container mt-4">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-left: 5px solid #dc3545;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Error</strong><br>
+                    <?php echo htmlspecialchars($_GET['error']); ?>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+<?php endif; ?>
+    <header class="header">
+        <div class="brand-container">
+            <img src="../img/LogoHorizontal - 2.png" alt="Logo" style="height: 50px;">
+            <h4>SETDITSX</h4>
+        </div>
+        <div class="user-info">
+            <div class="user-details">
                 <p class="user-name"><?php echo get_user_name(); ?></p>
                 <small class="text-muted"><?php echo get_user_role_text(); ?></small>
             </div>
+            <a href="../logout.php" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
         </div>
+    </header>
     </nav>
 
     <br>
