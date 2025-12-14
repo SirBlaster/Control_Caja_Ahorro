@@ -1,6 +1,8 @@
+<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <?php
 // Usuario/solicitud_prestamo.php
 require_once '../includes/init.php';
+
 
 // 1. Seguridad: Verificar sesión y rol (Ahorrador o SuperUsuario)
 if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [1])) {
@@ -55,18 +57,21 @@ $tasa_interes = 0.30;
   <link rel="stylesheet" href="../css/prestamo.css"> </head>
 <body>
 
-  <header class="app-header bg-white border-bottom">
-    <div class="container d-flex align-items-center justify-content-between py-3">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo" style="height: 50px;">
-        <span class="brand-name fw-bold text-primary">SETDITSX - Sindicato ITSX</span>
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <div class="user-name fw-bold"><?php echo htmlspecialchars($nombreUsuario); ?> ▾</div>
-        <a href="../logout.php" class="btn btn-sm btn-outline-danger">Cerrar Sesión</a>
-      </div>
-    </div>
-  </header>
+    <header class="header">
+        <div class="brand-container">
+            <img src="../img/LogoHorizontal - 2.png" alt="Logo" style="height: 50px;">
+            <h4>SETDITSX</h4>
+        </div>
+        <div class="user-info">
+            <div class="user-details">
+                <p class="user-name"><?php echo get_user_name(); ?></p>
+                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            </div>
+            <a href="../logout.php" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </header>
 
   <main class="container my-5">
     
@@ -88,7 +93,7 @@ $tasa_interes = 0.30;
       <div class="col-lg-8">
         <div class="card main-card p-5 shadow-sm border-0">
           <h1 class="card-title text-center mb-4 fw-bold" style="color: #1a237e;">
-              <?php echo $esDiciembre ? "Pre-Solicitud (Lista de Espera)" : "Solicitud de Préstamo"; ?>
+              <?php echo $esDiciembre ? "Pre-Solicitud (Lista de espera)" : "Solicitud de Préstamo"; ?>
           </h1>
 
           <form class="row g-4" action="procesar_prestamo.php" method="POST">

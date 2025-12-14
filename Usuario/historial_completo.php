@@ -7,23 +7,25 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
+
   </head>
 
   <body>
     <!-- Encabezado igual al menú principal -->
-    <header class="app-header">
-      <div class="container d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
-          <span class="brand-name">SETDITSX - Sindicato ITSX</span>
+    <header class="header">
+        <div class="brand-container">
+            <img src="../img/LogoHorizontal - 2.png" alt="Logo" style="height: 50px;">
+            <h4>SETDITSX</h4>
         </div>
+        <div class="user-info">
+            <div class="user-details">
 
-        <div class="user-actions d-flex align-items-center gap-3">
-          <div class="user-name">Sánchez Cortes Felipe Martin ▾</div>
-          <button class="btn btn-outline-primary btn-sm">Cerrar Sesión</button>
+            </div>
+            <a href="../logout.php" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
         </div>
-      </div>
     </header>
 
     <main class="container mt-4">

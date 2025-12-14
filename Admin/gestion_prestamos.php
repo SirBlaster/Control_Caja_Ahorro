@@ -227,7 +227,7 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
 
         <?php if ($bloqueoCierre): ?>
         <div class="alert alert-warning text-center fw-bold shadow-sm">
-            <i class="bi bi-lock-fill"></i> MODO CIERRE DE CAJA ACTIVADO (DICIEMBRE)
+            <i class="bi bi-lock-fill"></i> CIERRE DE CAJA ACTIVADO
         </div>
         <?php endif; ?>
 
