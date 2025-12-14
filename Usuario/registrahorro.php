@@ -38,13 +38,8 @@ if ($ultima_solicitud) {
         $mensaje_estado = "Ya tienes una solicitud en espera de revisión. Por favor espera a que sea atendida.";
         $clase_alerta = "alert-warning";
     }
-    // Estado 2 = Aprobado
-    elseif ($estado == 2) {
-        $puede_solicitar = false;
-        $mensaje_estado = "¡Felicidades! Tu solicitud de ahorro ya fue APROBADA y está activa. No es necesario enviar otra.";
-        $clase_alerta = "alert-success";
-    }
-    // Estado 3 = Rechazado (Permitimos solicitar de nuevo)
+
+    // Estado 2 = Rechazado (Permitimos solicitar de nuevo)
     elseif ($estado == 3) {
         $puede_solicitar = true; // Lo dejamos pasar
         $mensaje_estado = "Tu solicitud anterior fue rechazada. Puedes corregir tus datos y enviar una nueva solicitud aquí.";
