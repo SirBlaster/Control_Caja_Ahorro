@@ -22,6 +22,7 @@ require_once 'admin_user_handlers.php';
 
 require_once __DIR__ . '/admin_functions.php';
 require_once __DIR__ . '/audit_functions.php';
+require_once 'parametros_functions.php';
 // Configuraciones
 date_default_timezone_set('America/Mexico_City');
 
@@ -34,4 +35,5 @@ if (IS_DEV) {
 } else {
     error_reporting(0);
     ini_set('display_errors', 0);
+
 }
