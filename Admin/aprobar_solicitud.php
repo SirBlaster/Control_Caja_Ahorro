@@ -4,7 +4,7 @@ require_once '../includes/init.php';
 require_once '../includes/fpdf/fpdf.php';
 
 // Verificar Admin
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
+if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
     die("Acceso denegado.");
 }
 

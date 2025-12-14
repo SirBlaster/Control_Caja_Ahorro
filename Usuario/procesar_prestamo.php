@@ -49,9 +49,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Mensaje según mes
         $esDiciembre = (intval(date('m')) == 12);
         if ($esDiciembre) {
-            $msg = "✅ Solicitud en LISTA DE ESPERA. Se procesará en Enero.";
+            $msg = "Solicitud en lista de espera. Se procesará la solicitud en Enero.";
         } else {
-            $msg = "✅ Solicitud ENVIADA (Pendiente). Espera la aprobación del administrador.";
+            $msg = "Solicitud envidada. Espera a la aprobación del administrador.";
         }
 
         header("Location: panelAhorrador.php?msg=" . urlencode($msg));
