@@ -13,9 +13,16 @@
 body {
     background-color: var(--bg-light);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: var(--text-dark);
-    padding-top: 80px; /* Espacio para la navbar fija */
-}
+        }
+        .header {
+            background: linear-gradient(to bottom, #ffffff, #e8edf5);
+            padding: 20px 40px;
+            border-bottom: 2px solid #2a3472;
+        }
+        .header h4 {
+            color: #2a3472;
+            font-weight: bold;
+        }
 
 /* --- Navbar Superior --- */
 .navbar-top {
