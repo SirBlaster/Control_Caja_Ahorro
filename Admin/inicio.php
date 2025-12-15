@@ -68,10 +68,10 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
             <!-- Gestión de Ahorradores -->
             <div class="dashboard-card">
+                <div class="card-title">Gestión de usuarios</div>
                 <div class="card-icon">
                     <i class="bi bi-person-fill"></i>
                 </div>
-                <div class="card-title">Gestión de Ahorradores</div>
                 <div class="card-description">
                     Consultar perfiles y registrar nómina
                 </div>
@@ -82,10 +82,10 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
             <!-- Reportes -->
             <div class="dashboard-card">
+                <div class="card-title">Reportes</div>
                 <div class="card-icon">
                     <i class="bi bi-receipt-cutoff"></i>
                 </div>
-                <div class="card-title">Reportes</div>
                 <div class="card-description">Generar y descargar</div>
                 <a href="reportes.php" class="btn btn-manage">
                     Emitir

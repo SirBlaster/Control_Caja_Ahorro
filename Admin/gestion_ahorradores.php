@@ -1,8 +1,7 @@
 <?php
-// SuperUsuario/usuarios.php
 require_once '../includes/init.php';
 secure_session_start();
-check_login(2); // Solo SuperUsuario
+check_login(2); 
 
 // Manejar acciones POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,11 +22,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Obtener usuarios usando la nueva función
-$usuarios = obtener_usuarios_ahorrador();
+// ================== PAGINACIÓN ==================
+$usuarios_por_pagina = 10;
 
-// Obtener actividades recientes
-$actividades = obtener_actividades_recientes(10);
+$pagina_actual = isset($_GET['page']) && is_numeric($_GET['page'])
+    ? (int)$_GET['page']
+    : 1;
+
+$offset = ($pagina_actual - 1) * $usuarios_por_pagina;
+
+// Total de usuarios
+$total_usuarios = contar_usuarios_ahorrador();
+$total_paginas = ceil($total_usuarios / $usuarios_por_pagina);
+
+// Obtener usuarios paginados
+$usuarios = obtener_usuarios_ahorrador($usuarios_por_pagina, $offset);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -36,10 +45,9 @@ $actividades = obtener_actividades_recientes(10);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios - SETDITSX</title>
-    <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css" />
-
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <body>
@@ -89,7 +97,7 @@ $actividades = obtener_actividades_recientes(10);
 
         <div class="search-container mb-3">
             <div class="search-label">Buscar usuario:</div>
-            <input type="text" id="buscarUsuario" class="search-input" placeholder="Nombre, correo o ID"
+            <input type="text" id="buscarUsuario" class="search-input" placeholder="Nombre, RFC ó correo"
                 onkeyup="filtrarUsuarios()">
             <hr class="diviser">
         </div>
@@ -102,8 +110,8 @@ $actividades = obtener_actividades_recientes(10);
             <table class="table table-hover" id="tablaUsuarios">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre completo</th>
+                        <th>Nombre</th>
+                        <th>RFC</th>
                         <th>Correo institucional</th>
                         <th>Rol actual</th>
                         <th>Estado</th>
@@ -114,8 +122,8 @@ $actividades = obtener_actividades_recientes(10);
                     <?php if (!empty($usuarios)): ?>
                     <?php foreach ($usuarios as $usuario): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($usuario['id']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['nombre_completo']); ?></td>
+                        <td><?php echo htmlspecialchars($usuario['rfc']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['email']); ?></td>
                         <td>
                             <span
@@ -138,18 +146,16 @@ $actividades = obtener_actividades_recientes(10);
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <!-- Botón Editar -->
                                 <span>
                                     <a href="../admin/editar_usuario.php?id=<?php echo $usuario['id']; ?>"
                                         class="btn-editar-usuario" title="Editar usuario">
                                         Editar
                                     </a>
                                 </span>
-
-                                </form>
                             </div>
                         </td>
                     </tr>
+
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
@@ -168,26 +174,38 @@ $actividades = obtener_actividades_recientes(10);
         <div class="d-flex justify-content-between align-items-center mt-3">
             <small class="text-muted">
                 <i class="bi bi-info-circle me-1"></i>
-                Total: <?php echo count($usuarios); ?> usuario(s)
+                Total: <?php echo $total_usuarios; ?> usuario(s)
             </small>
-            <div class="legend">
-                <small class="text-muted me-3">
-                    <span class="status-active me-1"></span> Habilitado
-                </small>
-                <small class="text-muted me-3">
-                    <span class="status-inactive me-1"></span> Deshabilitado
-                </small>
-                <small class="text-muted me-2">
-                    <span class="badge badge-admin me-1"></span> Administrador
-                </small>
-                <small class="text-muted">
-                    <span class="badge badge-ahorrador me-1"></span> Ahorrador
-                </small>
-            </div>
         </div>
+        <nav aria-label="Paginación de usuarios">
+            <ul class="pagination justify-content-center mt-3">
+
+                <!-- Anterior -->
+                <li class="page-item <?php echo $pagina_actual <= 1 ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $pagina_actual - 1; ?>">
+                        &laquo;
+                    </a>
+                </li>
+
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                <li class="page-item <?php echo $i == $pagina_actual ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                </li>
+                <?php endfor; ?>
+
+                <!-- Siguiente -->
+                <li class="page-item <?php echo $pagina_actual >= $total_paginas ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $pagina_actual + 1; ?>">
+                        &raquo;
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
     </div>
 
-    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
     <script>
     function filtrarUsuarios() {
         var input = document.getElementById("buscarUsuario");
@@ -195,20 +213,21 @@ $actividades = obtener_actividades_recientes(10);
         var table = document.getElementById("tablaUsuarios");
         var tr = table.getElementsByTagName("tr");
 
-        // Ocultar/mostrar filas
         for (var i = 1; i < tr.length; i++) {
-            var tdNombre = tr[i].getElementsByTagName("td")[1];
+            var tdNombre = tr[i].getElementsByTagName("td")[0];
+            var tdRFC = tr[i].getElementsByTagName("td")[1];
             var tdEmail = tr[i].getElementsByTagName("td")[2];
-            var tdId = tr[i].getElementsByTagName("td")[0];
 
-            if (tdNombre || tdEmail || tdId) {
-                var txtValueNombre = tdNombre.textContent || tdNombre.innerText;
-                var txtValueEmail = tdEmail.textContent || tdEmail.innerText;
-                var txtValueId = tdId.textContent || tdId.innerText;
+            if (tdNombre || tdRFC || tdEmail) {
+                var txtNombre = tdNombre.textContent || tdNombre.innerText;
+                var txtRFC = tdRFC.textContent || tdRFC.innerText;
+                var txtEmail = tdEmail.textContent || tdEmail.innerText;
 
-                if (txtValueNombre.toUpperCase().indexOf(filter) > -1 ||
-                    txtValueEmail.toUpperCase().indexOf(filter) > -1 ||
-                    txtValueId.toUpperCase().indexOf(filter) > -1) {
+                if (
+                    txtNombre.toUpperCase().includes(filter) ||
+                    txtRFC.toUpperCase().includes(filter) ||
+                    txtEmail.toUpperCase().includes(filter)
+                ) {
                     tr[i].style.display = "";
                 } else {
                     tr[i].style.display = "none";
@@ -216,15 +235,9 @@ $actividades = obtener_actividades_recientes(10);
             }
         }
     }
-
-    // Mostrar tooltips para los botones
-    document.addEventListener('DOMContentLoaded', function() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    });
     </script>
+
+
 </body>
 
 </html>

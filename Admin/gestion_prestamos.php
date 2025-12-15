@@ -208,7 +208,7 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
 
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 
@@ -224,7 +224,9 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
     </div>
 
     <div class="card-form">
-
+        <a href="Inicio.php" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Volver al menú principal
+        </a>
         <?php if ($bloqueoCierre): ?>
         <div class="alert alert-warning text-center fw-bold shadow-sm">
             <i class="bi bi-lock-fill"></i> CIERRE DE CAJA ACTIVADO
@@ -296,10 +298,6 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
                 </tbody>
             </table>
         </div>
-
-        <a href="Inicio.php" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver al menú principal
-        </a>
     </div>
 
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
