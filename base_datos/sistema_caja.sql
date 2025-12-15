@@ -327,6 +327,6 @@ ADD COLUMN fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CUR
 -- 2. Actualizar valores por defecto si ya existe la tabla
 UPDATE datos_sistema SET 
     tasa_interes_general = 30.00,
-    rendimiento_anual_ahorros = 5.00,
+    rendimiento_anual_ahorros = 10.00,
     correo_soporte = 'soporte@itsx.com'
 WHERE id_datos = 1;
