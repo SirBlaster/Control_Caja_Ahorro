@@ -190,4 +190,54 @@ function actualizar_admin($id_usuario, $datos) {
         ];
     }
 }
+
+function actualizar_ahorrador(array $datos): bool
+{
+    global $pdo;
+
+    $sql = "
+        UPDATE usuario SET
+            nombre = :nombre,
+            apellido_paterno = :paterno,
+            apellido_materno = :materno,
+            correo_personal = :correo_personal,
+            correo_institucional = :correo_institucional,
+            telefono = :telefono,
+            rfc = :rfc,
+            curp = :curp,
+            habilitado = :habilitado
+    ";
+
+    // Si viene contraseña, agregarla
+    if (isset($datos['password_hash'])) {
+        $sql .= ", contrasena = :password_hash";
+    }
+
+    $sql .= "
+        WHERE id_usuario = :id_usuario
+          AND id_rol = 1
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':nombre', $datos['nombre']);
+    $stmt->bindParam(':paterno', $datos['paterno']);
+    $stmt->bindParam(':materno', $datos['materno']);
+    $stmt->bindParam(':correo_personal', $datos['correo_personal']);
+    $stmt->bindParam(':correo_institucional', $datos['correo_institucional']);
+    $stmt->bindParam(':telefono', $datos['telefono']);
+    $stmt->bindParam(':rfc', $datos['rfc']);
+    $stmt->bindParam(':curp', $datos['curp']);
+    $stmt->bindParam(':habilitado', $datos['habilitado'], PDO::PARAM_INT);
+    $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
+
+    if (isset($datos['password_hash'])) {
+        $stmt->bindParam(':password_hash', $datos['password_hash']);
+    }
+
+    $stmt->execute();
+
+    return $stmt->rowCount() > 0;
+}
+
 ?>

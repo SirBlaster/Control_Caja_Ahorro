@@ -25,7 +25,7 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
     <!-- HEADER -->
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <img src="../img/logoChico.png" alt="SETDITSX" width="70" class="me-3" />
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 

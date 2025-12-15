@@ -38,6 +38,39 @@ function obtener_usuarios_admin()
     }
 }
 
+function obtener_usuarios_ahorrador()
+{
+    global $pdo;
+
+    $sql = "SELECT u.id_usuario as id, 
+                   u.nombre, 
+                   u.apellido_paterno as paterno, 
+                   u.apellido_materno as materno, 
+                   CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as nombre_completo,
+                   u.correo_institucional as email,
+                   u.correo_personal as email_personal,
+                   u.telefono,
+                   u.id_rol as rol_id,
+                   COALESCE(r.rol, 'No asignado') as nombre_rol,
+                   u.rfc,
+                   u.curp,
+                   u.tarjeta,
+                   u.habilitado
+            FROM usuario u
+            LEFT JOIN rol r ON u.id_rol = r.id_rol
+            WHERE u.id_rol = 1
+            ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre";
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error al obtener usuarios: " . $e->getMessage());
+        return [];
+    }
+}
+
 /**
  * Cambia el estado de un usuario (habilitar/deshabilitar)
  */

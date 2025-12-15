@@ -2,6 +2,9 @@
 <?php
 // Usuario/solicitud_prestamo.php
 require_once '../includes/init.php';
+secure_session_start();
+check_login(1);
+
 
 // 1. Seguridad: Verificar sesión y rol (Ahorrador o SuperUsuario)
 if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [1])) {

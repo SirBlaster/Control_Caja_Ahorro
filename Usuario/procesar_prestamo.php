@@ -2,6 +2,9 @@
 // Usuario/procesar_prestamo.php
 require_once '../includes/init.php';
 
+secure_session_start();
+check_login(1);
+
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../login.php");
     exit();
