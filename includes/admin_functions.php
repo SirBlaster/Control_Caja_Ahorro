@@ -185,4 +185,141 @@ function actualizar_admin($id_usuario, $datos) {
         ];
     }
 }
+function actualizar_ahorrador(array $datos): bool
+{
+    global $pdo;
+
+    $sql = "
+        UPDATE usuario SET
+            nombre = :nombre,
+            apellido_paterno = :paterno,
+            apellido_materno = :materno,
+            correo_personal = :correo_personal,
+            correo_institucional = :correo_institucional,
+            telefono = :telefono,
+            rfc = :rfc,
+            curp = :curp,
+            habilitado = :habilitado
+    ";
+
+    // Si viene contraseña, agregarla
+    if (isset($datos['password_hash'])) {
+        $sql .= ", contrasena = :password_hash";
+    }
+
+    $sql .= "
+        WHERE id_usuario = :id_usuario
+          AND id_rol = 1
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':nombre', $datos['nombre']);
+    $stmt->bindParam(':paterno', $datos['paterno']);
+    $stmt->bindParam(':materno', $datos['materno']);
+    $stmt->bindParam(':correo_personal', $datos['correo_personal']);
+    $stmt->bindParam(':correo_institucional', $datos['correo_institucional']);
+    $stmt->bindParam(':telefono', $datos['telefono']);
+    $stmt->bindParam(':rfc', $datos['rfc']);
+    $stmt->bindParam(':curp', $datos['curp']);
+    $stmt->bindParam(':habilitado', $datos['habilitado'], PDO::PARAM_INT);
+    $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
+
+    if (isset($datos['password_hash'])) {
+        $stmt->bindParam(':password_hash', $datos['password_hash']);
+    }
+
+    $stmt->execute();
+
+    return $stmt->rowCount() > 0;
+}
+
+function obtener_solicitudes($pdo, $pagina = 1, $registros_por_pagina = 10) {
+    $offset = ($pagina - 1) * $registros_por_pagina;
+
+    // Contar total de solicitudes
+    $total_stmt = $pdo->query("
+        SELECT COUNT(*) AS total FROM (
+            SELECT id_solicitud_ahorro AS id FROM solicitud_ahorro
+            UNION ALL
+            SELECT id_solicitud_prestamo AS id FROM solicitud_prestamo
+        ) AS todas
+    ");
+    $total_result = $total_stmt->fetch(PDO::FETCH_ASSOC);
+    $total_solicitudes = $total_result['total'];
+    $total_paginas = ceil($total_solicitudes / $registros_por_pagina);
+
+    // Obtener solicitudes
+    $stmt = $pdo->prepare("
+        SELECT s.id_solicitud_ahorro AS id,
+               CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
+               u.rfc,
+               'Ahorro' AS tipo,
+               s.monto_solicitado AS monto,
+               e.estado
+        FROM solicitud_ahorro s
+        JOIN usuario u ON s.id_usuario = u.id_usuario
+        JOIN estado e ON s.id_estado = e.id_estado
+
+        UNION ALL
+
+        SELECT s.id_solicitud_prestamo AS id,
+               CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
+               u.rfc,
+               'Préstamo' AS tipo,
+               s.monto_solicitado AS monto,
+               e.estado
+        FROM solicitud_prestamo s
+        JOIN usuario u ON s.id_usuario = u.id_usuario
+        JOIN estado e ON s.id_estado = e.id_estado
+
+        ORDER BY id DESC
+        LIMIT :limit OFFSET :offset
+    ");
+    $stmt->bindValue(':limit', $registros_por_pagina, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return [
+        'solicitudes' => $solicitudes,
+        'total_paginas' => $total_paginas
+    ];
+}
+
+/**
+ * Función para darle clase al estado
+ */
+function estado_class($estado) {
+    switch(strtolower($estado)){
+        case 'pendiente': return 'status-pending';
+        case 'aprobado': return 'status-approved';
+        case 'rechazado': return 'status-rejected';
+        case 'pagado': return 'status-paid';
+        case 'cancelado': return 'status-cancelled';
+        default: return '';
+    }
+}
+
+/**
+ * Obtener el total de solicitudes pendientes (ahorro y préstamo)
+ */
+function total_pendientes($pdo) {
+    // Contar solicitudes de ahorro pendientes
+    $stmt_ahorro = $pdo->prepare("SELECT COUNT(*) AS total FROM solicitud_ahorro WHERE id_estado = (SELECT id_estado FROM estado WHERE LOWER(estado) = 'pendiente')");
+    $stmt_ahorro->execute();
+    $total_ahorro = $stmt_ahorro->fetch(PDO::FETCH_ASSOC)['total'];
+
+    // Contar solicitudes de préstamo pendientes
+    $stmt_prestamo = $pdo->prepare("SELECT COUNT(*) AS total FROM solicitud_prestamo WHERE id_estado = (SELECT id_estado FROM estado WHERE LOWER(estado) = 'pendiente')");
+    $stmt_prestamo->execute();
+    $total_prestamo = $stmt_prestamo->fetch(PDO::FETCH_ASSOC)['total'];
+
+    return [
+        'ahorro' => (int)$total_ahorro,
+        'prestamo' => (int)$total_prestamo,
+        'total' => (int)$total_ahorro + (int)$total_prestamo
+    ];
+}
+
 ?>
