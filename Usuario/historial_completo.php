@@ -12,6 +12,7 @@ check_login(1);
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css"> 
     <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 
   </head>
