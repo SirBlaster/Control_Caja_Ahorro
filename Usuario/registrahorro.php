@@ -119,7 +119,6 @@ if ($ultima_solicitud) {
 
 
   <main class="container my-5">
-      <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="row justify-content-center">
       <div class="col-lg-9">
 
@@ -164,7 +163,10 @@ if ($ultima_solicitud) {
                 </div>
 
                 <div class="col-12 d-flex gap-3 flex-wrap">
+                <div class="col-12 d-flex gap-3 flex-wrap align-items-center mt-4">
+                  <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel px-4">Cancelar</a>
                   <button type="submit" id="btnEnviar" class="btn btn-confirm ms-auto btn-success">Confirmar y enviar solicitud</button>
+                </div>
                 </div>
               </form>
 
