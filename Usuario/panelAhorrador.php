@@ -68,17 +68,17 @@ require_once '../includes/Usuario/logica_panel.php';
                 Apartados (Ahorrador)
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="registrahorro.php">Solicitar Ahorro</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="solicitud_prestamo.php">Solicitar préstamo</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="movimientos.php">Ver movimientos</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="mis_solicitudes.php">Mis solicitudes</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="historial_completo.php">Historial completo</a></li>
+                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
               </ul>
             </li>
           </ul>
