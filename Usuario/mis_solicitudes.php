@@ -14,7 +14,7 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
     <title>Mis Solicitudes</title>
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
     
     <style>
         body { 
