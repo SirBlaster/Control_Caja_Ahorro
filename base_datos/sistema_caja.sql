@@ -328,44 +328,6 @@ END $$
 DELIMITER ;
 
 
--- Tabla para tasas de interes globales
-CREATE TABLE IF NOT EXISTS tasas_interes (
-    id_tasa INT NOT NULL AUTO_INCREMENT,
-    tipo VARCHAR(20) NOT NULL, -- 'ahorro' o 'prestamo'
-    tasa DECIMAL(5,2) NOT NULL, -- porcentaje
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE DEFAULT NULL, -- NULL = aún vigente
-    PRIMARY KEY(id_tasa)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Tabla para historial 
-CREATE TABLE IF NOT EXISTS historial_tasas_usuario (
-    id_historial INT NOT NULL AUTO_INCREMENT,
-    id_usuario INT NOT NULL,
-    tasa DECIMAL(5,2) NOT NULL,
-    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id_historial),
-    CONSTRAINT fk_historial_usuario FOREIGN KEY(id_usuario)
-        REFERENCES usuario(id_usuario)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
---- Trigger historial de tasa de usuario
-
-DELIMITER $$
-
-CREATE TRIGGER auditar_cambio_tasa
-AFTER UPDATE ON usuario
-FOR EACH ROW
-BEGIN
-    IF OLD.tasa_interes <> NEW.tasa_interes THEN
-        INSERT INTO historial_tasas_usuario(id_usuario, tasa)
-        VALUES (NEW.id_usuario, NEW.tasa_interes);
-    END IF;
-END $$
-
-DELIMITER ;
 -- 1. Asegurar que datos_sistema tenga todas las columnas necesarias
 ALTER TABLE datos_sistema 
 ADD COLUMN tasa_interes_general DECIMAL(5,2) DEFAULT 30.00,
