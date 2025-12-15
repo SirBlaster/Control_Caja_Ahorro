@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS ahorro (
         ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+ALTER TABLE ahorro ADD COLUMN fecha_ultima_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP;
+
 INSERT INTO ahorro (monto_ahorrado, id_usuario) VALUES (0.00, 2);
 
 CREATE TABLE IF NOT EXISTS tipo_movimiento(

@@ -18,27 +18,114 @@ $actividades = obtener_actividades_recientes(5);
     <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css ">
 </head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light header">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
+        </a>
 
-<body>
-    <div class="header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
-            <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
+                </li>
+
+                <!-- DROPDOWN AHORRADOR -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAhorrador" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Apartados (Ahorrador)
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownAhorrador">
+                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
+                    </ul>
+                </li>
+
+                <?php if ($_SESSION['id_rol'] == 2 || $_SESSION['id_rol'] == 3): ?>
+                <!-- DROPDOWN ADMINISTRADOR -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Administrador
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownAdmin">
+                        <li><h6 class="dropdown-header text-primary">Panel Principal</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/inicio.php">Dashboard Admin</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Gestión de Solicitudes</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/rechazar_solicitud.php">Revisar Solicitudes</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Reportes y Datos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/reportes.php">Reportes del Sistema</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/base_datos/">Base de Datos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/datos_mysql/">Configuración MySQL</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
+
+                <?php if ($_SESSION['id_rol'] == 3): ?>
+                <!-- DROPDOWN SUPER USUARIO -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSuper" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Super Usuario
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownSuper">
+                        <li><h6 class="dropdown-header text-primary">Panel Principal</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/inicio.php">Dashboard Super Usuario</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Gestión de Usuarios</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/usuarios.php">Lista de Usuarios</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/editar_usuario.php">Editar Usuario</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/crear_admin.php">Crear Administrador</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/procesar_registro.php">Procesar Registro</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/procesar_edicion.php">Procesar Edición</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Auditoría y Control</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/auditoria_completa.php">Auditoría Completa</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/parametros.php">Parámetros del Sistema</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Acceso Rápido</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial General</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Ver Solicitudes</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/uploads/">Archivos Subidos</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
+            </ul>
         </div>
 
-        <div class="user-info">
-            <i class="bi bi-person-square user-icon"></i>
-            <div class="user-details">
-                <p class="user-name"><?php echo get_user_name(); ?></p>
+        <div class="d-flex align-items-center gap-3">
+            <div class="user-details text-end d-none d-md-block">
+                <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
                 <small class="text-muted"><?php echo get_user_role_text(); ?></small>
             </div>
-            <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-            </form>
+            <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
         </div>
     </div>
+</nav>
+<body>
+
     <div class="card card-form">
         <div>
             <h2 class="mb-0">Panel de SuperUsuario</h2>
@@ -155,7 +242,7 @@ $actividades = obtener_actividades_recientes(5);
 
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 
     <!-- Script para depuración en consola -->
     <script>

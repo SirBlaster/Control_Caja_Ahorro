@@ -1,8 +1,7 @@
-<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <?php
+require_once '../includes/init.php';
 secure_session_start();
 check_login(1);
-require_once '../includes/init.php';
 
 // 1. Seguridad
 if (!isset($_SESSION['id_usuario'])) {
@@ -63,6 +62,7 @@ if ($ultima_solicitud) {
 <title>Solicitud Ahorro - registrar nómina</title>
 <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <link rel="stylesheet" href="../css/ahorro-nomina.css">
 </head>
 <body>
@@ -88,17 +88,18 @@ if ($ultima_solicitud) {
                 Apartados (Ahorrador)
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
+                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
               </ul>
             </li>
           </ul>
@@ -118,7 +119,6 @@ if ($ultima_solicitud) {
 
 
   <main class="container my-5">
-      <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="row justify-content-center">
       <div class="col-lg-9">
 
@@ -163,7 +163,10 @@ if ($ultima_solicitud) {
                 </div>
 
                 <div class="col-12 d-flex gap-3 flex-wrap">
+                <div class="col-12 d-flex gap-3 flex-wrap align-items-center mt-4">
+                  <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel px-4">Cancelar</a>
                   <button type="submit" id="btnEnviar" class="btn btn-confirm ms-auto btn-success">Confirmar y enviar solicitud</button>
+                </div>
                 </div>
               </form>
 

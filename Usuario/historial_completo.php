@@ -12,6 +12,7 @@ check_login(1);
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css"> 
     <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 
   </head>
@@ -38,17 +39,18 @@ check_login(1);
                 Apartados (Ahorrador)
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
+                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
               </ul>
             </li>
           </ul>
@@ -73,60 +75,86 @@ check_login(1);
       <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
 
       <!-- TABLA COMPLETA -->
-      <div class="table-wrap mt-2">
-        <table class="table table-sm table-borderless">
-          <thead class="table-head">
-            <tr>
-              <th>ID</th>
-              <th>Fecha y Hora</th>
-              <th>Concepto</th>
-              <th class="text-end">Monto</th>
-              <th>Tipo de Movimiento</th>
-              <th class="text-end">Saldo</th>
-            </tr>
-          </thead>
+<div class="container mt-5 pt-4 mb-5">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-dark mb-0">Movimientos Generales</h2>
+            <a href="historial_completo.php" class="btn btn-primary btn-sm rounded-pill px-4">
+                <i class="bi bi-calculator"></i> Ver con Saldos
+            </a>
+        </div>
 
-          <tbody>
-            <!-- EJEMPLOS (AUMENTA LOS QUE NECESITES) -->
-            <tr>
-              <td>1A</td>
-              <td>28/10/25 6:34 P.M.</td>
-              <td>Depósito Nómina</td>
-              <td class="text-end text-success">+$7,500.00</td>
-              <td>Depósito</td>
-              <td class="text-end">$17,500.00</td>
-            </tr>
-            <tr>
-              <td>2B</td>
-              <td>20/10/25 12:54 P.M.</td>
-              <td>Retiro Emergencia</td>
-              <td class="text-end text-danger">-$1,000.00</td>
-              <td>Retiro</td>
-              <td class="text-end">$16,500.00</td>
-            </tr>
-            <tr>
-              <td>3C</td>
-              <td>29/11/25 2:48 P.M.</td>
-              <td>Préstamo</td>
-              <td class="text-end text-danger">-$450.00</td>
-              <td>Pago</td>
-              <td class="text-end">$16,050.00</td>
-            </tr>
-            <tr>
-              <td>4D</td>
-              <td>25/12/25 7:00 A.M.</td>
-              <td>Suscripción</td>
-              <td class="text-end text-danger">-$299.00</td>
-              <td>Pago</td>
-              <td class="text-end">$15,751.00</td>
-            </tr>
+        <div class="card card-custom">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Fecha</th>
+                            <th>Descripción / Concepto</th>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-end pe-4">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($lista_movimientos)): ?>
+                            <?php foreach ($lista_movimientos as $mov): ?>
+                                <?php 
+                                    // Lógica visual: ID 1 es Depósito (Verde), el resto (Retiro/Pago) es Rojo
+                                    $es_ingreso = ($mov['id_tipo_movimiento'] == 1);
+                                    
+                                    $clase_texto = $es_ingreso ? 'text-success' : 'text-danger';
+                                    $signo       = $es_ingreso ? '+' : '-';
+                                    
+                                    // Color de la etiqueta (Badge)
+                                    $clase_badge = 'bg-secondary';
+                                    if($mov['id_tipo_movimiento'] == 1) $clase_badge = 'bg-success'; // Depósito
+                                    if($mov['id_tipo_movimiento'] == 2) $clase_badge = 'bg-warning text-dark'; // Retiro
+                                    if($mov['id_tipo_movimiento'] == 3) $clase_badge = 'bg-info text-dark'; // Pago
+                                ?>
+                                <tr>
+                                    <td class="ps-4 text-muted fw-bold">
+                                        <?php echo date("d/m/Y", strtotime($mov['fecha'])); ?>
+                                        <br>
+                                        <small class="fw-normal"><?php echo date("h:i A", strtotime($mov['fecha'])); ?></small>
+                                    </td>
+                                    
+                                    <td class="fw-bold text-dark">
+                                        <?php echo htmlspecialchars($mov['concepto']); ?>
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <span class="badge badge-tipo <?php echo $clase_badge; ?>">
+                                            <?php echo htmlspecialchars($mov['tipo_movimiento']); ?>
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="text-end pe-4 fw-bold <?php echo $clase_texto; ?>" style="font-size: 1.1rem;">
+                                        <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    <div class="my-3">
+                                        <i class="bi bi-receipt fs-1 text-secondary opacity-50"></i>
+                                    </div>
+                                    <h5>Sin movimientos registrados</h5>
+                                    <p class="small">Aún no tienes actividad en tu cuenta.</p>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <small class="text-muted">Mostrando todos los movimientos registrados en el sistema.</small>
+        </div>
 
-            <!-- Puedes duplicar y agregar más registros -->
-          </tbody>
-        </table>
-      </div>
-    </main>
+    </div>
 
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
-  </body>
+</body>
 </html>
