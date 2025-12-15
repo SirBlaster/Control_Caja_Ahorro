@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <?php
 session_start();
 require_once '../includes/init.php';
@@ -38,13 +39,14 @@ if ($ultima_solicitud) {
         $mensaje_estado = "Ya tienes una solicitud en espera de revisión. Por favor espera a que sea atendida.";
         $clase_alerta = "alert-warning";
     }
-    // Estado 2 = Aprobado
-    elseif ($estado == 2) {
-        $puede_solicitar = false;
-        $mensaje_estado = "¡Felicidades! Tu solicitud de ahorro ya fue APROBADA y está activa. No es necesario enviar otra.";
-        $clase_alerta = "alert-success";
+
+        elseif ($estado == 2) {
+        $puede_solicitar = true; // Lo dejamos pasar
+        $mensaje_estado = "Tu solicitud anterior fue aceptada. Si haces otra solicitud remplazara a la anterior (solo puede aumentar el monto ahorrar si es en el mismo ciclo administrativo).";
+        $clase_alerta = "alert-danger"; // Rojo para avisar, pero mostramos el form
     }
-    // Estado 3 = Rechazado (Permitimos solicitar de nuevo)
+
+    // Estado 2 = Rechazado (Permitimos solicitar de nuevo)
     elseif ($estado == 3) {
         $puede_solicitar = true; // Lo dejamos pasar
         $mensaje_estado = "Tu solicitud anterior fue rechazada. Puedes corregir tus datos y enviar una nueva solicitud aquí.";
@@ -64,31 +66,21 @@ if ($ultima_solicitud) {
 </head>
 <body>
 
-  <header class="pn-header">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
-                <span class="fw-bold text-dark">Historial de Solicitudes</span>
-            </a>
-
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-none d-md-block text-end">
-                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
-                        <?php echo get_user_name(); ?>
-                    </div>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-                </form>
-                
-            </div>
+    <header class="header">
+        <div class="brand-container">
+            <img src="../img/LogoHorizontal - 2.png" alt="Logo" style="height: 50px;">
+            <h4>SETDITSX</h4>
         </div>
-    </nav>
-  </header>
+        <div class="user-info">
+            <div class="user-details">
+                <p class="user-name"><?php echo get_user_name(); ?></p>
+                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            </div>
+            <a href="../logout.php" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </header>
 
 
   <main class="container my-5">

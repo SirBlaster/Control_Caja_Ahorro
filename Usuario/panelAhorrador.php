@@ -12,25 +12,90 @@ require_once '../includes/Usuario/logica_panel.php';
 
   <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
 <body>
-
-    <header class="app-header">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-                <!-- RUTA LOCAL (entorno): /mnt/data/menuprincipal_Ahorrador.jpg
-          En tu proyecto apunta a: img/logo.png o img/menuprincipal_Ahorrador.jpg según donde la guardes -->
-                <img src="../img/LogoHorizontal - 2.png" alt="logo" class="header-logo">
-                <span class="brand-name">SETDITSX - Sindicato ITSX</span>
+  <?php if (isset($_GET['msg'])): ?>
+    <div class="container mt-4">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-left: 5px solid #28a745;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Aviso del sistema</strong><br>
+                    <?php echo htmlspecialchars($_GET['msg']); ?>
+                </div>
             </div>
-
-            <div class="user-actions d-flex align-items-center gap-3">
-                <p class="user-name"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_GET['error'])): ?>
+    <div class="container mt-4">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-left: 5px solid #dc3545;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Error</strong><br>
+                    <?php echo htmlspecialchars($_GET['error']); ?>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+<?php endif; ?>
+
+    <!-- Image and text -->
+  
+<nav class="navbar navbar-expand-lg navbar-light bg-light header">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apartados (Ahorrador)
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="registrahorro.php">Solicitar Ahorro</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="solicitud_prestamo.php">Solicitar préstamo</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="movimientos.php">Ver movimientos</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="mis_solicitudes.php">Mis solicitudes</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="historial_completo.php">Historial completo</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="user-details text-end d-none d-md-block">
+            <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
+            <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+          </div>
+          <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+          </a>
+        </div>
+      </div>
     </nav>
+
 
     <br>
     <br>
@@ -63,7 +128,7 @@ require_once '../includes/Usuario/logica_panel.php';
     <section class="actions mb-4">
       <h6 class="section-title">ACCIONES DEL AHORRADOR</h6>
         <div class="d-flex justify-content-center gap-3 flex-wrap my-3">
-          <a href="solicitud-prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo </a>
+          <a href="solicitud_prestamo.php" class="btn btn-warning px-4 rounded-pill"> Solicitar nuevo préstamo </a>
           <a href="registrahorro.php" class="btn btn-warning px-4 rounded-pill"> Solicitar ahorro / Registrar nómina </a>
           <a href="mis_solicitudes.php" class="btn btn-warning px-4 rounded-pill"> Consultar el estado de las solicitudes </a>
         </div>
@@ -117,6 +182,6 @@ require_once '../includes/Usuario/logica_panel.php';
     </section>
   </main>
 
-  <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>
