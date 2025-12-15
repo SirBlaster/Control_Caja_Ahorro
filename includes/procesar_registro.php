@@ -114,7 +114,7 @@ $password_hash = password_hash($password, PASSWORD_DEFAULT);
 $sqlInsert = "INSERT INTO usuario
     (nombre, apellido_paterno, apellido_materno, correo_institucional,
      correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol, habilitado)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 1)";
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1)";
 
 $stmt = $pdo->prepare($sqlInsert);
 

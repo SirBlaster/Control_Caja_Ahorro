@@ -1,7 +1,7 @@
+<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <?php
 require_once '../includes/init.php';
 secure_session_start();
-check_login(2);
 ?>
 <!doctype html>
 <html lang="es">
@@ -20,31 +20,21 @@ check_login(2);
 <body>
 
   <!-- Header -->
-  <header class="app-header">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
-                <span class="fw-bold text-dark">Historial de Solicitudes</span>
-            </a>
-
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-none d-md-block text-end">
-                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
-                        <?php echo get_user_name(); ?>
-                    </div>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-                </form>
-                
-            </div>
+    <header class="header">
+        <div class="brand-container">
+            <img src="../img/LogoHorizontal - 2.png" alt="Logo" style="height: 50px;">
+            <h4>SETDITSX</h4>
         </div>
-    </nav>
-  </header>
+        <div class="user-info">
+            <div class="user-details">
+                <p class="user-name"><?php echo get_user_name(); ?></p>
+                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            </div>
+            <a href="../logout.php" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </header>
 
   <!-- Main -->
   <main class="container my-5">

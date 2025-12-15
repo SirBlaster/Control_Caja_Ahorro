@@ -1,3 +1,16 @@
+<?php
+// =========================================================
+// LÓGICA PHP (BACKEND)
+// =========================================================
+require_once '../includes/init.php';
+
+// Verificar Admin
+if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
+    header("Location: ../login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 

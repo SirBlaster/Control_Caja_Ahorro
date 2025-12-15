@@ -1,5 +1,6 @@
 # Ignorar carpeta de base de datos de Docker
 datos_mysql/
+uploads
 
 # Ignorar archivos del sistema
 Thumbs.db

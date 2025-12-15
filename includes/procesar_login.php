@@ -3,7 +3,7 @@
 session_start();
 
 // Incluir init.php (MISMA carpeta includes)
-require_once __DIR__ . '/init.php';
+require_once 'init.php';
 
 // Evitar cache
 header("Cache-Control: no-cache, no-store, must-revalidate");

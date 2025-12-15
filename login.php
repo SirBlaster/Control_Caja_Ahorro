@@ -27,7 +27,7 @@
     <main class="card card-login">
         <h1 class="title">Iniciar Sesión</h1>
 
-        <form action="./includes/procesar_login.php" method="POST">
+        <form action="includes/procesar_login.php" method="POST">
 
 
             <?php if(isset($_GET['error'])): ?>
