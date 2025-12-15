@@ -14,8 +14,8 @@ $actividades = obtener_actividades_recientes(5);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css ">
 </head>
 
@@ -134,6 +134,25 @@ $actividades = obtener_actividades_recientes(5);
             </div>
             <?php endif; ?>
         </div>
+        <div class="card card-form">
+            <div class="card-body p-4">
+                <h2 class="mb-0">Panel de Administrador</h2>
+                <p class="mb-3">Administrar Ahorradores</p>
+                <a href="../Admin/inicio.php">
+                    <button class="btn btn-manage">Gestionar</button>
+                </a>
+            </div>
+        </div>
+        <div class="card card-form">
+            <div class="card-body p-4">
+                <h2 class="mb-0">Panel de Ahorrador</h2>
+                <p class="mb-3">Solicitar Préstamo, Ahorros </p>
+                <a href="../Usuario/panelAhorrador.php">
+                    <button class="btn btn-manage">Gestionar</button>
+                </a>
+            </div>
+        </div>
+
     </div>
 
     <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>

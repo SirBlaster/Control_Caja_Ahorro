@@ -3,7 +3,6 @@
 // Usuario/solicitud_prestamo.php
 require_once '../includes/init.php';
 
-
 // 1. Seguridad: Verificar sesión y rol (Ahorrador o SuperUsuario)
 if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [1])) {
     header("Location: ../login.php");
@@ -27,7 +26,7 @@ if ($esDiciembre) {
     // --- DICIEMBRE (LISTA DE ESPERA) ---
     // Calculamos para el próximo ciclo (Enero - Noviembre = 22 quincenas aprox)
     $quincenasRestantes = 22; 
-    $mensajeAviso = "⚠️ AVISO: Estamos en corte de caja anual. Tu solicitud entrará en <strong>LISTA DE ESPERA</strong> para Enero.";
+    $mensajeAviso = "AVISO DE CIERRE: Estamos en corte de caja. Puedes enviar tu solicitud, pero entrará en <strong>LISTA DE ESPERA</strong> y será procesada por el administrador hasta <strong>ENERO</strong>.";
 } else {
     // --- RESTO DEL AÑO (Hasta 30 Nov) ---
     // Meses completos faltantes hasta Noviembre (Mes 11)
@@ -126,7 +125,7 @@ $tasa_interes = 0.30;
       <div class="col-lg-8">
         <div class="card main-card p-5 shadow-sm border-0">
           <h1 class="card-title text-center mb-4 fw-bold" style="color: #1a237e;">
-              <?php echo $esDiciembre ? "Pre-Solicitud (Lista de espera)" : "Solicitud de Préstamo"; ?>
+              <?php echo $esDiciembre ? "Pre-Solicitud (Lista de Espera)" : "Solicitud de Préstamo"; ?>
           </h1>
 
           <form class="row g-4" action="procesar_prestamo.php" method="POST">

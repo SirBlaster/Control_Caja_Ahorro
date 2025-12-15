@@ -13,6 +13,7 @@
 body {
     background-color: var(--bg-light);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-dark);
         }
         .header {
             background: linear-gradient(to bottom, #ffffff, #e8edf5);

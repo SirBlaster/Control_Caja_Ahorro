@@ -362,3 +362,17 @@ BEGIN
 END $$
 
 DELIMITER ;
+-- 1. Asegurar que datos_sistema tenga todas las columnas necesarias
+ALTER TABLE datos_sistema 
+ADD COLUMN tasa_interes_general DECIMAL(5,2) DEFAULT 30.00,
+ADD COLUMN rendimiento_anual_ahorros DECIMAL(5,2) DEFAULT 5.00,
+ADD COLUMN correo_soporte VARCHAR(100) DEFAULT 'soporte@itsx.com',
+ADD COLUMN usuario_actualizacion VARCHAR(100) DEFAULT NULL,
+ADD COLUMN fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- 2. Actualizar valores por defecto si ya existe la tabla
+UPDATE datos_sistema SET 
+    tasa_interes_general = 30.00,
+    rendimiento_anual_ahorros = 5.00,
+    correo_soporte = 'soporte@itsx.com'
+WHERE id_datos = 1;
