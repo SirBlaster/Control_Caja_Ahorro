@@ -35,6 +35,7 @@ $prestamos = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,8 +57,9 @@ $prestamos = $stmtP->fetchAll(PDO::FETCH_ASSOC);
         .badge { font-size: 0.85rem; padding: 0.5em 0.8em; }
     </style>
 </head>
-<body class="pt-5"> 
-    
+
+<body class="pt-5">
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light header">
         <div class="container-fluid">
         <a class="navbar-brand" href="#">
@@ -205,7 +207,9 @@ $prestamos = $stmtP->fetchAll(PDO::FETCH_ASSOC);
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="5" class="text-muted py-4">No has solicitado ningún préstamo.</td></tr>
+                            <tr>
+                                <td colspan="5" class="text-muted py-4">No has solicitado ningún préstamo.</td>
+                            </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

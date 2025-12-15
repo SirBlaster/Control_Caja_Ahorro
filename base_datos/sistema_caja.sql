@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS usuario (
     id_rol INT NOT NULL,
     UNIQUE (correo_institucional),
     UNIQUE (correo_personal),
+    UNIQUE (rfc),
+    UNIQUE (curp),
     PRIMARY KEY (id_usuario),
     CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol)
         REFERENCES rol(id_rol)

@@ -149,6 +149,23 @@ h2 {
   background-color: #2a3472;
   color: white;
 }
+.btn-logout {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-logout:hover {
+    background-color: #dc3545;
+    color: white;
+}
 .view-all {
   color: #2a3472;
   text-decoration: none;
@@ -182,4 +199,33 @@ h2 {
   font-weight: bold;
   color: #2a3472;
   margin: 10px 0;
+}
+/* ===== BADGES DE ROL ===== */
+.badge-admin {
+    border: 1px solid #1e2660;
+    background-color: #2a3472;   /* azul principal */
+    color: #ffffff;              /* texto blanco */
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 14px;
+    letter-spacing: 0.3px;
+
+}
+
+.badge-ahorrador {
+    border: 1px solid #141a44;
+    background-color: #1e2660;   /* azul más oscuro */
+    color: #ffffff;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 14px;
+    letter-spacing: 0.3px;
+}
+
+/* Alineación icono + texto */
+.badge-admin,
+.badge-ahorrador {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }

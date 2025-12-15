@@ -66,15 +66,17 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
 
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Panel - Ahorrador</title>
 
-  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-  <link rel="stylesheet" href="../css/estilo_ahorrador.css">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Panel - Ahorrador</title>
+
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
+
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light header">

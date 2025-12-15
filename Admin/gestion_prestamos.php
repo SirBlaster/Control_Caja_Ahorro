@@ -114,7 +114,15 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
     </div>
 
     <div class="card-form">
-        
+        <a href="Inicio.php" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Volver al menú principal
+        </a>
+        <?php if ($bloqueoCierre): ?>
+        <div class="alert alert-warning text-center fw-bold shadow-sm">
+            <i class="bi bi-lock-fill"></i> CIERRE DE CAJA ACTIVADO
+        </div>
+        <?php endif; ?>
+
         <?php if (isset($_GET['msg'])): ?>
             <div class="alert alert-success alert-dismissible fade show">
                 <i class="bi bi-check-circle-fill"></i> <?php echo htmlspecialchars($_GET['msg']); ?>
@@ -190,12 +198,6 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
                     <?php endif; ?>
                 </tbody>
             </table>
-        </div>
-
-        <div class="mt-3">
-            <a href="Inicio.php" class="text-decoration-none fw-bold" style="color: #2a3472;">
-                <i class="bi bi-arrow-left"></i> Volver al Inicio
-            </a>
         </div>
     </div>
 
