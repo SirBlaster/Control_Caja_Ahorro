@@ -58,7 +58,7 @@ $prestamos = $stmtP->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 
-<body class="pt-5">
+<body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light header">
         <div class="container-fluid">
