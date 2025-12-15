@@ -7,6 +7,7 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
 // Aquí después puedes traer datos reales desde BD
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
