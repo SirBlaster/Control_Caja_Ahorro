@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sistema_caja;
-USE sistema_caja;
+CREATE DATABASE IF NOT EXISTS caja_ahorro;
+USE caja_ahorro;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS rol(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO rol (rol) VALUES 
-('Ahorrador'),
 ('Administrador'),
+('Ahorrador'),
 ('Super Usuario');
 
 CREATE TABLE IF NOT EXISTS usuario (
@@ -29,10 +29,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     contrasena VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     tarjeta VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     habilitado TINYINT NOT NULL DEFAULT 1,
-    tasa_interes DECIMAL(5,2) NOT NULL DEFAULT 0.00,
     id_rol INT NOT NULL,
-    UNIQUE (correo_institucional),
-    UNIQUE (correo_personal),
     PRIMARY KEY (id_usuario),
     CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol)
         REFERENCES rol(id_rol)
@@ -42,8 +39,8 @@ CREATE TABLE IF NOT EXISTS usuario (
 
 
 INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) VALUES
-('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 2),
-('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 1);
+('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 1),
+('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 2);
 
 CREATE TABLE IF NOT EXISTS ahorro (
     id_ahorro INT NOT NULL AUTO_INCREMENT,
@@ -147,8 +144,6 @@ CREATE TABLE IF NOT EXISTS datos_sistema (
     nombre_director VARCHAR(200) DEFAULT NULL,
     periodo VARCHAR(50) DEFAULT NULL,
     nombre_enc_personal VARCHAR(200) DEFAULT NULL,
-    correo_soporte VARCHAR(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    UNIQUE (correo_soporte),
     PRIMARY KEY (id_datos)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -321,47 +316,6 @@ BEGIN
     END IF;
 END $$
 
-DELIMITER ;
-
-
--- Tabla para tasas de interes globales
-CREATE TABLE IF NOT EXISTS tasas_interes (
-    id_tasa INT NOT NULL AUTO_INCREMENT,
-    tipo VARCHAR(20) NOT NULL, -- 'ahorro' o 'prestamo'
-    tasa DECIMAL(5,2) NOT NULL, -- porcentaje
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE DEFAULT NULL, -- NULL = aún vigente
-    PRIMARY KEY(id_tasa)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Tabla para historial 
-CREATE TABLE IF NOT EXISTS historial_tasas_usuario (
-    id_historial INT NOT NULL AUTO_INCREMENT,
-    id_usuario INT NOT NULL,
-    tasa DECIMAL(5,2) NOT NULL,
-    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id_historial),
-    CONSTRAINT fk_historial_usuario FOREIGN KEY(id_usuario)
-        REFERENCES usuario(id_usuario)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
---- Trigger historial de tasa de usuario
-
-DELIMITER $$
-
-CREATE TRIGGER auditar_cambio_tasa
-AFTER UPDATE ON usuario
-FOR EACH ROW
-BEGIN
-    IF OLD.tasa_interes <> NEW.tasa_interes THEN
-        INSERT INTO historial_tasas_usuario(id_usuario, tasa)
-        VALUES (NEW.id_usuario, NEW.tasa_interes);
-    END IF;
-END $$
-
-DELIMITER ;
 -- 1. Asegurar que datos_sistema tenga todas las columnas necesarias
 ALTER TABLE datos_sistema 
 ADD COLUMN tasa_interes_general DECIMAL(5,2) DEFAULT 30.00,
