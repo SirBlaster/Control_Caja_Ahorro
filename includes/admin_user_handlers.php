@@ -2,9 +2,8 @@
 // includes/admin_user_handlers.php
 // Funciones para la gestión general de usuarios
 
-/**
- * Obtiene todos los usuarios excepto superadministradores (rol 3)
- */
+//Obtiene todos los usuarios excepto superusuarios (rol 3)
+
 function obtener_usuarios_admin()
 {
     global $pdo;
@@ -38,9 +37,7 @@ function obtener_usuarios_admin()
     }
 }
 
-/**
- * Cambia el estado de un usuario (habilitar/deshabilitar)
- */
+//Cambia el estado de un usuario (habilitar/deshabilitar)
 function cambiar_estado_usuario($id_usuario)
 {
     global $pdo;
@@ -82,9 +79,8 @@ function cambiar_estado_usuario($id_usuario)
     }
 }
 
-/**
- * Cambia el rol de un usuario (Administrador ↔ Ahorrador)
- */
+//Cambia el rol de un usuario (Administrador ↔ Ahorrador)
+
 function cambiar_rol_usuario($id_usuario)
 {
     global $pdo;
@@ -133,9 +129,8 @@ function cambiar_rol_usuario($id_usuario)
     }
 }
 
-/**
- * Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
- */
+//Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
+
 function obtener_usuario_por_id($id_usuario)
 {
     global $pdo;
@@ -166,9 +161,8 @@ function obtener_usuario_por_id($id_usuario)
     }
 }
 
-/**
- * Actualiza los datos de un usuario (versión mejorada)
- */
+//Actualiza los datos de un usuario (versión mejorada)
+
 function actualizar_usuario_general($id_usuario, $datos)
 {
     global $pdo;
@@ -249,9 +243,8 @@ function actualizar_usuario_general($id_usuario, $datos)
     }
 }
 
-/**
- * Función segura para obtener datos de usuario con todos los campos
- */
+//Función segura para obtener datos de usuario con todos los campos
+
 function obtener_usuario_completo($id_usuario)
 {
     global $pdo;
@@ -287,6 +280,37 @@ function obtener_usuario_completo($id_usuario)
         
     } catch (PDOException $e) {
         error_log("Error en obtener_usuario_completo: " . $e->getMessage());
+        return null;
+    }
+}
+//Función específica para obtener datos de SuperUsuario
+
+function obtener_superusuario_completo($id_usuario)
+{
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                u.*, 
+                COALESCE(r.rol, 'Super Usuario') as rol,
+                COALESCE(u.telefono, '') as telefono,
+                COALESCE(u.rfc, '') as rfc,
+                COALESCE(u.curp, '') as curp,
+                COALESCE(u.correo_personal, '') as correo_personal,
+                COALESCE(u.correo_institucional, '') as correo_institucional,
+                COALESCE(u.tarjeta, '') as tarjeta
+            FROM usuario u 
+            LEFT JOIN rol r ON u.id_rol = r.id_rol 
+            WHERE u.id_usuario = ?  -- NO excluye SuperUsuario
+        ");
+        $stmt->execute([$id_usuario]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $usuario;
+        
+    } catch (PDOException $e) {
+        error_log("Error en obtener_superusuario_completo: " . $e->getMessage());
         return null;
     }
 }

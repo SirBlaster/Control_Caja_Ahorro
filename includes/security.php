@@ -1,9 +1,8 @@
 <?php
 // includes/security.php
 
-/**
- * Inicia sesión segura con headers anti-cache
- */
+//Inicia sesión segura con headers anti-cache
+
 function secure_session_start() {
     // Headers anti-cache (IMPORTANTE)
     header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -43,9 +42,7 @@ function check_login($min_role = null) {
     return true;
 }
 
-/**
- * Destruye completamente la sesión
- */
+// Destruir sesión
 
 function destroy_session() {
     // Registrar logout antes de destruir
@@ -93,9 +90,6 @@ function destroy_session() {
 }
 
 
-/**
- * Redirige según el rol del usuario
- */
 function redirect_by_role() {
     if (!isset($_SESSION['id_rol'])) {
         header("Location: login.php");
@@ -103,17 +97,15 @@ function redirect_by_role() {
     }
     
     switch ($_SESSION['id_rol']) {
-        case 1: header("Location: Usuario/panelAhorrador.php"); break;
-        case 2: header("Location: Admin/Inicio.php"); break;
+        case 1: header("Location: Admin/Inicio.php"); break;
+        case 2: header("Location: Usuario/panelAhorrador.php"); break;
         case 3: header("Location: SuperUsuario/Inicio.php"); break;
         default: header("Location: login.php");
     }
     exit();
 }
 
-/**
- * Obtiene el nombre completo del usuario
- */
+
 function get_full_name() {
     if (!isset($_SESSION['nombre'])) return 'Usuario';
     
@@ -123,5 +115,4 @@ function get_full_name() {
     
     return trim("$nombre $paterno $materno");
 }
-
 ?>

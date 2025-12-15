@@ -1,9 +1,8 @@
 <?php
-// includes/parametros_functions.php - VERSIÓN SIN TRIGGER
+// includes/parametros_functions.php 
 
-/**
- * Obtiene todos los parámetros del sistema
- */
+//Obtiene todos los parámetros del sistema
+
 function obtener_parametros_sistema() {
     global $pdo;
     
@@ -43,9 +42,8 @@ function obtener_parametros_sistema() {
     ];
 }
 
-/**
- * Actualiza los parámetros del sistema CON AUDITORÍA EN PHP
- */
+//Actualiza los parámetros del sistema
+
 function actualizar_parametros_sistema($datos, $usuario) {
     global $pdo;
     
@@ -97,7 +95,6 @@ function actualizar_parametros_sistema($datos, $usuario) {
             ]);
         }
         
-        // AUDITORÍA MANUAL (sin trigger)
         if ($resultado) {
             // Obtener ID del usuario actual
             $usuario_id = obtener_id_usuario_actual();
@@ -132,9 +129,8 @@ function actualizar_parametros_sistema($datos, $usuario) {
     }
 }
 
-/**
- * Obtiene el ID del usuario actualmente logueado
- */
+//Obtiene el ID del usuario actualmente logueado
+
 function obtener_id_usuario_actual() {
     if (isset($_SESSION['id_usuario'])) {
         return $_SESSION['id_usuario'];
@@ -142,9 +138,8 @@ function obtener_id_usuario_actual() {
     return null; // Devolver null es seguro para la FK
 }
 
-/**
- * Registrar auditoría de parámetros
- */
+//Registrar auditoría de parámetros
+
 function registrar_auditoria_parametro($usuario_id, $parametro, $valor_anterior, $valor_nuevo, $usuario_nombre) {
     global $pdo;
     
