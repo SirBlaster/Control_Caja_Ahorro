@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/init.php'; 
-secure_session_start(); 
+secure_session_start();
+check_login(1);
 
 // CORRECCIÓN 1: Ruta correcta (están en la misma carpeta)
 require_once '..\includes\Usuario\logica_solicitudes.php';

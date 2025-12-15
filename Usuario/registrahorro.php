@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <?php
-session_start();
+secure_session_start();
+check_login(1);
 require_once '../includes/init.php';
 
 // 1. Seguridad
