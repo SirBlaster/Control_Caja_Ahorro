@@ -1,6 +1,8 @@
 <?php
 require_once '../includes/init.php'; 
 secure_session_start(); 
+
+// CORRECCIÓN 1: Ruta correcta (están en la misma carpeta)
 require_once '..\includes\Usuario\logica_solicitudes.php';
 ?>
 <!DOCTYPE html>
@@ -14,27 +16,23 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
     <link rel="stylesheet" href="../css/estilo.css">
     
     <style>
-        /* FORZAR QUE EL CUERPO SEA BLOQUE (Uno abajo del otro) */
         body { 
             display: block !important; 
             background-color: #f8f9fa;
             height: auto !important;
         }
-
-        /* Estilo de la Barra Superior */
         .navbar-top {
             background-color: white;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             height: 70px;
         }
-
-        /* Colores de tablas */
         .table-custom th { background-color: #153b52; color: white; }
         .card-header-ahorro { background-color: #d18819; color: white; font-weight: bold; }
         .card-header-prestamo { background-color: #153b52; color: white; font-weight: bold; }
     </style>
 </head>
 <body class="pt-5"> 
+    
     <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-3" href="#">
@@ -54,16 +52,14 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
                     <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
                 </button>
                 </form>
-                
             </div>
         </div>
     </nav>
 
-    <div class="container my-5">
-        <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
-    </div>
-    <div class="container mt-5 pt-4"> <div class="card shadow-sm mb-5 border-0">
-                
+    <div class="container my-5 pt-4">
+        <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar al Panel</a>
+        
+        <div class="card shadow-sm mb-5 border-0">
             <div class="card-header card-header-ahorro">
                 <i class="bi bi-piggy-bank me-2"></i> Mis Solicitudes de Ahorro
             </div>
@@ -83,17 +79,19 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
                             <?php if (!empty($ahorros)): ?>
                                 <?php foreach ($ahorros as $row): ?>
                                     <tr>
-                                        <td><strong>#<?php echo $row['Id_SolicitudAhorro']; ?></strong></td>
-                                        <td><?php echo date("d/m/Y", strtotime($row['Fecha'])); ?></td>
-                                        <td class="fw-bold text-success">$ <?php echo number_format($row['Monto'], 2); ?></td>
+                                        <td><strong>#<?php echo $row['id_solicitud_ahorro']; ?></strong></td>
+                                        <td><?php echo date("d/m/Y", strtotime($row['fecha'])); ?></td>
+                                        
+                                        <td class="fw-bold text-success">$ <?php echo number_format($row['monto_solicitado'], 2); ?></td>
+                                        
                                         <td>
-                                            <span class="badge rounded-pill <?php echo colorEstado($row['Id_Estado']); ?>">
-                                                <?php echo $row['Estado']; ?>
+                                            <span class="badge rounded-pill <?php echo colorEstado($row['id_estado']); ?>">
+                                                <?php echo $row['estado']; ?>
                                             </span>
                                         </td>
                                         <td>
-                                            <?php if (!empty($row['ArchivoSolicitud']) && $row['ArchivoSolicitud'] != 'GENERANDO...' && $row['ArchivoSolicitud'] != 'pendiente_de_generar.pdf'): ?>
-                                                <a href="../uploads/solicitudes/<?php echo $row['ArchivoSolicitud']; ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <?php if (!empty($row['archivo_solicitud']) && $row['archivo_solicitud'] != 'GENERANDO...' && $row['archivo_solicitud'] != 'pendiente_de_generar.pdf'): ?>
+                                                <a href="../uploads/solicitudes/<?php echo $row['archivo_solicitud']; ?>" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="bi bi-file-earmark-pdf"></i> PDF
                                                 </a>
                                             <?php else: ?>
@@ -103,7 +101,7 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="5" class="text-muted py-4">No hay solicitudes.</td></tr>
+                                <tr><td colspan="5" class="text-muted py-4">No has realizado solicitudes de ahorro.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -131,19 +129,19 @@ require_once '..\includes\Usuario\logica_solicitudes.php';
                             <?php if (!empty($prestamos)): ?>
                                 <?php foreach ($prestamos as $row): ?>
                                     <tr>
-                                        <td><strong>#<?php echo $row['Id_SolicitudPrestamo']; ?></strong></td>
-                                        <td><?php echo date("d/m/Y", strtotime($row['FechaSolicitud'])); ?></td>
-                                        <td class="text-primary fw-bold">$ <?php echo number_format($row['MontoSolicitado'], 2); ?></td>
-                                        <td>$ <?php echo number_format($row['Total_A_Pagar'], 2); ?></td>
+                                        <td><strong>#<?php echo $row['id_solicitud_prestamo']; ?></strong></td>
+                                        <td><?php echo date("d/m/Y", strtotime($row['fecha_solicitud'])); ?></td>
+                                        <td class="text-primary fw-bold">$ <?php echo number_format($row['monto_solicitado'], 2); ?></td>
+                                        <td>$ <?php echo number_format($row['total_a_pagar'], 2); ?></td>
                                         <td>
-                                            <span class="badge rounded-pill <?php echo colorEstado($row['Id_Estado']); ?>">
-                                                <?php echo $row['Estado']; ?>
+                                            <span class="badge rounded-pill <?php echo colorEstado($row['id_estado']); ?>">
+                                                <?php echo $row['estado']; ?>
                                             </span>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="5" class="text-muted py-4">No hay préstamos.</td></tr>
+                                <tr><td colspan="5" class="text-muted py-4">No has solicitado ningún préstamo.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

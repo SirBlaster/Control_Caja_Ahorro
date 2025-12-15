@@ -40,6 +40,12 @@ if ($ultima_solicitud) {
         $clase_alerta = "alert-warning";
     }
 
+        elseif ($estado == 2) {
+        $puede_solicitar = true; // Lo dejamos pasar
+        $mensaje_estado = "Tu solicitud anterior fue aceptada. Si haces otra solicitud remplazara a la anterior (solo puede aumentar el monto ahorrar si es en el mismo ciclo administrativo).";
+        $clase_alerta = "alert-danger"; // Rojo para avisar, pero mostramos el form
+    }
+
     // Estado 2 = Rechazado (Permitimos solicitar de nuevo)
     elseif ($estado == 3) {
         $puede_solicitar = true; // Lo dejamos pasar
