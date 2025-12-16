@@ -18,6 +18,54 @@ $total_actividades = count($actividades);
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
 </head>
+<style>
+    .table-responsive {
+        max-height: 600px; 
+        overflow-y: auto;
+        border: 1px solid #dee2e6; 
+    }
+
+    .table-responsive table {
+        margin-bottom: 0; 
+    }
+
+    .table-responsive thead {
+        position: sticky;
+        top: 0;
+        background-color: #212529; 
+        z-index: 10;
+    }
+    
+    .table-responsive th:nth-child(1), 
+    .table-responsive td:nth-child(1) {
+        width: 160px;
+        min-width: 160px;
+    }
+    
+    .table-responsive th:nth-child(2),
+    .table-responsive td:nth-child(2) {
+        width: 150px;
+        min-width: 150px;
+    }
+    
+    .table-responsive th:nth-child(3), 
+    .table-responsive td:nth-child(3) {
+        width: 120px;
+        min-width: 120px;
+    }
+    
+    .table-responsive th:nth-child(4),
+    .table-responsive td:nth-child(4) {
+        
+        min-width: 300px; 
+    }
+    
+    .table-responsive th:nth-child(5), 
+    .table-responsive td:nth-child(5) {
+        width: 120px;
+        min-width: 120px;
+    }
+</style>
 <body>
     <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
         <div class="d-flex align-items-center">
@@ -163,13 +211,13 @@ $total_actividades = count($actividades);
                                             $clase_badge = 'badge-login';
                                             $icono = 'bi-box-arrow-in-right';
                                         } elseif (strpos($accion, 'LOGOUT') !== false) {
-                                            $clase_badge = 'badge-logout';
+                                            $clase_badge = 'bg-primary';
                                             $icono = 'bi-box-arrow-right';
                                         } elseif (strpos($accion, 'CREATE') !== false || strpos($accion, 'INSERT') !== false) {
                                             $clase_badge = 'badge-create';
                                             $icono = 'bi-plus-circle';
                                         } elseif (strpos($accion, 'UPDATE') !== false) {
-                                            $clase_badge = 'badge-update';
+                                            $clase_badge = 'bg-secondary';
                                             $icono = 'bi-pencil-square';
                                         } elseif (strpos($accion, 'DELETE') !== false) {
                                             $clase_badge = 'badge-delete';
@@ -181,16 +229,16 @@ $total_actividades = count($actividades);
                                             <?php echo htmlspecialchars($actividad['accion']); ?>
                                         </span>
                                     </td>
-                                    <td class="text-break">
-                                        <?php echo htmlspecialchars($actividad['detalle']); ?>
-                                        <?php if (!empty($actividad['user_agent'])): ?>
-                                            <br>
-                                            <small class="text-muted">
-                                                <i class="bi bi-laptop"></i>
-                                                <?php echo htmlspecialchars(substr($actividad['user_agent'], 0, 60)); ?>...
-                                            </small>
-                                        <?php endif; ?>
-                                    </td>
+                                     <td class="text-break">
+                                <?php echo htmlspecialchars($actividad['detalle']); ?>
+                                <?php if (!empty($actividad['user_agent'])): ?>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="bi bi-laptop"></i>
+                                        <?php echo htmlspecialchars(substr($actividad['user_agent'], 0, 60)); ?>...
+                                    </small>
+                                <?php endif; ?>
+                            </td>
                                     <td>
                                         <small class="text-muted">
                                             <i class="bi bi-globe me-1"></i>
