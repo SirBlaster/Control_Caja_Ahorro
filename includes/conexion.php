@@ -2,8 +2,8 @@
 // C:\laragon\www\ControlCajadeAhorro\includes\conexion.php
 
 $host = '127.0.0.1'; // IP de Docker
-$port = '3308';
-$db   = 'caja_ahorro';
+$port = '3306';
+$db   = 'sistema_caja';
 $user = 'root';
 $pass = 'password123'; // La contraseña de tu docker-compose.yml
 $charset = 'utf8mb4';

@@ -2,6 +2,9 @@
 // Admin/gestion_prestamos.php
 require_once '../includes/init.php';
 
+secure_session_start();
+check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
+
 // Verificar Admin
 if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
     header("Location: ../login.php");

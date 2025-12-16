@@ -3,6 +3,7 @@ require_once __DIR__ . '/init.php';
 
 /**
  * Genera un archivo CSV con los reportes de Ahorros y Préstamos de una quincena específica
+ * con acentos correctos y números formateados, evitando warnings de PHP 8+
  *
  * @param PDO $pdo Conexión a la base de datos
  * @param string $mes Mes en formato YYYY-MM
@@ -74,11 +75,20 @@ function generarReporteQuincenalCSV(PDO $pdo, string $mes, int $quincena)
 
     $output = fopen('php://output', 'w');
 
+    // Agregar BOM UTF-8 para Excel
+    fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
     // --- Ahorros ---
     fputcsv($output, ['AHORROS']);
     fputcsv($output, ['ID Usuario', 'Nombre Completo', 'Total Depósitos', 'Total Retiros', 'Saldo Quincenal']);
     foreach ($ahorros as $row) {
-        fputcsv($output, $row);
+        fputcsv($output, [
+            $row['id_usuario'],
+            $row['nombre_completo'],
+            number_format($row['total_depositos'] ?? 0, 2),
+            number_format($row['total_retiros'] ?? 0, 2),
+            number_format($row['saldo_quincenal'] ?? 0, 2)
+        ]);
     }
 
     fputcsv($output, []); // línea vacía
@@ -87,7 +97,13 @@ function generarReporteQuincenalCSV(PDO $pdo, string $mes, int $quincena)
     fputcsv($output, ['PRÉSTAMOS']);
     fputcsv($output, ['ID Usuario', 'Nombre Completo', 'Total Solicitado', 'Total a Pagar', 'Saldo Pendiente']);
     foreach ($prestamos as $row) {
-        fputcsv($output, $row);
+        fputcsv($output, [
+            $row['id_usuario'],
+            $row['nombre_completo'],
+            number_format($row['total_solicitado'] ?? 0, 2),
+            number_format($row['total_a_pagar'] ?? 0, 2),
+            number_format($row['saldo_pendiente'] ?? 0, 2)
+        ]);
     }
 
     fclose($output);
