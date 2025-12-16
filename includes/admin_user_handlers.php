@@ -101,10 +101,11 @@ function cambiar_rol_usuario($id_usuario)
             return ['success' => false, 'message' => 'No se puede cambiar el rol de un SuperUsuario'];
         }
 
-        // Cambiar entre rol 1 (Administrador) y 2 (Ahorrador)
+        // CORRECCIÓN AQUÍ: Cambiar entre rol 1 (Ahorrador) y 2 (Administrador)
         $nuevo_rol = $usuario['id_rol'] == 1 ? 2 : 1;
-        $nuevo_rol_nombre = $nuevo_rol == 1 ? 'Administrador' : 'Ahorrador';
-        $rol_anterior = $usuario['id_rol'] == 1 ? 'Administrador' : 'Ahorrador';
+        // CORRECCIÓN: Asignar nombres correctos según tu tabla
+        $nuevo_rol_nombre = $nuevo_rol == 1 ? 'Ahorrador' : 'Administrador';
+        $rol_anterior = $usuario['id_rol'] == 1 ? 'Ahorrador' : 'Administrador';
 
         $sql_update = "UPDATE usuario SET id_rol = ? WHERE id_usuario = ?";
         $stmt = $pdo->prepare($sql_update);
@@ -128,7 +129,6 @@ function cambiar_rol_usuario($id_usuario)
         return ['success' => false, 'message' => 'Error en la base de datos'];
     }
 }
-
 //Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
 
 function obtener_usuario_por_id($id_usuario)
@@ -316,41 +316,39 @@ function obtener_superusuario_completo($id_usuario)
 }
 function obtener_usuarios_ahorrador($limit = 10, $offset = 0)
 {
-global $pdo;
+    global $pdo;
 
+    $sql = "SELECT
+            u.id_usuario AS id,
+            u.nombre,
+            u.apellido_paterno AS paterno,
+            u.apellido_materno AS materno,
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
+            u.correo_institucional AS email,
+            u.correo_personal AS email_personal,
+            u.telefono,
+            u.id_rol AS rol_id,
+            COALESCE(r.rol, 'No asignado') AS nombre_rol,
+            u.rfc,
+            u.curp,
+            u.tarjeta,
+            u.habilitado
+            FROM usuario u
+            LEFT JOIN rol r ON u.id_rol = r.id_rol
+            WHERE u.id_rol = 2  -- CAMBIADO: 2 = Ahorrador según tu tabla
+            ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
+            LIMIT :limit OFFSET :offset";
 
-$sql = "SELECT
-u.id_usuario AS id,
-u.nombre,
-u.apellido_paterno AS paterno,
-u.apellido_materno AS materno,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
-u.correo_institucional AS email,
-u.correo_personal AS email_personal,
-u.telefono,
-u.id_rol AS rol_id,
-COALESCE(r.rol, 'No asignado') AS nombre_rol,
-u.rfc,
-u.curp,
-u.tarjeta,
-u.habilitado
-FROM usuario u
-LEFT JOIN rol r ON u.id_rol = r.id_rol
-WHERE u.id_rol = 1
-ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
-LIMIT :limit OFFSET :offset";
-
-
-try {
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-$stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-$stmt->execute();
-return $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-error_log("Error al obtener usuarios: " . $e->getMessage());
-return [];
-}
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error al obtener usuarios: " . $e->getMessage());
+        return [];
+    }
 }
 
 
@@ -358,7 +356,7 @@ function contar_usuarios_ahorrador()
 {
     global $pdo;
     try {
-        $stmt = $pdo->query("SELECT COUNT(*) FROM usuario WHERE id_rol = 1");
+        $stmt = $pdo->query("SELECT COUNT(*) FROM usuario WHERE id_rol = 2"); // CAMBIADO: 2 = Ahorrador
         return (int)$stmt->fetchColumn();
     } catch (PDOException $e) {
         error_log("Error al contar usuarios: " . $e->getMessage());
