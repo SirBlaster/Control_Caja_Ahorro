@@ -250,7 +250,7 @@ $actividades = obtener_actividades_recientes(10);
                                         <!-- Botón Cambiar Rol -->
                                         <form method="POST" action="usuarios.php" style="display: inline;">
                                             <input type="hidden" name="id_usuario" value="<?php echo $usuario['id']; ?>">
-                                            <?php if ($usuario['rol_id'] == 1): ?>
+                                            <?php if ($usuario['rol_id'] == 2): ?>
                                                 <!-- Si es Administrador, cambiar a Ahorrador -->
                                                 <button type="submit" name="cambiar_rol" class="btn btn-info btn-action"
                                                     onclick="return confirm('¿Cambiar a Ahorrador? Perderá privilegios de administración.')"
