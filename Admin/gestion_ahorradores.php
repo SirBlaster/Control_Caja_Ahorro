@@ -85,7 +85,7 @@ $usuarios = obtener_usuarios_ahorrador($usuarios_por_pagina, $offset);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='./gestion_prestamos.php') echo 'active'; ?>"
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='gestion_prestamos.php') echo 'active'; ?>"
                         href="./gestion_prestamos.php">
                         <i class="bi bi-cash-stack me-1"></i>Gestión de prestamos y ahorros
                     </a>
@@ -93,11 +93,11 @@ $usuarios = obtener_usuarios_ahorrador($usuarios_por_pagina, $offset);
                 <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='nominas.php') echo 'active'; ?>"
                         href="./gestion_nominas.php">
-                        <i class="bi bi-cash-stack me-1"></i>Gestión de nominas
+                        <i class="bi bi-person-badge me-1"></i>Gestión de nóminas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='./gestion_ahorradores.php') echo 'active'; ?>"
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='gestion_ahorradores.php') echo 'active'; ?>"
                         href="./gestion_ahorradores.php">
                         <i class="bi bi-people-fill me-1"></i>Usuarios
                     </a>
@@ -109,7 +109,13 @@ $usuarios = obtener_usuarios_ahorrador($usuarios_por_pagina, $offset);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='configuracion.php') echo 'active'; ?>"
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='dashboard_usuario.php') echo 'active'; ?>"
+                        href="../Usuario/panelAhorrador.php">
+                        <i class="bi bi-card-checklist me-1"></i>Solicitudes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
                         href="./editar_perfil.php">
                         <i class="bi bi-gear-fill me-1"></i>Editar perfil
                     </a>
