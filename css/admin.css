@@ -145,6 +145,7 @@ h2 {
   cursor: pointer;
   transition: all 0.3s;
 }
+
 .btn-details:hover {
   background-color: #2a3472;
   color: white;
@@ -166,6 +167,7 @@ h2 {
     background-color: #dc3545;
     color: white;
 }
+
 .view-all {
   color: #2a3472;
   text-decoration: none;

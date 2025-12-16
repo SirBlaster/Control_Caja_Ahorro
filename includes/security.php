@@ -97,9 +97,9 @@ function redirect_by_role() {
     }
     
     switch ($_SESSION['id_rol']) {
-        case 1: header("Location: Admin/Inicio.php"); break;
-        case 2: header("Location: Usuario/panelAhorrador.php"); break;
-        case 3: header("Location: SuperUsuario/Inicio.php"); break;
+        case 1: header("Location: Usuario/panelAhorrador.php"); break;
+        case 2: header("Location: Admin/inicio.php"); break;
+        case 3: header("Location: SuperUsuario/inicio.php"); break;
         default: header("Location: login.php");
     }
     exit();

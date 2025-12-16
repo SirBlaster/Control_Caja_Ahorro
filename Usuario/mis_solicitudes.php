@@ -78,77 +78,112 @@ $prestamos = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Panel Ahorrador</h4>
+        </div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3 text-end">
+                <p class="user-name mb-0">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
+            </div>
+
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NAVBAR AHORRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt="">
-                SETDITSX
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAhorrador"
+                aria-controls="navbarAhorrador" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="navbarAhorrador">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ================= PANEL PRINCIPAL ================= -->
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Apartados (Ahorrador)
+                        <a class="nav-link" href="../includes/redirect_inicio.php">
+                            <i class="bi bi-house-door-fill me-1"></i>Inicio
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <h6 class="dropdown-header text-primary">Ahorro</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar
-                                    Ahorro</a></li>
+                    </li>
+                    <!-- ================= EDITAR PERFIL ================= -->
+                    <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                            href="editar_perfil.php">
+                            <i class="bi bi-person-gear me-1"></i>Editar perfil
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- ================= AHORRO ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-piggy-bank me-1"></i>Ahorro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./registrahorro.php">
+                                    <i class="bi bi-plus-circle me-1"></i>Solicitar Ahorro
+                                </a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-
-                            <li>
-                                <h6 class="dropdown-header text-primary">Préstamos</h6>
-                            </li>
-                            <li><a class="dropdown-item"
-                                    href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a>
-                            </li>
-                            <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado
-                                    de mi préstamo</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <li>
-                                <h6 class="dropdown-header text-primary">Movimientos y Consultas</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver
-                                    movimientos</a></li>
-                            <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis
-                                    solicitudes</a></li>
+                            <li><a class="dropdown-item" href="./movimientos.php">
+                                    <i class="bi bi-list-ul me-1"></i>Ver movimientos
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= PRÉSTAMOS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-cash-stack me-1"></i>Préstamos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./solicitud_prestamo.php">
+                                    <i class="bi bi-currency-dollar me-1"></i>Solicitar préstamo
+                                </a></li>
+                            <li><a class="dropdown-item" href="./Estado_Prestamo.php">
+                                    <i class="bi bi-clipboard-check me-1"></i>Estado de mi préstamo
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= CONSULTAS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Consultas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./mis_solicitudes.php">
+                                    <i class="bi bi-clock-history me-1"></i>Mis solicitudes
+                                </a></li>
+                            <li><a class="dropdown-item" href="./historial_completo.php">
+                                    <i class="bi bi-journal-text me-1"></i>Historial completo
+                                </a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
-
-            <div class="d-flex align-items-center gap-3">
-                <div class="user-details text-end d-none d-md-block">
-                    <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                </a>
-            </div>
         </div>
     </nav>
 
+    <!-- CONTENIDO -->
     <div class="container my-5 pt-4">
         <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">
             <i class="bi bi-arrow-left"></i> Regresar al Panel

@@ -67,59 +67,113 @@ if ($miPrestamo) {
 </head>
 
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light header">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
-          </a>
-
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Apartados (Ahorrador)
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-
-          <div class="d-flex align-items-center gap-3">
-            <div class="user-details text-end d-none d-md-block">
-              <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
-              <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-            </div>
-            <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-            </a>
-          </div>
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Panel Ahorrador</h4>
         </div>
-      </nav>
 
-  <?php if (isset($_GET['msg'])): ?>
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3 text-end">
+                <p class="user-name mb-0">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
+            </div>
+
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NAVBAR AHORRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAhorrador"
+                aria-controls="navbarAhorrador" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarAhorrador">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ================= PANEL PRINCIPAL ================= -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../includes/redirect_inicio.php">
+                            <i class="bi bi-house-door-fill me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <!-- ================= EDITAR PERFIL ================= -->
+                    <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                            href="editar_perfil.php">
+                            <i class="bi bi-person-gear me-1"></i>Editar perfil
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- ================= AHORRO ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-piggy-bank me-1"></i>Ahorro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./registrahorro.php">
+                                    <i class="bi bi-plus-circle me-1"></i>Solicitar Ahorro
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="./movimientos.php">
+                                    <i class="bi bi-list-ul me-1"></i>Ver movimientos
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= PRÉSTAMOS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-cash-stack me-1"></i>Préstamos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./solicitud_prestamo.php">
+                                    <i class="bi bi-currency-dollar me-1"></i>Solicitar préstamo
+                                </a></li>
+                            <li><a class="dropdown-item" href="./Estado_Prestamo.php">
+                                    <i class="bi bi-clipboard-check me-1"></i>Estado de mi préstamo
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= CONSULTAS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Consultas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./mis_solicitudes.php">
+                                    <i class="bi bi-clock-history me-1"></i>Mis solicitudes
+                                </a></li>
+                            <li><a class="dropdown-item" href="./historial_completo.php">
+                                    <i class="bi bi-journal-text me-1"></i>Historial completo
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <?php if (isset($_GET['msg'])): ?>
     <div class="container mt-4">
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i>
@@ -127,110 +181,89 @@ if ($miPrestamo) {
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
-  <?php endif; ?>
+    <?php endif; ?>
 
 
-  <div style="color: #1a237e;" class="alert d-flex align-items-center" role="alert">
-    <div>
-      El porcentaje de la caja se asigna al corte de la caja, despues del 30 de noviembre de cada año.
+    <div style="color: #1a237e;" class="alert d-flex align-items-center" role="alert">
+        <div>
+            El porcentaje de la caja se asigna al corte de la caja, despues del 30 de noviembre de cada año.
+        </div>
     </div>
-  </div>
-  <div class="main-container">
+    <div class="main-container">
 
-    
-    <div class="dashboard-cards">
 
-      <div class="info-card">
-         <h6 class="card-label">CAJA DE AHORRO</h6>
-         <div class="card-amount amount-success">
-             $ <?php echo number_format($saldo_total, 2); ?> <span class="fs-6 text-muted">MXN</span>
-             
-             <?php 
+        <div class="dashboard-cards">
+
+            <div class="info-card">
+                <h6 class="card-label">CAJA DE AHORRO</h6>
+                <div class="card-amount amount-success">
+                    $ <?php echo number_format($saldo_total, 2); ?> <span class="fs-6 text-muted">MXN</span>
+
+                    <?php 
              $mes_actual = date('n');
              if ($mes_actual == 12): 
              ?>
-                <hr class="my-2" style="opacity: 0.1"> <h6 class="card-label" style="font-size: 0.8rem;">Rendimiento (<?php echo $porcentaje_Rendimiento; ?>%):</h6>
-                <div class="text-success fw-bold">
-                    <?php 
+                    <hr class="my-2" style="opacity: 0.1">
+                    <h6 class="card-label" style="font-size: 0.8rem;">Rendimiento
+                        (<?php echo $porcentaje_Rendimiento; ?>%):</h6>
+                    <div class="text-success fw-bold">
+                        <?php 
                         $ganancia = ($saldo_total * $porcentaje_Rendimiento) / 100;
                         echo '+ $ ' . number_format($ganancia, 2); 
-                    ?> 
-                    <span class="fs-6 text-muted">MXN</span>
+                    ?>
+                        <span class="fs-6 text-muted">MXN</span>
+                    </div>
+
+                    <h6 class="card-label mt-2" style="font-size: 0.8rem;">Total al cierre:</h6>
+                    <div class="fw-bold" style="color: #153b52;">
+                        $ <?php echo number_format($saldo_total + $ganancia, 2); ?>
+                        <span class="fs-6 text-muted">MXN</span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="text-muted small">Saldo total disponible</div>
+                <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
+            </div>
+
+            <div class="info-card" style="<?php echo $esPendiente ? 'border: 1px solid #0d6efd;' : ''; ?>">
+                <h6 class="card-label">
+                    <?php echo $esPendiente ? 'ESTADO SOLICITUD' : 'PRÉSTAMO ACTIVO'; ?>
+                </h6>
+
+                <div class="card-amount <?php echo $esPendiente ? 'text-primary' : 'amount-warning'; ?>">
+                    $ <?php echo number_format($montoMostrar, 2); ?> <span class="fs-6 text-muted">MXN</span>
                 </div>
 
-                <h6 class="card-label mt-2" style="font-size: 0.8rem;">Total al cierre:</h6>
-                <div class="fw-bold" style="color: #153b52;">
-                    $ <?php echo number_format($saldo_total + $ganancia, 2); ?> 
-                    <span class="fs-6 text-muted">MXN</span>
+                <div class="small fw-bold <?php echo $claseEstado; ?>">
+                    <?php echo $textoEstado; ?>
                 </div>
-             <?php endif; ?>
-         </div>
-         <div class="text-muted small">Saldo total disponible</div>
-         <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
-      </div>
 
-      <div class="info-card" style="<?php echo $esPendiente ? 'border: 1px solid #0d6efd;' : ''; ?>">
-         <h6 class="card-label">
-             <?php echo $esPendiente ? 'ESTADO SOLICITUD' : 'PRÉSTAMO ACTIVO'; ?>
-         </h6>
+                <?php if ($tieneSolicitud): ?>
+                <a href="Estado_Prestamo.php" class="btn btn-outline-primary mt-3 btn-sm w-100">
+                    <?php echo $esPendiente ? 'Ver estado de revisión' : 'Consultar detalles'; ?>
+                </a>
+                <?php else: ?>
+                <button class="btn btn-light mt-3 btn-sm w-100" disabled>Sin préstamo activo</button>
+                <?php endif; ?>
+            </div>
 
-         <div class="card-amount <?php echo $esPendiente ? 'text-primary' : 'amount-warning'; ?>">
-             $ <?php echo number_format($montoMostrar, 2); ?> <span class="fs-6 text-muted">MXN</span>
-         </div>
-         
-         <div class="small fw-bold <?php echo $claseEstado; ?>">
-             <?php echo $textoEstado; ?>
-         </div>
+        </div>
 
-         <?php if ($tieneSolicitud): ?>
-             <a href="Estado_Prestamo.php" class="btn btn-outline-primary mt-3 btn-sm w-100">
-                 <?php echo $esPendiente ? 'Ver estado de revisión' : 'Consultar detalles'; ?>
-             </a>
-         <?php else: ?>
-             <button class="btn btn-light mt-3 btn-sm w-100" disabled>Sin préstamo activo</button>
-         <?php endif; ?>
-      </div>
-
-    </div>
-
-    <section class="mb-5">
-      <h6 class="section-title">ACCIONES RÁPIDAS</h6>
-      <div class="actions-container justify-content-center">
-         
-         <?php if (!$tieneSolicitud): ?>
-             <a href="solicitud_prestamo.php" class="btn-custom btn-gold text-decoration-none">
-                 <i class="bi bi-cash-stack"></i> Solicitar nuevo préstamo
-             </a>
-         <?php else: ?>
-             <button class="btn-custom btn-cancel text-decoration-none" disabled style="opacity: 0.6; cursor: not-allowed;">
-                 <i class="bi bi-lock-fill"></i> Solicitud en curso
-             </button>
-         <?php endif; ?>
-
-         <a href="registrahorro.php" class="btn-custom btn-gold text-decoration-none">
-             <i class="bi bi-piggy-bank"></i> Registrar Ahorro / Nómina
-         </a>
-         <a href="mis_solicitudes.php" class="btn-custom btn-gold text-decoration-none">
-             <i class="bi bi-clock-history"></i> Ver Historial Solicitudes
-         </a>
-      </div>
-    </section>
-
-<section>
-       <h6 class="section-title">ÚLTIMOS MOVIMIENTOS</h6>
-       <div class="table-container">
-           <table class="table">
-               <thead>
-                   <tr>
-                       <th>Fecha</th>
-                       <th>Concepto</th>
-                       <th>Tipo</th>
-                       <th class="text-end">Monto</th>
-                   </tr>
-               </thead>
-               <tbody>
-                   <?php if (!empty($movimientos)): ?>
-                       <?php foreach ($movimientos as $mov): 
+        <section>
+            <h6 class="section-title">ÚLTIMOS MOVIMIENTOS</h6>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Tipo</th>
+                            <th class="text-end">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($movimientos)): ?>
+                        <?php foreach ($movimientos as $mov): 
                            // CORRECCIÓN: Claves en minúscula (id_tipo_movimiento)
                            $es_ingreso = ($mov['id_tipo_movimiento'] == 1); 
                            
@@ -238,35 +271,39 @@ if ($miPrestamo) {
                            $signo = $es_ingreso ? '+' : '-';
                            $badge_bg = $es_ingreso ? 'bg-success' : 'bg-warning text-dark';
                        ?>
-                       <tr>
-                           <td><?php echo date("d/m/Y", strtotime($mov['fecha'])); ?></td>
-                           
-                           <td><?php echo htmlspecialchars($mov['concepto']); ?></td>
-                           
-                           <td>
+                        <tr>
+                            <td><?php echo date("d/m/Y", strtotime($mov['fecha'])); ?></td>
+
+                            <td><?php echo htmlspecialchars($mov['concepto']); ?></td>
+
+                            <td>
                                 <span class="badge badge-tipo <?php echo $badge_bg; ?>">
                                     <?php echo htmlspecialchars($mov['etiqueta_tipo'] ?? 'Sin Asignar'); ?>
                                 </span>
                             </td>
-                           
-                           <td class="text-end fw-bold <?php echo $clase_monto; ?>">
-                               <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
-                           </td>
-                       </tr>
-                       <?php endforeach; ?>
-                   <?php else: ?>
-                       <tr><td colspan="4" class="text-center py-4 text-muted">No hay movimientos recientes.</td></tr>
-                   <?php endif; ?>
-               </tbody>
-           </table>
-       </div>
-       <div class="mt-3 text-end">
-          <a href="historial_completo.php" class="text-primary fw-bold text-decoration-none"> Ver historial completo &rarr;</a>
-       </div>
-    </section>
 
-  </div>
+                            <td class="text-end fw-bold <?php echo $clase_monto; ?>">
+                                <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">No hay movimientos recientes.</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3 text-end">
+                <a href="historial_completo.php" class="text-primary fw-bold text-decoration-none"> Ver historial
+                    completo &rarr;</a>
+            </div>
+        </section>
 
-  <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    </div>
+
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

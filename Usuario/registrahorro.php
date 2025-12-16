@@ -56,141 +56,206 @@ if ($ultima_solicitud) {
 ?>
 <!doctype html>
 <html lang="es">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Solicitud Ahorro - registrar nómina</title>
-<link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-<link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-<link rel="stylesheet" href="../css/estilo_ahorrador.css">
-<link rel="stylesheet" href="../css/ahorro-nomina.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Solicitud Ahorro - registrar nómina</title>
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
+    <link rel="stylesheet" href="../css/ahorro-nomina.css">
 </head>
+
 <body>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light header">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Apartados (Ahorrador)
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-              </ul>
-            </li>
-          </ul>
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Panel Ahorrador</h4>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
-          <div class="user-details text-end d-none d-md-block">
-            <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
-            <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-          </div>
-          <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-          </a>
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3 text-end">
+                <p class="user-name mb-0">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
+            </div>
+
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
         </div>
-      </div>
+    </div>
+
+    <!-- NAVBAR AHORRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAhorrador"
+                aria-controls="navbarAhorrador" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarAhorrador">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ================= PANEL PRINCIPAL ================= -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../includes/redirect_inicio.php">
+                            <i class="bi bi-house-door-fill me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <!-- ================= EDITAR PERFIL ================= -->
+                    <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                            href="editar_perfil.php">
+                            <i class="bi bi-person-gear me-1"></i>Editar perfil
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- ================= AHORRO ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-piggy-bank me-1"></i>Ahorro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./registrahorro.php">
+                                    <i class="bi bi-plus-circle me-1"></i>Solicitar Ahorro
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="./movimientos.php">
+                                    <i class="bi bi-list-ul me-1"></i>Ver movimientos
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= PRÉSTAMOS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-cash-stack me-1"></i>Préstamos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./solicitud_prestamo.php">
+                                    <i class="bi bi-currency-dollar me-1"></i>Solicitar préstamo
+                                </a></li>
+                            <li><a class="dropdown-item" href="./Estado_Prestamo.php">
+                                    <i class="bi bi-clipboard-check me-1"></i>Estado de mi préstamo
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= CONSULTAS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Consultas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./mis_solicitudes.php">
+                                    <i class="bi bi-clock-history me-1"></i>Mis solicitudes
+                                </a></li>
+                            <li><a class="dropdown-item" href="./historial_completo.php">
+                                    <i class="bi bi-journal-text me-1"></i>Historial completo
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
+    <!-- CONTENIDO -->
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
 
-  <main class="container my-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-9">
+                <div class="pn-card p-5 shadow-sm">
+                    <h1 class="pn-title text-center mb-4">Solicitar ahorro y registro de nómina</h1>
 
-        <div class="pn-card p-5 shadow-sm">
-          <h1 class="pn-title text-center mb-4">Solicitar ahorro y registro de nómina</h1>
-
-          <?php if (!empty($mensaje_estado)): ?>
-            <div class="alert <?php echo $clase_alerta; ?> text-center mb-4" role="alert">
-                <i class="bi bi-info-circle-fill me-2"></i>
-                <?php echo $mensaje_estado; ?>
-            </div>
-          <?php endif; ?>
-
-          <?php if ($puede_solicitar): ?>
-
-              <form class="row g-4" id="formAhorro" action="../includes/Usuario/procesar_ahorro.php" method="POST" enctype="multipart/form-data">
-                
-                <div class="col-12">
-                  <label class="form-label fw-bold">Registre su nómina (Sueldo Neto MXN)</label>
-                  <input type="number" step="0.01" name="sueldo" id="sueldo" class="form-control form-control-lg pn-input-amount" placeholder="Inserte su nómina" required>
-                </div>
-
-                <div class="col-12">
-                  <label class="form-label fw-bold">Monto de ahorro deseado (MXN)</label>
-                  <input type="number" step="0.01" name="monto" id="monto" class="form-control form-control-lg pn-input-amount" placeholder="Inserte el monto a ahorrar" required>
-                  <small class="text-danger mt-1" id="errorMonto" style="display:none; font-weight:bold;">
-                     El monto no puede superar el 30% de tu nómina ($<span id="topeMax">0.00</span>)
-                  </small>
-                </div>
-
-                <div class="col-12 col-md-6">
-                  <label class="form-label fw-bold">Cargar comprobante de Nómina (PDF)</label>
-                  <div class="upload-box mt-2">
-                    <div class="upload-inner text-center p-4">
-                      <i class="bi bi-cloud-upload upload-icon" style="font-size: 2rem;"></i>
-                      <p class="mb-2">Arrastra y suelta tu archivo PDF aquí</p>
-                      <input type="file" name="archivo_nomina" id="nominaFile" accept="application/pdf" class="d-none" required>
-                      <label for="nominaFile" class="btn btn-sm btn-select btn-primary">Seleccionar archivo</label>
-                      <div id="fileNameDisplay" class="mt-2 text-muted small"></div>
+                    <?php if (!empty($mensaje_estado)): ?>
+                    <div class="alert <?php echo $clase_alerta; ?> text-center mb-4" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <?php echo $mensaje_estado; ?>
                     </div>
-                  </div>
-                </div>
+                    <?php endif; ?>
 
-                <div class="col-12 d-flex gap-3 flex-wrap">
-                <div class="col-12 d-flex gap-3 flex-wrap align-items-center mt-4">
-                  <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel px-4">Cancelar</a>
-                  <button type="submit" id="btnEnviar" class="btn btn-confirm ms-auto btn-success">Confirmar y enviar solicitud</button>
-                </div>
-                </div>
-              </form>
+                    <?php if ($puede_solicitar): ?>
 
-          <?php else: ?>
-              <div class="text-center">
-                <p class="text-muted">No puedes realizar una nueva solicitud en este momento.</p>
-                <a href="panelAhorrador.php" class="btn btn-primary">Volver al Panel Principal</a>
-              </div>
-          <?php endif; ?>
+                    <form class="row g-4" id="formAhorro" action="../includes/Usuario/procesar_ahorro.php" method="POST"
+                        enctype="multipart/form-data">
 
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Registre su nómina (Sueldo Neto MXN)</label>
+                            <input type="number" step="0.01" name="sueldo" id="sueldo"
+                                class="form-control form-control-lg pn-input-amount" placeholder="Inserte su nómina"
+                                required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Monto de ahorro deseado (MXN)</label>
+                            <input type="number" step="0.01" name="monto" id="monto"
+                                class="form-control form-control-lg pn-input-amount"
+                                placeholder="Inserte el monto a ahorrar" required>
+                            <small class="text-danger mt-1" id="errorMonto" style="display:none; font-weight:bold;">
+                                El monto no puede superar el 30% de tu nómina ($<span id="topeMax">0.00</span>)
+                            </small>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-bold">Cargar comprobante de Nómina (PDF)</label>
+                            <div class="upload-box mt-2">
+                                <div class="upload-inner text-center p-4">
+                                    <i class="bi bi-cloud-upload upload-icon" style="font-size: 2rem;"></i>
+                                    <p class="mb-2">Arrastra y suelta tu archivo PDF aquí</p>
+                                    <input type="file" name="archivo_nomina" id="nominaFile" accept="application/pdf"
+                                        class="d-none" required>
+                                    <label for="nominaFile" class="btn btn-sm btn-select btn-primary">Seleccionar
+                                        archivo</label>
+                                    <div id="fileNameDisplay" class="mt-2 text-muted small"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex gap-3 flex-wrap">
+                            <div class="col-12 d-flex gap-3 flex-wrap align-items-center mt-4">
+                                <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel px-4">Cancelar</a>
+                                <button type="submit" id="btnEnviar"
+                                    class="btn btn-confirm ms-auto btn-success">Confirmar y enviar solicitud</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <?php else: ?>
+                    <div class="text-center">
+                        <p class="text-muted">No puedes realizar una nueva solicitud en este momento.</p>
+                        <a href="panelAhorrador.php" class="btn btn-primary">Volver al Panel Principal</a>
+                    </div>
+                    <?php endif; ?>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 
-<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
-<?php if ($puede_solicitar): ?>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <?php if ($puede_solicitar): ?>
     <script src="../js/validar_ahorro.js"></script>
     <script>
-        document.getElementById('nominaFile').addEventListener('change', function(e) {
-            var fileName = e.target.files[0] ? e.target.files[0].name : '';
-            document.getElementById('fileNameDisplay').textContent = fileName;
-        });
+    document.getElementById('nominaFile').addEventListener('change', function(e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : '';
+        document.getElementById('fileNameDisplay').textContent = fileName;
+    });
     </script>
-<?php endif; ?>
+    <?php endif; ?>
 </body>
+
 </html>
