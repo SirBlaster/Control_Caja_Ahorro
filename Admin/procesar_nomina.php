@@ -4,7 +4,7 @@ require_once '../includes/init.php';
 secure_session_start();
 
 
-if (!isset($_SESSION['id_rol']) || ($_SESSION['id_rol'] != 1 && $_SESSION['id_rol'] != 3)) {
+if (!isset($_SESSION['id_rol']) || ($_SESSION['id_rol'] != 2)) {
     die("Acceso denegado.");
 }
 

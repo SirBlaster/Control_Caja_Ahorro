@@ -30,12 +30,14 @@ try {
 
 if ($id_usuario) {
 
+
     try {
         $sqlSaldo = "SELECT 
-                        SUM(CASE WHEN Id_TipoMovimiento = 1 THEN Monto ELSE 0 END) as TotalDepositos,
-                        SUM(CASE WHEN Id_TipoMovimiento = 2 THEN Monto ELSE 0 END) as TotalRetiros
-                        FROM Movimientos 
-                        WHERE Id_Ahorrador = ?";
+                        SUM(CASE WHEN id_tipo_movimiento = 1 THEN monto ELSE 0 END) as TotalDepositos,
+                        SUM(CASE WHEN id_tipo_movimiento = 2 THEN monto ELSE 0 END) as TotalRetiros
+                    FROM movimiento 
+                    WHERE id_usuario = ?";
+        
         $stmtSaldo = $pdo->prepare($sqlSaldo);
         $stmtSaldo->execute([$id_usuario]);
         $resSaldo = $stmtSaldo->fetch();
@@ -49,9 +51,10 @@ if ($id_usuario) {
 
 
     try {
-        $sqlPrest = "SELECT SUM(Total_A_Pagar) 
-                        FROM Solicitud_Prestamo 
-                        WHERE Id_Ahorrador = ? AND Id_Estado = 2"; 
+        $sqlPrest = "SELECT SUM(saldo_pendiente) 
+                    FROM solicitud_prestamo 
+                     WHERE id_usuario = ? AND id_estado = 2"; // 2 = Aprobado
+
         $stmtPrest = $pdo->prepare($sqlPrest);
         $stmtPrest->execute([$id_usuario]);
         $saldo_prestamo = $stmtPrest->fetchColumn() ?: 0.00;
@@ -59,13 +62,21 @@ if ($id_usuario) {
         $saldo_prestamo = 0.00;
     }
 
+
     try {
-        $sqlMovs = "SELECT m.Fecha, m.Concepto, m.Monto, m.Id_TipoMovimiento, tm.Descripcion as Tipo
-                    FROM Movimientos m
-                    LEFT JOIN TipoMovimiento tm ON m.Id_TipoMovimiento = tm.Id_TipoMovimiento
-                    WHERE m.Id_Ahorrador = ?
-                    ORDER BY m.Fecha DESC 
+        
+        $sqlMovs = "SELECT 
+                        m.fecha, 
+                        m.concepto, 
+                        m.monto, 
+                        m.id_tipo_movimiento, 
+                        tm.tipo_movimiento AS etiqueta_tipo 
+                    FROM movimiento m
+                    LEFT JOIN tipo_movimiento tm ON m.id_tipo_movimiento = tm.id_tipo_movimiento
+                    WHERE m.id_usuario = ?
+                    ORDER BY m.fecha DESC 
                     LIMIT 5";
+                    
         $stmtMovs = $pdo->prepare($sqlMovs);
         $stmtMovs->execute([$id_usuario]);
         $movimientos = $stmtMovs->fetchAll();

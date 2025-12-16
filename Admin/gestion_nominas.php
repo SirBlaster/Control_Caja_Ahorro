@@ -3,7 +3,7 @@ require_once '../includes/init.php';
 secure_session_start();
 
 // Validar Rol Admin
-if (!isset($_SESSION['id_rol']) || ($_SESSION['id_rol'] != 1 && $_SESSION['id_rol'] != 3)) {
+if (!isset($_SESSION['id_rol']) || ( $_SESSION['id_rol'] != 2)) {
     header("Location: ../login.php");
     exit();
 }

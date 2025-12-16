@@ -52,16 +52,7 @@ if ($miPrestamo) {
     }
 }
 
-// C. Movimientos recientes
-$stmtMovs = $pdo->prepare("
-    SELECT m.*, tm.tipo_movimiento as Tipo 
-    FROM movimiento m 
-    JOIN tipo_movimiento tm ON m.id_tipo_movimiento = tm.id_tipo_movimiento 
-    WHERE m.id_usuario = :id 
-    ORDER BY m.fecha DESC LIMIT 5
-");
-$stmtMovs->execute([':id' => $id_usuario]);
-$movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!doctype html>
@@ -208,7 +199,7 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </section>
 
-    <section>
+<section>
        <h6 class="section-title">ÚLTIMOS MOVIMIENTOS</h6>
        <div class="table-container">
            <table class="table">
@@ -223,17 +214,26 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
                <tbody>
                    <?php if (!empty($movimientos)): ?>
                        <?php foreach ($movimientos as $mov): 
-                           $es_ingreso = ($mov['Id_TipoMovimiento'] == 1); 
+                           // CORRECCIÓN: Claves en minúscula (id_tipo_movimiento)
+                           $es_ingreso = ($mov['id_tipo_movimiento'] == 1); 
+                           
                            $clase_monto = $es_ingreso ? 'text-success' : 'text-danger';
                            $signo = $es_ingreso ? '+' : '-';
                            $badge_bg = $es_ingreso ? 'bg-success' : 'bg-warning text-dark';
                        ?>
                        <tr>
-                           <td><?php echo date("d/m/Y", strtotime($mov['Fecha'])); ?></td>
-                           <td><?php echo htmlspecialchars($mov['Concepto']); ?></td>
-                           <td><span class="badge <?php echo $badge_bg; ?>"><?php echo htmlspecialchars($mov['Tipo']); ?></span></td>
+                           <td><?php echo date("d/m/Y", strtotime($mov['fecha'])); ?></td>
+                           
+                           <td><?php echo htmlspecialchars($mov['concepto']); ?></td>
+                           
+                           <td>
+                                <span class="badge badge-tipo <?php echo $badge_bg; ?>">
+                                    <?php echo htmlspecialchars($mov['etiqueta_tipo'] ?? 'Sin Asignar'); ?>
+                                </span>
+                            </td>
+                           
                            <td class="text-end fw-bold <?php echo $clase_monto; ?>">
-                               <?php echo $signo . '$' . number_format($mov['Monto'], 2); ?>
+                               <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
                            </td>
                        </tr>
                        <?php endforeach; ?>

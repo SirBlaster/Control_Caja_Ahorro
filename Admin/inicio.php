@@ -81,6 +81,12 @@ $pendientes = total_pendientes($pdo); // ['ahorro'=>x, 'prestamo'=>y, 'total'=>z
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='nominas.php') echo 'active'; ?>"
+                        href="./gestion_nominas.php">
+                        <i class="bi bi-cash-stack me-1"></i>Gestión de nominas
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='usuarios.php') echo 'active'; ?>"
                         href="./gestion_ahorradores.php">
                         <i class="bi bi-people-fill me-1"></i>Usuarios
