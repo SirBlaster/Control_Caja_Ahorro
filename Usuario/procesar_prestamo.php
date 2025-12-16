@@ -22,8 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        // --- CÁLCULOS FINANCIEROS (30% Interés) ---
-        $tasa_interes = 0.30;
+        // --- NUEVO: OBTENER TASA DE INTERÉS DINÁMICA DE LA BD ---
+        $stmtConfig = $pdo->query("SELECT tasa_interes_general FROM datos_sistema WHERE id_datos = 1");
+        $config = $stmtConfig->fetch(PDO::FETCH_ASSOC);
+        
+        // Convertir de porcentaje (30.00) a decimal (0.30)
+        // Si no se encuentra, usar 0.30 por defecto
+        $tasa_interes = ($config && isset($config['tasa_interes_general'])) ? ($config['tasa_interes_general'] / 100) : 0.30;
+
+        // --- CÁLCULOS FINANCIEROS (Con Tasa Dinámica) ---
         $interes_generado = $monto_solicitado * $tasa_interes;
         $total_a_pagar = $monto_solicitado + $interes_generado;
         
@@ -54,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($esDiciembre) {
             $msg = "Solicitud en lista de espera. Se procesará la solicitud en Enero.";
         } else {
-            $msg = "Solicitud envidada. Espera a la aprobación del administrador.";
+            $msg = "Solicitud enviada. Espera a la aprobación del administrador.";
         }
 
         header("Location: panelAhorrador.php?msg=" . urlencode($msg));
