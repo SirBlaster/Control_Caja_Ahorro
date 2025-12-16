@@ -9,6 +9,25 @@ $saldo_total = 0.00;
 $saldo_prestamo = 0.00;
 $movimientos = [];
 
+$porcentaje_Rendimiento = 0;
+
+try {
+    $sql = "SELECT rendimiento_anual_ahorros FROM datos_sistema LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    
+    $stmt->execute();
+
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($resultado) {
+        $porcentaje_Rendimiento = $resultado['rendimiento_anual_ahorros'];
+    }
+
+} catch (PDOException $e) {
+    error_log("Error al obtener rendimiento: " . $e->getMessage());
+}
+
+
 if ($id_usuario) {
 
     try {

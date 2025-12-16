@@ -72,9 +72,9 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Panel - Ahorrador</title>
 
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
 
 <body>
@@ -140,18 +140,26 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
     </div>
   <?php endif; ?>
 
+
+  <div style="color: #1a237e;" class="alert d-flex align-items-center" role="alert">
+    <div>
+      El porcentaje de la caja se asigna al corte de la caja, despues del 30 de noviembre de cada año.
+    </div>
+  </div>
   <div class="main-container">
+
     
     <div class="dashboard-cards">
-      
       <div class="info-card">
          <h6 class="card-label">CAJA DE AHORRO</h6>
          <div class="card-amount amount-success">
              $ <?php echo number_format($saldo_total, 2); ?> <span class="fs-6 text-muted">MXN</span>
+             <h6 class="card-label">Rendimiento:</h6>
+             $ <?php echo number_format($porcentaje_Rendimiento); ?> <span class="fs-6 text-muted">%</span>
          </div>
          <div class="text-muted small">Saldo total disponible</div>
-         <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
-      </div>
+        <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
+        </div>
 
       <div class="info-card" style="<?php echo $esPendiente ? 'border: 1px solid #0d6efd;' : ''; ?>">
          <h6 class="card-label">
