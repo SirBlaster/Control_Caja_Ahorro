@@ -51,35 +51,73 @@ $usuarios = obtener_usuarios_ahorrador($usuarios_por_pagina, $offset);
 </head>
 
 <body>
-    <div class="header d-flex justify-content-between align-items-center">
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
         <div class="d-flex align-items-center">
-            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3">
+            <img src="../img/logoChico.png" alt="SETDITSX" width="70" class="me-3" />
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 
-        <div class="user-info">
-            <i class="bi bi-person-square user-icon"></i>
-            <div class="user-details">
-                <p class="user-name"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3">
+                <p class="user-name mb-0"><?php echo htmlspecialchars(get_user_name()); ?></p>
+                <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
             </div>
 
             <form action="../logout.php" method="POST" style="display:inline;">
                 <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
-                    <i class="bi bi-box-arrow-right me-1"></i>
-                    Cerrar Sesión
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
                 </button>
             </form>
         </div>
-
     </div>
 
-    <div class="card-form">
-        <div class="nav-actions">
-            <a href="./inicio.php" class="nav-link">
-                <i class="bi bi-arrow-left"></i> Volver al menú principal
-            </a>
+    <!-- NAVBAR DE ADMINISTRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='inicio.php') echo 'active'; ?>"
+                        href="./inicio.php">
+                        <i class="bi bi-house-door-fill me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='ahorros.php') echo 'active'; ?>"
+                        href="./gestion_prestamos.php">
+                        <i class="bi bi-cash-stack me-1"></i>Prestamos y Ahorros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='usuarios.php') echo 'active'; ?>"
+                        href="./gestion_ahorradores.php">
+                        <i class="bi bi-people-fill me-1"></i>Usuarios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='reportes.php') echo 'active'; ?>"
+                        href="./reportes.php">
+                        <i class="bi bi-file-earmark-text-fill me-1"></i>Reportes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='configuracion.php') echo 'active'; ?>"
+                        href="./configuracion.php">
+                        <i class="bi bi-gear-fill me-1"></i>Configuración
+                    </a>
+                </li>
+            </ul>
         </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+
+    <div class="card-form">
+        <a href="./inicio.php" class="btn btn-secondary mb-4">
+            <i class="bi bi-arrow-left"></i> Volver al menú principal
+        </a>
 
         <h2>Gestión de Usuarios</h2>
 

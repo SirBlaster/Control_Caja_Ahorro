@@ -23,26 +23,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario_id = $_SESSION['id_usuario'] ?? null;
     
     if (actualizar_parametros_sistema($datos, $usuario_nombre)) {
-        $mensaje = '✅ Parámetros actualizados correctamente';
+        $mensaje = 'Parámetros actualizados correctamente';
         $tipo_mensaje = 'success';
         $parametros = obtener_parametros_sistema();
     } else {
-        $mensaje = '❌ Error al actualizar parámetros';
+        $mensaje = 'Error al actualizar parámetros';
         $tipo_mensaje = 'danger';
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración de Parámetros - SETDITSX</title>
-    <link rel="stylesheet" href="../../css/Super.css">
-    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
-    
+    <link rel="stylesheet" href="../css/Super.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light header">
         <div class="container-fluid">
@@ -146,10 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="d-flex align-items-center gap-2">
                         <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
                         <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
-                            <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
-                                title="Editar perfil">
-                                <i class="bi bi-pencil-square text-primary"></i>
-                            </a>
+                        <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                            title="Editar perfil">
+                            <i class="bi bi-pencil-square text-primary"></i>
+                        </a>
                         <?php endif; ?>
                     </div>
                     <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
@@ -160,76 +162,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </nav>
-    
+
     <div class="card-form">
         <div class="nav-actions">
             <a href="../SuperUsuario/inicio.php" class="nav-link">
                 <i class="bi bi-arrow-left"></i> Volver al menú principal
             </a>
         </div>
-        
+
         <h2>Configuración de parámetros</h2>
-        
+
         <?php if ($mensaje): ?>
         <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
             <?php echo $mensaje; ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <?php endif; ?>
-        
+
         <form method="POST" action="">
             <div class="parameter-group">
                 <h5 class="section-title">Préstamos</h5>
-                
+
                 <div class="parameter-item">
                     <div class="col-md-6">Tasa de interés general (%):</div>
-                    <input type="number" name="tasa_general" class="form-control" 
-                           step="0.01" min="0.01" max="100" 
-                           value="<?php echo htmlspecialchars($parametros['tasa_interes_general']); ?>" 
-                           required>
+                    <input type="number" name="tasa_general" class="form-control" step="0.01" min="0.01" max="100"
+                        value="<?php echo htmlspecialchars($parametros['tasa_interes_general']); ?>" required>
                     <small class="text-muted">Tasa anual para usuarios sin tasa personalizada</small>
                 </div>
             </div>
-            
+
             <div class="parameter-group">
                 <h5 class="section-title">Ahorros</h5>
-                
+
                 <div class="parameter-item">
                     <div class="col-md-6">Rendimiento anual (%):</div>
-                    <input type="number" name="rendimiento" class="form-control" 
-                           step="0.01" min="0.01" max="100" 
-                           value="<?php echo htmlspecialchars($parametros['rendimiento_anual_ahorros']); ?>" 
-                           required>
+                    <input type="number" name="rendimiento" class="form-control" step="0.01" min="0.01" max="100"
+                        value="<?php echo htmlspecialchars($parametros['rendimiento_anual_ahorros']); ?>" required>
                     <small class="text-muted">Rendimiento anual para todos los ahorradores</small>
                 </div>
             </div>
-            
+
             <div class="parameter-group">
                 <h5 class="section-title">General</h5>
-                
+
                 <div class="parameter-item">
                     <div class="col-md-6">Correo de contacto soporte:</div>
-                    <input type="email" name="correo_soporte" class="form-control" 
-                           value="<?php echo htmlspecialchars($parametros['correo_soporte']); ?>" 
-                           required>
+                    <input type="email" name="correo_soporte" class="form-control"
+                        value="<?php echo htmlspecialchars($parametros['correo_soporte']); ?>" required>
                 </div>
                 <div class="parameter-item">
                     <div class="col-md-6">Nombre de Administrativo:</div>
-                    <input type="text" name="nombre_director" class="form-control" 
-                           value="<?php echo htmlspecialchars($parametros['nombre_director']); ?>" 
-                           required>
+                    <input type="text" name="nombre_director" class="form-control"
+                        value="<?php echo htmlspecialchars($parametros['nombre_director']); ?>" required>
                 </div>
                 <div class="parameter-item">
                     <div class="col-md-6">Nombre del Encargado de personal:</div>
-                    <input type="text" name="nombre_enc_personal" class="form-control" 
-                           value="<?php echo htmlspecialchars($parametros['nombre_enc_personal']); ?>" 
-                           required>
+                    <input type="text" name="nombre_enc_personal" class="form-control"
+                        value="<?php echo htmlspecialchars($parametros['nombre_enc_personal']); ?>" required>
                 </div>
                 <div class="parameter-item">
                     <div class="col-md-6">Periodo</div>
-                    <input type="text" name="periodo" class="form-control" 
-                           value="<?php echo htmlspecialchars($parametros['periodo']); ?>" 
-                           required>
+                    <input type="text" name="periodo" class="form-control"
+                        value="<?php echo htmlspecialchars($parametros['periodo']); ?>" required>
                 </div>
             </div>
             <br>
@@ -238,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
             </div>
         </form>
-        
+
         <?php if (!empty($parametros['fecha_actualizacion'])): ?>
         <div class="mt-3 text-end text-muted">
             <small>
@@ -251,6 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
