@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario_id = $_SESSION['id_usuario'] ?? null;
     
     if (actualizar_parametros_sistema($datos, $usuario_nombre)) {
-        $mensaje = '✅ Parámetros actualizados correctamente';
+        $mensaje = 'Parámetros actualizados correctamente';
         $tipo_mensaje = 'success';
         $parametros = obtener_parametros_sistema();
     } else {
-        $mensaje = '❌ Error al actualizar parámetros';
+        $mensaje = 'Error al actualizar parámetros';
         $tipo_mensaje = 'danger';
     }
 }
@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="col-md-6">Tasa de interés general (%):</div>
                     <input type="number" name="tasa_general" class="form-control" step="0.01" min="0.01" max="100"
                         value="<?php echo htmlspecialchars($parametros['tasa_interes_general']); ?>" required>
-                    <small class="text-muted">Tasa anual</small>
+                    <small class="text-muted">Tasa anual para usuarios sin tasa personalizada</small>
                 </div>
             </div>
 
@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

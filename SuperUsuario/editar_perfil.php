@@ -54,6 +54,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,7 +63,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/registrar.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    
+
 </head>
 
 <body>
@@ -168,10 +169,10 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="d-flex align-items-center gap-2">
                         <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
                         <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
-                            <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
-                                title="Editar perfil">
-                                <i class="bi bi-pencil-square text-primary"></i>
-                            </a>
+                        <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                            title="Editar perfil">
+                            <i class="bi bi-pencil-square text-primary"></i>
+                        </a>
                         <?php endif; ?>
                     </div>
                     <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
@@ -194,11 +195,12 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Mostrar mensajes -->
         <?php if ($mensaje): ?>
-            <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
-                <i class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
-                <?php echo htmlspecialchars($mensaje); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+            <i
+                class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
+            <?php echo htmlspecialchars($mensaje); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <?php endif; ?>
 
         <!-- Información del usuario -->
@@ -206,17 +208,17 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-body">
                 <h6 class="card-title"><i class="bi bi-info-circle me-2"></i>Información de Mi Cuenta</h6>
                 <p class="mb-1"><strong>ID:</strong> <?php echo htmlspecialchars($usuario['id_usuario']); ?></p>
-                <p class="mb-1"><strong>Rol:</strong> 
+                <p class="mb-1"><strong>Rol:</strong>
                     <span class="badge bg-danger">
                         <?php echo htmlspecialchars($usuario['rol']); ?>
                     </span>
                 </p>
-                <p class="mb-1"><strong>Estado:</strong> 
+                <p class="mb-1"><strong>Estado:</strong>
                     <?php echo $usuario['habilitado'] == 1 ? 
                         '<span class="text-success"><i class="bi bi-check-circle"></i> Habilitado</span>' : 
                         '<span class="text-danger"><i class="bi bi-x-circle"></i> Deshabilitado</span>'; ?>
                 </p>
-                <p class="mb-0"><strong>Última actualización:</strong> 
+                <p class="mb-0"><strong>Última actualización:</strong>
                     <?php echo !empty($usuario['fecha_actualizacion']) ? 
                         date('d/m/Y H:i', strtotime($usuario['fecha_actualizacion'])) : 
                         'No disponible'; ?>
@@ -291,8 +293,10 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-md-6">
                     <label class="form-label">Estado de la Cuenta *</label>
                     <select class="form-select" name="habilitado" required>
-                        <option value="1" <?php echo $usuario['habilitado'] == 1 ? 'selected' : ''; ?>>Habilitado</option>
-                        <option value="0" <?php echo $usuario['habilitado'] == 0 ? 'selected' : ''; ?>>Deshabilitado</option>
+                        <option value="1" <?php echo $usuario['habilitado'] == 1 ? 'selected' : ''; ?>>Habilitado
+                        </option>
+                        <option value="0" <?php echo $usuario['habilitado'] == 0 ? 'selected' : ''; ?>>Deshabilitado
+                        </option>
                     </select>
                 </div>
             </div>
@@ -337,4 +341,5 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../js/editar_usuario.js"></script>
 </body>
+
 </html>

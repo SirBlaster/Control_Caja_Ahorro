@@ -136,7 +136,6 @@ $actividades = obtener_actividades_recientes(5);
             </div>
         </div>
     </nav>
-
     <div class="card card-form">
         <div>
             <h2 class="mb-0">Panel de SuperUsuario</h2>
@@ -258,7 +257,7 @@ $actividades = obtener_actividades_recientes(5);
 
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 
     <!-- Script para depuración en consola -->
     <script>
