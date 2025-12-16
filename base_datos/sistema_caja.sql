@@ -44,6 +44,22 @@ CREATE TABLE IF NOT EXISTS usuario (
 
 INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) VALUES
 ('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 2);
+-- usuario ahorrador predeterminado
+INSERT INTO usuario 
+(nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, telefono, contrasena, tarjeta, id_rol) 
+VALUES 
+(
+    'Juan',
+    'Pérez',
+    'García',
+    'juan321@itsx.edu.mx',
+    'juan.perez@gmail.com',
+    '5551234567',
+    'ahorrador123',
+    'user123',  -- Número de tarjeta de ejemplo
+    1  -- ID del rol Ahorrador
+);
+
 
 -- Insertar SuperUsuario al crear la base de datos
 INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) 
