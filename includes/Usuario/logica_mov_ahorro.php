@@ -25,7 +25,7 @@ if ($id_usuario) {
         $movimientos_ahorro = $stmt->fetchAll();
 
     } catch (PDOException $e) {
-        // En producción puedes quitar esto, ayuda a depurar
+
         error_log("Error DB: " . $e->getMessage());
     }
 }

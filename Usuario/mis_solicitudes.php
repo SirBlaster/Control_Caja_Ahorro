@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/init.php'; 
 secure_session_start();
-check_login(1); // Rol 1 = Ahorrador
+check_login(1); 
 
 $id_usuario = $_SESSION['id_usuario'];
 
@@ -16,6 +16,7 @@ function obtenerDetallesEstado($id_estado) {
 }
 
 // --- 2. CONSULTA DE AHORROS (TODOS LOS ESTADOS) ---
+
 // Obtenemos todas las solicitudes sin filtrar por estado (para ver historial completo)
 $sqlAhorro = "SELECT * FROM solicitud_ahorro 
               WHERE id_usuario = :id 

@@ -23,11 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // 3. SUBIDA DE ARCHIVO (Ruta Corregida)
     $nombre_archivo_nomina = "nomina_" . $id_usuario . "_" . time() . ".pdf";
-    
-    // USAMOS dirname(dirname(__DIR__)) para ir a la Raíz del proyecto de forma segura
-    // __DIR__ = includes/Usuario
-    // dirname(__DIR__) = includes
-    // dirname(dirname(__DIR__)) = Raíz del proyecto
     $ruta_raiz = dirname(dirname(__DIR__)); 
     $ruta_destino = $ruta_raiz . "/uploads/nominas/" . $nombre_archivo_nomina;
     $carpeta_nominas = $ruta_raiz . "/uploads/nominas/";

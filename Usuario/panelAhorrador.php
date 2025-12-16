@@ -1,12 +1,10 @@
 <?php
-// Usuario/panelAhorrador.php
 require_once '../includes/init.php';
 
-// 1. SEGURIDAD: Verificar sesión y ROL (1 = Ahorrador)
 secure_session_start();
-check_login(1); // Si no es rol 1, va pa' fuera.
+check_login(1); 
 
-require_once '../includes/Usuario/logica_panel.php'; // Si usas este archivo externo, asegúrate que no choque variables.
+require_once '../includes/Usuario/logica_panel.php'; 
 
 // --- RECARGAMOS DATOS LOCALMENTE PARA ASEGURARNOS QUE ESTÉN FRESCOS ---
 $id_usuario = $_SESSION['id_usuario'];
@@ -32,23 +30,23 @@ $tieneSolicitud = false;
 $esPendiente = false;
 $montoMostrar = 0;
 $textoEstado = "Sin préstamo activo";
-$claseEstado = "text-muted"; // Gris por defecto
+$claseEstado = "text-muted"; 
 
 if ($miPrestamo) {
     $tieneSolicitud = true;
-    $montoMostrar = $miPrestamo['total_a_pagar']; // Mostramos la deuda total proyectada
+    $montoMostrar = $miPrestamo['total_a_pagar']; 
     
     if ($miPrestamo['id_estado'] == 1) {
         // CASO: PENDIENTE
         $esPendiente = true;
         $textoEstado = "Solicitud en Revisión";
-        $claseEstado = "text-primary"; // Azul
-        $montoMostrar = $miPrestamo['total_a_pagar']; // Deuda futura
+        $claseEstado = "text-primary"; 
+        $montoMostrar = $miPrestamo['total_a_pagar']; 
     } elseif ($miPrestamo['id_estado'] == 2) {
         // CASO: ACTIVO
         $textoEstado = "Saldo Pendiente";
-        $claseEstado = "text-warning"; // Amarillo/Dorado
-        $montoMostrar = $miPrestamo['saldo_pendiente']; // Lo que debe hoy
+        $claseEstado = "text-warning";
+        $montoMostrar = $miPrestamo['saldo_pendiente']; 
     }
 }
 

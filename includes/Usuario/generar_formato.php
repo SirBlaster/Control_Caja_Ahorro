@@ -46,9 +46,9 @@ if (!$data) {
     die("No se encontraron datos para esta solicitud.");
 }
 
-// ==========================================
+
 // FUNCIONES PARA CALCULAR PERIODO Y QUINCENA
-// ==========================================
+
 
 /**
  * Determina la próxima quincena basada en la fecha actual
@@ -66,17 +66,17 @@ function obtenerProximaQuincena($fecha_solicitud) {
         9 => "septiembre", 10 => "octubre", 11 => "noviembre", 12 => "diciembre"
     );
     
-    // Determinar en qué quincena estamos y cuál es la próxima
+    
     if ($dia <= 15) {
-        // Estamos en primera quincena, próxima es segunda quincena del mismo mes
+  
         return "segunda quincena de " . $meses[$mes] . " de " . $anio;
     } else {
-        // Estamos en segunda quincena, próxima es primera quincena del próximo mes
+
         if ($mes == 12) {
-            // Diciembre → Enero del siguiente año
+
             return "primera quincena de enero de " . ($anio + 1);
         } else {
-            // Otro mes → siguiente mes mismo año
+
             return "primera quincena de " . $meses[$mes + 1] . " de " . $anio;
         }
     }
@@ -91,12 +91,12 @@ function obtenerPeriodo($fecha_solicitud) {
     $mes = (int)$fecha->format('n');
     $anio = (int)$fecha->format('Y');
     
-    // Si la solicitud es en noviembre (mes 11), es para el siguiente año
+
     if ($mes == 11) {
         $anio_inicio = $anio + 1;
         $anio_fin = $anio_inicio + 1;
     } else {
-        // Para otros meses, es para el año actual/siguiente
+
         $anio_inicio = $anio;
         $anio_fin = $anio + 1;
     }
@@ -113,11 +113,11 @@ function obtenerFechaInicioDescuento($fecha_solicitud) {
     $mes = (int)$fecha->format('n');
     
     if ($mes == 11) {
-        // Noviembre: empieza en diciembre del siguiente año
+
         $anio = (int)$fecha->format('Y');
         return "diciembre de " . ($anio + 1);
     } else {
-        // Otros meses: empieza en la próxima quincena
+
         return obtenerProximaQuincena($fecha_solicitud);
     }
 }
@@ -128,7 +128,7 @@ function obtenerFechaInicioDescuento($fecha_solicitud) {
 function esSolicitudProximoPeriodo($fecha_solicitud) {
     $fecha = new DateTime($fecha_solicitud);
     $mes = (int)$fecha->format('n');
-    return ($mes == 11); // Noviembre = próximo período
+    return ($mes == 11); 
 }
 
 /**
