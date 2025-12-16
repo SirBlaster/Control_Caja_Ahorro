@@ -274,7 +274,8 @@ $total_actividades = count($actividades);
     </div>
 
     <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="../../js/d_audit.js">
+    <script src="../js/d_audit.js">
     </script>
 </body>
+
 </html>
