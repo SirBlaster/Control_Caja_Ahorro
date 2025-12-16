@@ -14,118 +14,128 @@ $actividades = obtener_actividades_recientes(5);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/Super.css">
-    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css ">
+    <link rel="stylesheet" href="../../css/Super.css">
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css ">
 </head>
-<nav class="navbar navbar-expand-lg navbar-light bg-light header">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
-        </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
-                </li>
-
-                <!-- DROPDOWN AHORRADOR -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAhorrador" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Apartados (Ahorrador)
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownAhorrador">
-                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
-                    </ul>
-                </li>
-
-                <?php if ($_SESSION['id_rol'] == 2 || $_SESSION['id_rol'] == 3): ?>
-                <!-- DROPDOWN ADMINISTRADOR -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Administrador
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownAdmin">
-                        <li><h6 class="dropdown-header text-primary">Panel Principal</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/inicio.php">Dashboard Admin</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Gestión de Solicitudes</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/rechazar_solicitud.php">Revisar Solicitudes</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Reportes y Datos</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/reportes.php">Reportes del Sistema</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/base_datos/">Base de Datos</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Admin/datos_mysql/">Configuración MySQL</a></li>
-                    </ul>
-                </li>
-                <?php endif; ?>
-
-                <?php if ($_SESSION['id_rol'] == 3): ?>
-                <!-- DROPDOWN SUPER USUARIO -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSuper" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Super Usuario
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownSuper">
-                        <li><h6 class="dropdown-header text-primary">Panel Principal</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/inicio.php">Dashboard Super Usuario</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Gestión de Usuarios</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/usuarios.php">Lista de Usuarios</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/editar_usuario.php">Editar Usuario</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/crear_admin.php">Crear Administrador</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/procesar_registro.php">Procesar Registro</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/procesar_edicion.php">Procesar Edición</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Auditoría y Control</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/auditoria_completa.php">Auditoría Completa</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/parametros.php">Parámetros del Sistema</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Acceso Rápido</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial General</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Ver Solicitudes</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Super Usuario/uploads/">Archivos Subidos</a></li>
-                    </ul>
-                </li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-        <div class="d-flex align-items-center gap-3">
-            <div class="user-details text-end d-none d-md-block">
-                <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-            </div>
-            <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-            </a>
-        </div>
-    </div>
-</nav>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../SuperUsuario/inicio.php">
+                <img src="../img/NewLogo - 1.png" width="50" height="50" class="d-inline-block align-items-center"
+                    alt=""> SETDITSX
+            </a>
 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Panel Principal
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../SuperUsuario/editar_perfil.php">Editar Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/usuarios.php">Gestionar Usuarios</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/parametros.php">Modificar Parámetros</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/auditoria_completa.php">Auditoría</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Administrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Admin/gestion_ahorradores.php">Gestionar
+                                    Ahorradores</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/gestion_prestamos.php">Gestionar Préstamos</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/reportes.php">Reportes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Ahorrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/solicitud_prestamo.php">Solicitar préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/movimientos.php">Ver movimientos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/Estado_Prestamo.php">Estado de mi préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/historial_completo.php">Historial completo</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="user-details text-end d-none d-md-block">
+                    <div class="d-flex align-items-center gap-2">
+                        <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
+                        <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
+                            <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                                title="Editar perfil">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+                </div>
+                <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
     <div class="card card-form">
         <div>
             <h2 class="mb-0">Panel de SuperUsuario</h2>
@@ -155,17 +165,17 @@ $actividades = obtener_actividades_recientes(5);
             <h5 class="section-title">Actividad reciente del sistema</h5>
 
             <?php if (empty($actividades)): ?>
-            <!-- Mensaje cuando NO hay actividades -->
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                No hay actividades registradas en el sistema.
-                <small class="d-block mt-1">
-                    Esto puede significar que:
-                    <br>1. No hay datos en la tabla auditoria_usuario
-                    <br>2. Hay un error en la consulta
-                    <br>3. Los triggers no están funcionando
-                </small>
-            </div>
+                <!-- Mensaje cuando NO hay actividades -->
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay actividades registradas en el sistema.
+                    <small class="d-block mt-1">
+                        Esto puede significar que:
+                        <br>1. No hay datos en la tabla auditoria_usuario
+                        <br>2. Hay un error en la consulta
+                        <br>3. Los triggers no están funcionando
+                    </small>
+                </div>
             <?php endif; ?>
 
             <div class="table-container">
@@ -180,33 +190,38 @@ $actividades = obtener_actividades_recientes(5);
                     </thead>
                     <tbody>
                         <?php if (empty($actividades)): ?>
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">
-                                <i class="bi bi-database-slash me-2"></i>
-                                No hay actividades registradas
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="bi bi-database-slash me-2"></i>
+                                    No hay actividades registradas
+                                </td>
+                            </tr>
                         <?php else: ?>
-                        <?php foreach ($actividades as $actividad): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($actividad['fecha_hora'] ?? 'N/A'); ?></td>
-                            <td><?php echo htmlspecialchars($actividad['usuario_nombre'] ?? 'Sistema'); ?></td>
-                            <td>
-                                <span class="badge 
-                                            <?php 
+                            <?php foreach ($actividades as $actividad): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($actividad['fecha_hora'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($actividad['usuario_nombre'] ?? 'Sistema'); ?></td>
+                                    <td>
+                                        <span class="badge 
+                                            <?php
                                             $accion = strtoupper($actividad['accion'] ?? '');
-                                            if (in_array($accion, ['CREATE', 'INSERT'])) echo 'bg-success';
-                                            elseif (in_array($accion, ['UPDATE', 'MODIFY'])) echo 'bg-warning text-dark';
-                                            elseif (in_array($accion, ['DELETE', 'REMOVE'])) echo 'bg-danger';
-                                            elseif (in_array($accion, ['LOGIN', 'LOGOUT'])) echo 'bg-primary';
-                                            else echo 'bg-secondary';
+                                            if (in_array($accion, ['CREATE', 'INSERT']))
+                                                echo 'bg-success';
+                                            elseif (in_array($accion, ['UPDATE', 'MODIFY']))
+                                                echo 'bg-warning text-dark';
+                                            elseif (in_array($accion, ['DELETE', 'REMOVE']))
+                                                echo 'bg-danger';
+                                            elseif (in_array($accion, ['LOGIN', 'LOGOUT']))
+                                                echo 'bg-primary';
+                                            else
+                                                echo 'bg-secondary';
                                             ?>">
-                                    <?php echo htmlspecialchars($actividad['accion'] ?? 'N/A'); ?>
-                                </span>
-                            </td>
-                            <td><?php echo htmlspecialchars($actividad['detalle'] ?? ''); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
+                                            <?php echo htmlspecialchars($actividad['accion'] ?? 'N/A'); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($actividad['detalle'] ?? ''); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -214,11 +229,11 @@ $actividades = obtener_actividades_recientes(5);
 
             <!-- Opcional: Enlace para ver más actividades -->
             <?php if (!empty($actividades)): ?>
-            <div class="text-end mt-3">
-                <a href="../SuperUsuario/auditoria_completa.php" class="view-history">
-                    <i class="bi bi-clock-history me-1"></i> Ver historial completo
-                </a>
-            </div>
+                <div class="text-end mt-3">
+                    <a href="../SuperUsuario/auditoria_completa.php" class="view-history">
+                        <i class="bi bi-clock-history me-1"></i> Ver historial completo
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
         <div class="card card-form">
@@ -242,11 +257,11 @@ $actividades = obtener_actividades_recientes(5);
 
     </div>
 
-<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
 
     <!-- Script para depuración en consola -->
     <script>
-    console.log("Actividades obtenidas: <?php echo count($actividades); ?>");
+        console.log("Actividades obtenidas: <?php echo count($actividades); ?>");
     </script>
 </body>
 

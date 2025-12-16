@@ -1,14 +1,12 @@
 <?php
-// includes/audit_functions.php - VERSIÓN SIMPLE Y SEGURA
+// includes/audit_functions.php
 
-/**
- * Obtiene las actividades recientes del sistema - VERSIÓN SIMPLE
- */
+//Obtiene las actividades recientes del sistema 
+
 function obtener_actividades_recientes($limite = 5) {
     global $pdo;
 
     try {
-        // CONSULTA MÁS SIMPLE - usa EXACTAMENTE los campos de tu tabla
         $sql = "SELECT 
                     fecha_cambio as fecha_hora,
                     COALESCE(usuario_responsable, 'Sistema') as usuario_nombre,
@@ -52,9 +50,8 @@ function obtener_actividades_recientes($limite = 5) {
     }
 }
 
-/**
- * Función de auditoría SIMPLE - compatible con tu código actual
- */
+//Función de auditoría SIMPLE - compatible con tu código actual
+
 function registrar_auditoria($accion, $detalle = '', $usuario_id = null) {
     global $pdo;
     
@@ -80,7 +77,7 @@ function registrar_auditoria($accion, $detalle = '', $usuario_id = null) {
             }
         }
         
-        // Insertar en auditoría - usando campos exactos de tu tabla
+        // Insertar en auditoría 
         $sql = "INSERT INTO auditoria_usuario 
                 (id_usuario, accion, campo_modificado, valor_anterior, valor_nuevo, 
                  usuario_responsable, ip_address, user_agent, fecha_cambio) 
@@ -104,9 +101,8 @@ function registrar_auditoria($accion, $detalle = '', $usuario_id = null) {
     }
 }
 
-/**
- * Para auditoria_completa.php - obtener TODAS las actividades
- */
+//Para auditoria_completa.php - obtener TODAS las actividades
+
 function obtener_actividades_completas() {
     global $pdo;
     

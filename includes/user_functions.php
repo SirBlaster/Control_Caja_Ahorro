@@ -18,4 +18,5 @@ function get_user_role_text() {
     
     return isset($roles[$_SESSION['id_rol']]) ? $roles[$_SESSION['id_rol']] : 'Usuario';
 }
+
 ?>

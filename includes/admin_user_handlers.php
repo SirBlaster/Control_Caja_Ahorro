@@ -2,9 +2,7 @@
 // includes/admin_user_handlers.php
 // Funciones para la gestión general de usuarios
 
-/**
- * Obtiene todos los usuarios excepto superadministradores (rol 3)
- */
+//Obtiene todos los usuarios excepto superusuarios (rol 3)
 
 function obtener_usuarios_admin()
 {
@@ -39,96 +37,7 @@ function obtener_usuarios_admin()
     }
 }
 
-function obtener_usuarios_ahorrador($limit = 10, $offset = 0)
-{
-global $pdo;
-
-
-$sql = "SELECT
-u.id_usuario AS id,
-u.nombre,
-u.apellido_paterno AS paterno,
-u.apellido_materno AS materno,
-CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
-u.correo_institucional AS email,
-u.correo_personal AS email_personal,
-u.telefono,
-u.id_rol AS rol_id,
-COALESCE(r.rol, 'No asignado') AS nombre_rol,
-u.rfc,
-u.curp,
-u.tarjeta,
-u.habilitado
-FROM usuario u
-LEFT JOIN rol r ON u.id_rol = r.id_rol
-WHERE u.id_rol = 1
-ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
-LIMIT :limit OFFSET :offset";
-
-
-try {
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-$stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-$stmt->execute();
-return $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-error_log("Error al obtener usuarios: " . $e->getMessage());
-return [];
-}
-}
-
-
-function contar_usuarios_ahorrador()
-{
-    global $pdo;
-    try {
-        $stmt = $pdo->query("SELECT COUNT(*) FROM usuario WHERE id_rol = 1");
-        return (int)$stmt->fetchColumn();
-    } catch (PDOException $e) {
-        error_log("Error al contar usuarios: " . $e->getMessage());
-        return 0;
-    }
-}
-
-/*
-function obtener_usuarios_ahorrador()
-{
-    global $pdo;
-
-    $sql = "SELECT u.id_usuario as id, 
-                   u.nombre, 
-                   u.apellido_paterno as paterno, 
-                   u.apellido_materno as materno, 
-                   CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) as nombre_completo,
-                   u.correo_institucional as email,
-                   u.correo_personal as email_personal,
-                   u.telefono,
-                   u.id_rol as rol_id,
-                   COALESCE(r.rol, 'No asignado') as nombre_rol,
-                   u.rfc,
-                   u.curp,
-                   u.tarjeta,
-                   u.habilitado
-            FROM usuario u
-            LEFT JOIN rol r ON u.id_rol = r.id_rol
-            WHERE u.id_rol = 1
-            ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre";
-    
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Error al obtener usuarios: " . $e->getMessage());
-        return [];
-    }
-}
-*/
-
-/**
- * Cambia el estado de un usuario (habilitar/deshabilitar)
- */
+//Cambia el estado de un usuario (habilitar/deshabilitar)
 function cambiar_estado_usuario($id_usuario)
 {
     global $pdo;
@@ -170,9 +79,8 @@ function cambiar_estado_usuario($id_usuario)
     }
 }
 
-/**
- * Cambia el rol de un usuario (Administrador ↔ Ahorrador)
- */
+//Cambia el rol de un usuario (Administrador ↔ Ahorrador)
+
 function cambiar_rol_usuario($id_usuario)
 {
     global $pdo;
@@ -221,9 +129,8 @@ function cambiar_rol_usuario($id_usuario)
     }
 }
 
-/**
- * Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
- */
+//Obtiene los datos de un usuario por ID (cualquier usuario excepto SuperUsuario)
+
 function obtener_usuario_por_id($id_usuario)
 {
     global $pdo;
@@ -254,9 +161,8 @@ function obtener_usuario_por_id($id_usuario)
     }
 }
 
-/**
- * Actualiza los datos de un usuario (versión mejorada)
- */
+//Actualiza los datos de un usuario (versión mejorada)
+
 function actualizar_usuario_general($id_usuario, $datos)
 {
     global $pdo;
@@ -337,9 +243,8 @@ function actualizar_usuario_general($id_usuario, $datos)
     }
 }
 
-/**
- * Función segura para obtener datos de usuario con todos los campos
- */
+//Función segura para obtener datos de usuario con todos los campos
+
 function obtener_usuario_completo($id_usuario)
 {
     global $pdo;
@@ -376,6 +281,88 @@ function obtener_usuario_completo($id_usuario)
     } catch (PDOException $e) {
         error_log("Error en obtener_usuario_completo: " . $e->getMessage());
         return null;
+    }
+}
+//Función específica para obtener datos de SuperUsuario
+
+function obtener_superusuario_completo($id_usuario)
+{
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                u.*, 
+                COALESCE(r.rol, 'Super Usuario') as rol,
+                COALESCE(u.telefono, '') as telefono,
+                COALESCE(u.rfc, '') as rfc,
+                COALESCE(u.curp, '') as curp,
+                COALESCE(u.correo_personal, '') as correo_personal,
+                COALESCE(u.correo_institucional, '') as correo_institucional,
+                COALESCE(u.tarjeta, '') as tarjeta
+            FROM usuario u 
+            LEFT JOIN rol r ON u.id_rol = r.id_rol 
+            WHERE u.id_usuario = ?  -- NO excluye SuperUsuario
+        ");
+        $stmt->execute([$id_usuario]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $usuario;
+        
+    } catch (PDOException $e) {
+        error_log("Error en obtener_superusuario_completo: " . $e->getMessage());
+        return null;
+    }
+}
+function obtener_usuarios_ahorrador($limit = 10, $offset = 0)
+{
+global $pdo;
+
+
+$sql = "SELECT
+u.id_usuario AS id,
+u.nombre,
+u.apellido_paterno AS paterno,
+u.apellido_materno AS materno,
+CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_completo,
+u.correo_institucional AS email,
+u.correo_personal AS email_personal,
+u.telefono,
+u.id_rol AS rol_id,
+COALESCE(r.rol, 'No asignado') AS nombre_rol,
+u.rfc,
+u.curp,
+u.tarjeta,
+u.habilitado
+FROM usuario u
+LEFT JOIN rol r ON u.id_rol = r.id_rol
+WHERE u.id_rol = 1
+ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
+LIMIT :limit OFFSET :offset";
+
+
+try {
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+$stmt->execute();
+return $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+error_log("Error al obtener usuarios: " . $e->getMessage());
+return [];
+}
+}
+
+
+function contar_usuarios_ahorrador()
+{
+    global $pdo;
+    try {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM usuario WHERE id_rol = 1");
+        return (int)$stmt->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("Error al contar usuarios: " . $e->getMessage());
+        return 0;
     }
 }
 ?>
