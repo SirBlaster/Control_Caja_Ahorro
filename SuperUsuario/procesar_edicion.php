@@ -51,7 +51,7 @@ if (empty($datos['nombre']) || empty($datos['paterno']) ||
     exit();
 }
 
-// Usar la función CORRECTA para actualizar
+// actualizar
 $resultado = actualizar_usuario_general($id_usuario, $datos);
 
 if ($resultado['success']) {

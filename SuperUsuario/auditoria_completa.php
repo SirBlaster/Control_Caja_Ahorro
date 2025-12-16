@@ -4,13 +4,12 @@ require_once '../includes/init.php';
 secure_session_start();
 check_login(3);
 
-// Obtener TODAS las actividades
+// Obtener actividades
 $actividades = obtener_actividades_completas();
 $total_actividades = count($actividades);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,133 +18,74 @@ $total_actividades = count($actividades);
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
+        </div>
+
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3">
+                <p class="user-name mb-0"><?php echo htmlspecialchars(get_user_name()); ?></p>
+                <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+            </div>
+
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../SuperUsuario/inicio.php">
-                <img src="../img/NewLogo - 1.png" width="50" height="50" class="d-inline-block align-items-center"
-                    alt=""> SETDITSX
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Panel Principal
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="../SuperUsuario/editar_perfil.php">Editar Perfil</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../SuperUsuario/usuarios.php">Gestionar Usuarios</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../SuperUsuario/parametros.php">Modificar Parámetros</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../SuperUsuario/auditoria_completa.php">Auditoría</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Apartados (Administrador)
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="../Admin/gestion_ahorradores.php">Gestionar
-                                    Ahorradores</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Admin/gestion_prestamos.php">Gestionar Préstamos</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Admin/reportes.php">Reportes</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Apartados (Ahorrador)
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="../Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Usuario/solicitud_prestamo.php">Solicitar préstamo</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Usuario/movimientos.php">Ver movimientos</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Usuario/Estado_Prestamo.php">Estado de mi préstamo</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="../Usuario/historial_completo.php">Historial completo</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="user-details text-end d-none d-md-block">
-                    <div class="d-flex align-items-center gap-2">
-                        <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
-                        <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
-                        <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
-                            title="Editar perfil">
-                            <i class="bi bi-pencil-square text-primary"></i>
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                    <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
-                </div>
-                <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                </a>
-            </div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='inicio.php') echo 'active'; ?>"
+                        href="./inicio.php">
+                        <i class="bi bi-house-door-fill me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='usuarios.php') echo 'active'; ?>"
+                        href="./usuarios.php">
+                        <i class="bi bi-people-fill me-1"></i>Gestión de Usuarios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='parametros.php') echo 'active'; ?>"
+                        href="./parametros.php">
+                        <i class="bi bi-cash-stack me-1"></i>Gestión de Parámetros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='auditoria_completa.php') echo 'active'; ?>"
+                        href="./auditoria_completa.php">
+                        <i class="bi bi-file-earmark-text-fill me-1"></i>Auditoría
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                        href="./editar_perfil.php">
+                        <i class="bi bi-gear-fill me-1"></i>Configuración
+                    </a>
+                </li>
+            </ul>
         </div>
     </nav>
-
+    
     <div class="card card-form">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <div class="nav-actions">
-                    <a href="../SuperUsuario/inicio.php" class="nav-link">
-                        <i class="bi bi-arrow-left"></i> Volver al menú principal
-                    </a>
-                </div>
+            <a href="../SuperUsuario/inicio.php" class="nav-link">
+                <i class="bi bi-arrow-left"></i> Volver al menú principal
+            </a>
+        </div>
                 <h2 class="mb-0">Auditoría Completa del Sistema</h2>
             </div>
             <div class="badge bg-primary fs-6">
@@ -153,37 +93,37 @@ $total_actividades = count($actividades);
                 Total: <?php echo $total_actividades; ?> registros
             </div>
         </div>
-
+        
         <div class="card-body p-4">
             <div>
-                <button onclick="exportarCSV()" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-download me-1"></i> Exportar CSV
-                </button>
-                <button onclick="window.print()" class="btn btn-outline-primary btn-sm ms-2">
-                    <i class="bi bi-printer me-1"></i> Imprimir
-                </button>
-            </div>
+                        <button onclick="exportarCSV()" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-download me-1"></i> Exportar CSV
+                        </button>
+                        <button onclick="window.print()" class="btn btn-outline-primary btn-sm ms-2">
+                            <i class="bi bi-printer me-1"></i> Imprimir
+                        </button>
+                    </div>
             <br>
             <?php if (empty($actividades)): ?>
-            <div class="alert alert-warning">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>No hay actividades registradas</h5>
-                <p>Posibles causas:</p>
-                <ol>
-                    <li>La tabla <code>auditoria_usuario</code> está vacía</li>
-                    <li>Los triggers no están funcionando</li>
-                    <li>No se han realizado acciones auditables</li>
-                </ol>
-                <div class="mt-3">
-                    <a href="test_auditoria.php" class="btn btn-sm btn-primary">
-                        <i class="bi bi-gear me-1"></i> Probar auditoría
-                    </a>
-                    <button onclick="insertarDatosPrueba()" class="btn btn-sm btn-success">
-                        <i class="bi bi-plus-circle me-1"></i> Insertar datos de prueba
-                    </button>
+                <div class="alert alert-warning">
+                    <h5><i class="bi bi-exclamation-triangle me-2"></i>No hay actividades registradas</h5>
+                    <p>Posibles causas:</p>
+                    <ol>
+                        <li>La tabla <code>auditoria_usuario</code> está vacía</li>
+                        <li>Los triggers no están funcionando</li>
+                        <li>No se han realizado acciones auditables</li>
+                    </ol>
+                    <div class="mt-3">
+                        <a href="test_auditoria.php" class="btn btn-sm btn-primary">
+                            <i class="bi bi-gear me-1"></i> Probar auditoría
+                        </a>
+                        <button onclick="insertarDatosPrueba()" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus-circle me-1"></i> Insertar datos de prueba
+                        </button>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
-
+            
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
@@ -197,24 +137,24 @@ $total_actividades = count($actividades);
                     </thead>
                     <tbody>
                         <?php if (empty($actividades)): ?>
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                <i class="bi bi-database-slash me-2 fs-4"></i>
-                                <h5 class="mt-2">No hay actividades registradas</h5>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="bi bi-database-slash me-2 fs-4"></i>
+                                    <h5 class="mt-2">No hay actividades registradas</h5>
+                                </td>
+                            </tr>
                         <?php else: ?>
-                        <?php foreach ($actividades as $actividad): ?>
-                        <tr>
-                            <td class="text-nowrap">
-                                <small><?php echo htmlspecialchars($actividad['fecha_hora']); ?></small>
-                            </td>
-                            <td>
-                                <i class="bi bi-person-circle me-1"></i>
-                                <?php echo htmlspecialchars($actividad['usuario_nombre']); ?>
-                            </td>
-                            <td>
-                                <?php 
+                            <?php foreach ($actividades as $actividad): ?>
+                                <tr>
+                                    <td class="text-nowrap">
+                                        <small><?php echo htmlspecialchars($actividad['fecha_hora']); ?></small>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-person-circle me-1"></i>
+                                        <?php echo htmlspecialchars($actividad['usuario_nombre']); ?>
+                                    </td>
+                                    <td>
+                                        <?php 
                                         $accion = strtoupper($actividad['accion']);
                                         $clase_badge = 'bg-secondary';
                                         $icono = 'bi-activity';
@@ -236,41 +176,41 @@ $total_actividades = count($actividades);
                                             $icono = 'bi-trash';
                                         }
                                         ?>
-                                <span class="badge <?php echo $clase_badge; ?>">
-                                    <i class="bi <?php echo $icono; ?> me-1"></i>
-                                    <?php echo htmlspecialchars($actividad['accion']); ?>
-                                </span>
-                            </td>
-                            <td class="text-break">
-                                <?php echo htmlspecialchars($actividad['detalle']); ?>
-                                <?php if (!empty($actividad['user_agent'])): ?>
-                                <br>
-                                <small class="text-muted">
-                                    <i class="bi bi-laptop"></i>
-                                    <?php echo htmlspecialchars(substr($actividad['user_agent'], 0, 60)); ?>...
-                                </small>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <small class="text-muted">
-                                    <i class="bi bi-globe me-1"></i>
-                                    <?php echo htmlspecialchars($actividad['ip_address'] ?? 'N/A'); ?>
-                                </small>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
+                                        <span class="badge <?php echo $clase_badge; ?>">
+                                            <i class="bi <?php echo $icono; ?> me-1"></i>
+                                            <?php echo htmlspecialchars($actividad['accion']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-break">
+                                        <?php echo htmlspecialchars($actividad['detalle']); ?>
+                                        <?php if (!empty($actividad['user_agent'])): ?>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="bi bi-laptop"></i>
+                                                <?php echo htmlspecialchars(substr($actividad['user_agent'], 0, 60)); ?>...
+                                            </small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            <i class="bi bi-globe me-1"></i>
+                                            <?php echo htmlspecialchars($actividad['ip_address'] ?? 'N/A'); ?>
+                                        </small>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-
+            
             <?php if ($total_actividades > 0): ?>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <small class="text-muted">
-                    Mostrando <?php echo $total_actividades; ?> registros
-                </small>
-
-            </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <small class="text-muted">
+                        Mostrando <?php echo $total_actividades; ?> registros
+                    </small>
+                    
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -279,5 +219,4 @@ $total_actividades = count($actividades);
     <script src="../js/d_audit.js">
     </script>
 </body>
-
 </html>
