@@ -19,7 +19,6 @@ require_once __DIR__ . '/admin_functions.php';
 require_once __DIR__ . '/audit_functions.php';
 require_once __DIR__ . '/parametros_functions.php';
 require_once __DIR__ . '/reports_functions.php';
-
 // Configuraciones
 date_default_timezone_set('America/Mexico_City');
 
