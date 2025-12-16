@@ -15,7 +15,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    // ESTO TE MOSTRARÁ EL ERROR REAL EN PANTALLA
-    die("<h1>Error Real:</h1> " . $e->getMessage()); 
+    die("<h1>Error de Conexión</h1><p>No se pudo conectar a la base de datos en Docker.</p>" . $e->getMessage());
 }
 ?>

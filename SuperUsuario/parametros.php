@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario_id = $_SESSION['id_usuario'] ?? null;
     
     if (actualizar_parametros_sistema($datos, $usuario_nombre)) {
-        $mensaje = '✅ Parámetros actualizados correctamente';
+        $mensaje = 'Parámetros actualizados correctamente';
         $tipo_mensaje = 'success';
         $parametros = obtener_parametros_sistema();
     } else {
-        $mensaje = '❌ Error al actualizar parámetros';
+        $mensaje = 'Error al actualizar parámetros';
         $tipo_mensaje = 'danger';
     }
 }
@@ -39,31 +39,129 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración de Parámetros - SETDITSX</title>
+    <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../css/Super.css">
+
 </head>
 
 <body>
-    <div class="header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
-            <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../SuperUsuario/inicio.php">
+                <img src="../img/NewLogo - 1.png" width="50" height="50" class="d-inline-block align-items-center"
+                    alt=""> SETDITSX
+            </a>
 
-        <div class="user-info">
-            <i class="bi bi-person-square user-icon"></i>
-            <div class="user-details">
-                <p class="user-name"><?php echo htmlspecialchars(get_user_name()); ?></p>
-                <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Panel Principal
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../SuperUsuario/editar_perfil.php">Editar Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/usuarios.php">Gestionar Usuarios</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/parametros.php">Modificar Parámetros</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/auditoria_completa.php">Auditoría</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Administrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Admin/gestion_ahorradores.php">Gestionar
+                                    Ahorradores</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/gestion_prestamos.php">Gestionar Préstamos</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/reportes.php">Reportes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Ahorrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/solicitud_prestamo.php">Solicitar préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/movimientos.php">Ver movimientos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/Estado_Prestamo.php">Estado de mi préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/historial_completo.php">Historial completo</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-            </form>
+            <div class="d-flex align-items-center gap-3">
+                <div class="user-details text-end d-none d-md-block">
+                    <div class="d-flex align-items-center gap-2">
+                        <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
+                        <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
+                        <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                            title="Editar perfil">
+                            <i class="bi bi-pencil-square text-primary"></i>
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                    <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+                </div>
+                <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
         </div>
-    </div>
+    </nav>
 
     <div class="card-form">
         <div class="nav-actions">

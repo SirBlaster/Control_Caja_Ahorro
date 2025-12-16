@@ -1,28 +1,41 @@
 <?php
-// SuperUsuario/editar_usuario.php
+// Activar reporte de errores
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// SuperUsuario/editar_perfil.php - VERSIÓN CORREGIDA
 require_once '../includes/init.php';
 secure_session_start();
 check_login(3);
 
-// Obtener el ID del usuario a editar
-$id_usuario = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Debug: Verificar que estamos aquí
+echo "<!-- Debug 1: Pasó los includes -->";
+
+// Obtener datos del superusuario logueado
+$id_usuario = $_SESSION['id_usuario'] ?? 0;
 
 if ($id_usuario <= 0) {
-    $_SESSION['mensaje'] = 'ID de usuario inválido';
+    echo "<!-- Debug 2: ID de usuario inválido -->";
+    $_SESSION['mensaje'] = 'Usuario no identificado';
     $_SESSION['tipo_mensaje'] = 'danger';
-    header('Location: usuarios.php');
+    header('Location: inicio.php');
     exit();
 }
+
+echo "<!-- Debug 3: ID de usuario es $id_usuario -->";
 
 // Obtener datos del usuario usando la función CORRECTA
-$usuario = obtener_usuario_completo($id_usuario); // Cambiado
+$usuario = obtener_superusuario_completo($id_usuario);
 
 if (!$usuario) {
-    $_SESSION['mensaje'] = 'Usuario no encontrado o es SuperUsuario';
+    echo "<!-- Debug 4: Usuario no encontrado -->";
+    $_SESSION['mensaje'] = 'Usuario no encontrado';
     $_SESSION['tipo_mensaje'] = 'danger';
-    header('Location: usuarios.php');
+    header('Location: inicio.php');
     exit();
 }
+
+echo "<!-- Debug 5: Usuario obtenido correctamente -->";
 
 // Manejar mensajes de sesión
 $mensaje = '';
@@ -34,25 +47,26 @@ if (isset($_SESSION['mensaje'])) {
     unset($_SESSION['tipo_mensaje']);
 }
 
-// Obtener lista de roles para el select (excluyendo SuperUsuario)
+// Obtener lista de roles (en este caso solo mostrará SuperUsuario ya que no puede cambiar su rol)
 global $pdo;
-$stmt = $pdo->query("SELECT id_rol, rol FROM rol WHERE id_rol != 3 ORDER BY id_rol");
+$stmt = $pdo->query("SELECT id_rol, rol FROM rol WHERE id_rol = 3 ORDER BY id_rol");
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Editar Usuario - SETDITSX</title>
+    <title>Editar Mi Perfil - SETDITSX</title>
+    <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/registrar.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../../css/Super.css">
+
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light header">
         <div class="container-fluid">
             <a class="navbar-brand" href="../SuperUsuario/inicio.php">
@@ -155,10 +169,10 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="d-flex align-items-center gap-2">
                         <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
                         <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
-                            <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
-                                title="Editar perfil">
-                                <i class="bi bi-pencil-square text-primary"></i>
-                            </a>
+                        <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                            title="Editar perfil">
+                            <i class="bi bi-pencil-square text-primary"></i>
+                        </a>
                         <?php endif; ?>
                     </div>
                     <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
@@ -172,38 +186,39 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="card card-form container mt-4 p-4 shadow-sm" style="max-width: 800px;">
         <div class="nav-actions">
-            <a href="../SuperUsuario/usuarios.php" class="nav-link">
-                <i class="bi bi-arrow-left"></i> Volver a gestión de usuarios
+            <a href="inicio.php" class="nav-link">
+                <i class="bi bi-arrow-left"></i> Volver al Panel Principal
             </a>
         </div>
 
-        <h2 class="text-center mb-4">Edición de Usuario</h2>
+        <h2 class="text-center mb-4">Editar Mi Perfil</h2>
 
         <!-- Mostrar mensajes -->
         <?php if ($mensaje): ?>
-            <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
-                <i class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
-                <?php echo htmlspecialchars($mensaje); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+            <i
+                class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
+            <?php echo htmlspecialchars($mensaje); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <?php endif; ?>
 
         <!-- Información del usuario -->
         <div class="card bg-light mb-4">
             <div class="card-body">
-                <h6 class="card-title"><i class="bi bi-info-circle me-2"></i>Información del Usuario</h6>
+                <h6 class="card-title"><i class="bi bi-info-circle me-2"></i>Información de Mi Cuenta</h6>
                 <p class="mb-1"><strong>ID:</strong> <?php echo htmlspecialchars($usuario['id_usuario']); ?></p>
-                <p class="mb-1"><strong>Rol Actual:</strong> 
-                    <span class="badge <?php echo $usuario['id_rol'] == 1 ? 'bg-primary' : 'bg-success'; ?>">
+                <p class="mb-1"><strong>Rol:</strong>
+                    <span class="badge bg-danger">
                         <?php echo htmlspecialchars($usuario['rol']); ?>
                     </span>
                 </p>
-                <p class="mb-1"><strong>Estado:</strong> 
+                <p class="mb-1"><strong>Estado:</strong>
                     <?php echo $usuario['habilitado'] == 1 ? 
                         '<span class="text-success"><i class="bi bi-check-circle"></i> Habilitado</span>' : 
                         '<span class="text-danger"><i class="bi bi-x-circle"></i> Deshabilitado</span>'; ?>
                 </p>
-                <p class="mb-0"><strong>Última actualización:</strong> 
+                <p class="mb-0"><strong>Última actualización:</strong>
                     <?php echo !empty($usuario['fecha_actualizacion']) ? 
                         date('d/m/Y H:i', strtotime($usuario['fecha_actualizacion'])) : 
                         'No disponible'; ?>
@@ -211,7 +226,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <form action="procesar_edicion.php" method="POST" id="formEditar">
+        <form action="procesar_edicion_perfil.php" method="POST" id="formEditar">
             <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
 
             <h5 class="section-title border-bottom pb-2 mb-3">Datos Personales</h5>
@@ -269,18 +284,17 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="row g-3 mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Rol del Usuario *</label>
-                    <select class="form-select" name="id_rol" required>
-                        <?php foreach ($roles as $rol): ?>
-                            <option value="<?php echo $rol['id_rol']; ?>" <?php echo $usuario['id_rol'] == $rol['id_rol'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($rol['rol']); ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <select class="form-select" name="id_rol" required disabled>
+                        <option value="3" selected>Super Usuario</option>
                     </select>
+                    <input type="hidden" name="id_rol" value="3">
+                    <small class="text-muted">El rol de SuperUsuario no puede ser modificado</small>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Estado de la Cuenta *</label>
                     <select class="form-select" name="habilitado" required>
-                        <option value="1" <?php echo $usuario['habilitado'] == 1 ? 'selected' : ''; ?>>Habilitado</option>
+                        <option value="1" <?php echo $usuario['habilitado'] == 1 ? 'selected' : ''; ?>>Habilitado
+                        </option>
                         <option value="0" <?php echo $usuario['habilitado'] == 0 ? 'selected' : ''; ?>>Deshabilitado
                         </option>
                     </select>
@@ -310,7 +324,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="row g-3 mt-2">
                 <div class="col-md-6 mb-2">
-                    <a href="../SuperUsuario/usuarios.php" class="btn btn-outline-secondary w-100">
+                    <a href="inicio.php" class="btn btn-outline-secondary w-100">
                         <i class="bi bi-x-circle me-2"></i>Cancelar
                     </a>
                 </div>

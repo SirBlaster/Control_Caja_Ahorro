@@ -1,10 +1,8 @@
 <?php
 // includes/admin_functions.php
-// Funciones específicas para la gestión de administradores
+// Gestión de administradores
 
-/**
- * Registrar un nuevo administrador
- */
+//Registrar un nuevo administrador
 function registrar_administrador($datos) {
     global $pdo;
     
@@ -30,7 +28,7 @@ function registrar_administrador($datos) {
         // Hash de la contraseña
         $password_hash = password_hash($datos['password'], PASSWORD_DEFAULT);
         
-        // Insertar nuevo usuario como administrador (rol 1)
+        // Insertar nuevo usuario como administrador 
         $sql = "INSERT INTO usuario (
                     nombre, 
                     apellido_paterno, 
@@ -82,9 +80,8 @@ function registrar_administrador($datos) {
     }
 }
 
-/**
- * Obtener información de un administrador por ID
- */
+//Obtener información de un administrador por ID
+
 function obtener_admin_por_id($id_usuario) {
     global $pdo;
     
@@ -103,9 +100,7 @@ function obtener_admin_por_id($id_usuario) {
     }
 }
 
-/**
- * Actualizar información de administrador
- */
+//Actualizar información de administrador
 function actualizar_admin($id_usuario, $datos) {
     global $pdo;
     
@@ -190,7 +185,6 @@ function actualizar_admin($id_usuario, $datos) {
         ];
     }
 }
-
 function actualizar_ahorrador(array $datos): bool
 {
     global $pdo;
@@ -327,6 +321,5 @@ function total_pendientes($pdo) {
         'total' => (int)$total_ahorro + (int)$total_prestamo
     ];
 }
-
 
 ?>
