@@ -75,13 +75,13 @@ $pendientes = total_pendientes($pdo); // ['ahorro'=>x, 'prestamo'=>y, 'total'=>z
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='ahorros.php') echo 'active'; ?>"
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='./gestion_prestamos.php') echo 'active'; ?>"
                         href="./gestion_prestamos.php">
                         <i class="bi bi-cash-stack me-1"></i>Gestión de prestamos y ahorros
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='usuarios.php') echo 'active'; ?>"
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='./gestion_ahorradores.php') echo 'active'; ?>"
                         href="./gestion_ahorradores.php">
                         <i class="bi bi-people-fill me-1"></i>Usuarios
                     </a>
@@ -94,7 +94,7 @@ $pendientes = total_pendientes($pdo); // ['ahorro'=>x, 'prestamo'=>y, 'total'=>z
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='configuracion.php') echo 'active'; ?>"
-                        href="./configuracion.php">
+                        href="./editar_perfil.php">
                         <i class="bi bi-gear-fill me-1"></i>Configuración
                     </a>
                 </li>

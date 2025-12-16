@@ -115,4 +115,17 @@ function get_full_name() {
     
     return trim("$nombre $paterno $materno");
 }
+
+
+function get_current_user_id() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (isset($_SESSION['id_usuario']) && !empty($_SESSION['id_usuario'])) {
+        return (int)$_SESSION['id_usuario'];
+    }
+
+    return 0; // Usuario no logeado
+}
 ?>

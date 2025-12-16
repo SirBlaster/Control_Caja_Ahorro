@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar_excel'])) {
                 <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='ahorros.php') echo 'active'; ?>"
                         href="./gestion_prestamos.php">
-                        <i class="bi bi-cash-stack me-1"></i>Prestamos y Ahorros
+                        <i class="bi bi-cash-stack me-1"></i>Gestión de prestamos y ahorros
                     </a>
                 </li>
                 <li class="nav-item">

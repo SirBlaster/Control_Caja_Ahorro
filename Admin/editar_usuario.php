@@ -87,7 +87,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='ahorros.php') echo 'active'; ?>"
                         href="./gestion_prestamos.php">
-                        <i class="bi bi-cash-stack me-1"></i>Prestamos y Ahorros
+                        <i class="bi bi-cash-stack me-1"></i>Gestión de prestamos y ahorros
                     </a>
                 </li>
                 <li class="nav-item">
@@ -115,8 +115,8 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- CONTENIDO -->
     <div class="card card-form container mt-4 p-4 shadow-sm" style="max-width: 800px;">
         <div class="nav-actions">
-            <a href="./gestion_ahorradores.php" class="btn btn-secondary mb-4">
-                <i class="bi bi-arrow-left"></i> Volver a Gestión de Usuarios
+            <a href="./inicio.php" class="btn btn-secondary mb-4">
+                <i class="bi bi-arrow-left"></i> Volver al menú principal
             </a>
         </div>
 
