@@ -52,16 +52,7 @@ if ($miPrestamo) {
     }
 }
 
-// C. Movimientos recientes
-$stmtMovs = $pdo->prepare("
-    SELECT m.*, tm.tipo_movimiento as Tipo 
-    FROM movimiento m 
-    JOIN tipo_movimiento tm ON m.id_tipo_movimiento = tm.id_tipo_movimiento 
-    WHERE m.id_usuario = :id 
-    ORDER BY m.fecha DESC LIMIT 5
-");
-$stmtMovs->execute([':id' => $id_usuario]);
-$movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!doctype html>
@@ -72,9 +63,9 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Panel - Ahorrador</title>
 
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
 
 <body>
@@ -140,18 +131,26 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
     </div>
   <?php endif; ?>
 
+
+  <div style="color: #1a237e;" class="alert d-flex align-items-center" role="alert">
+    <div>
+      El porcentaje de la caja se asigna al corte de la caja, despues del 30 de noviembre de cada año.
+    </div>
+  </div>
   <div class="main-container">
+
     
     <div class="dashboard-cards">
-      
       <div class="info-card">
          <h6 class="card-label">CAJA DE AHORRO</h6>
          <div class="card-amount amount-success">
              $ <?php echo number_format($saldo_total, 2); ?> <span class="fs-6 text-muted">MXN</span>
+             <h6 class="card-label">Rendimiento:</h6>
+             $ <?php echo number_format($porcentaje_Rendimiento); ?> <span class="fs-6 text-muted">%</span>
          </div>
          <div class="text-muted small">Saldo total disponible</div>
-         <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
-      </div>
+        <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
+        </div>
 
       <div class="info-card" style="<?php echo $esPendiente ? 'border: 1px solid #0d6efd;' : ''; ?>">
          <h6 class="card-label">
@@ -200,7 +199,7 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </section>
 
-    <section>
+<section>
        <h6 class="section-title">ÚLTIMOS MOVIMIENTOS</h6>
        <div class="table-container">
            <table class="table">
@@ -215,17 +214,26 @@ $movimientos = $stmtMovs->fetchAll(PDO::FETCH_ASSOC);
                <tbody>
                    <?php if (!empty($movimientos)): ?>
                        <?php foreach ($movimientos as $mov): 
-                           $es_ingreso = ($mov['Id_TipoMovimiento'] == 1); 
+                           // CORRECCIÓN: Claves en minúscula (id_tipo_movimiento)
+                           $es_ingreso = ($mov['id_tipo_movimiento'] == 1); 
+                           
                            $clase_monto = $es_ingreso ? 'text-success' : 'text-danger';
                            $signo = $es_ingreso ? '+' : '-';
                            $badge_bg = $es_ingreso ? 'bg-success' : 'bg-warning text-dark';
                        ?>
                        <tr>
-                           <td><?php echo date("d/m/Y", strtotime($mov['Fecha'])); ?></td>
-                           <td><?php echo htmlspecialchars($mov['Concepto']); ?></td>
-                           <td><span class="badge <?php echo $badge_bg; ?>"><?php echo htmlspecialchars($mov['Tipo']); ?></span></td>
+                           <td><?php echo date("d/m/Y", strtotime($mov['fecha'])); ?></td>
+                           
+                           <td><?php echo htmlspecialchars($mov['concepto']); ?></td>
+                           
+                           <td>
+                                <span class="badge badge-tipo <?php echo $badge_bg; ?>">
+                                    <?php echo htmlspecialchars($mov['etiqueta_tipo'] ?? 'Sin Asignar'); ?>
+                                </span>
+                            </td>
+                           
                            <td class="text-end fw-bold <?php echo $clase_monto; ?>">
-                               <?php echo $signo . '$' . number_format($mov['Monto'], 2); ?>
+                               <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
                            </td>
                        </tr>
                        <?php endforeach; ?>

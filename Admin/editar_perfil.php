@@ -113,6 +113,12 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='nominas.php') echo 'active'; ?>"
+                        href="./gestion_nominas.php">
+                        <i class="bi bi-cash-stack me-1"></i>Gestión de nominas
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='./gestion_ahorradores.php') echo 'active'; ?>"
                         href="./gestion_ahorradores.php">
                         <i class="bi bi-people-fill me-1"></i>Usuarios
@@ -127,90 +133,90 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li class="nav-item">
                     <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='configuracion.php') echo 'active'; ?>"
                         href="./editar_perfil.php">
-                        <i class="bi bi-gear-fill me-1"></i>Configuración
+                        <i class="bi bi-gear-fill me-1"></i>Editar perfil
                     </a>
                 </li>
             </ul>
         </div>
+    </nav>
 
-        <!-- CONTENIDO -->
-        <div class="card card-form container mt-4 p-4 shadow-sm" style="max-width: 800px;">
-            <h2 class="text-center mb-4">Editar Perfil</h2>
+    <!-- CONTENIDO -->
+    <div class="card card-form container mt-4 p-4 shadow-sm" style="max-width: 800px;">
+        <h2 class="text-center mb-4">Editar Perfil</h2>
 
-            <?php if ($mensaje): ?>
-            <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
-                <i
-                    class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
-                <?php echo htmlspecialchars($mensaje); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php endif; ?>
-
-            <form action="./editar_perfil.php" method="POST" id="formEditar">
-                <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
-
-                <h5 class="section-title border-bottom pb-2 mb-3">Datos Personales</h5>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-4"><label class="form-label">Nombre(s) *</label><input type="text" name="nombre"
-                            class="form-control" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
-                    </div>
-                    <div class="col-md-4"><label class="form-label">Apellido Paterno *</label><input type="text"
-                            name="paterno" class="form-control"
-                            value="<?php echo htmlspecialchars($usuario['apellido_paterno']); ?>" required></div>
-                    <div class="col-md-4"><label class="form-label">Apellido Materno *</label><input type="text"
-                            name="materno" class="form-control"
-                            value="<?php echo htmlspecialchars($usuario['apellido_materno']); ?>" required></div>
-                </div>
-
-                <h5 class="section-title border-bottom pb-2 mb-3">Información de Contacto</h5>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6"><label class="form-label">Correo Personal *</label><input type="email"
-                            name="correo_personal" class="form-control"
-                            value="<?php echo htmlspecialchars($usuario['correo_personal'] ?? ''); ?>" required></div>
-                    <div class="col-md-6"><label class="form-label">Correo Institucional *</label><input type="email"
-                            name="correo_institucional" class="form-control"
-                            value="<?php echo htmlspecialchars($usuario['correo_institucional'] ?? ''); ?>" required>
-                    </div>
-                    <div class="col-md-6"><label class="form-label">Teléfono</label><input type="text" name="telefono"
-                            class="form-control" value="<?php echo htmlspecialchars($usuario['telefono'] ?? ''); ?>"
-                            placeholder="Número celular (10 dígitos)" maxlength="15"></div>
-                    <div class="col-md-6"><label class="form-label">RFC</label><input type="text" name="rfc"
-                            class="form-control" value="<?php echo htmlspecialchars($usuario['rfc'] ?? ''); ?>"
-                            placeholder="RFC (13 caracteres)" maxlength="13"></div>
-                    <div class="col-md-6"><label class="form-label">CURP</label><input type="text" name="curp"
-                            class="form-control" value="<?php echo htmlspecialchars($usuario['curp'] ?? ''); ?>"
-                            placeholder="CURP (18 caracteres)" maxlength="18"></div>
-                </div>
-
-                <h5 class="section-title border-bottom pb-2 mb-3">Cambiar Contraseña (Opcional)</h5>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6"><label class="form-label">Nueva Contraseña</label><input type="password"
-                            name="password" class="form-control" placeholder="Dejar vacío para no cambiar"
-                            minlength="8"><small class="text-muted">Mínimo 8 caracteres. Dejar vacío si no desea
-                            cambiarla.</small></div>
-                    <div class="col-md-6"><label class="form-label">Confirmar Contraseña</label><input type="password"
-                            name="confirm_password" class="form-control" placeholder="Confirmar nueva contraseña"></div>
-                </div>
-
-                <div class="alert alert-info">
-                    <i class="bi bi-exclamation-circle me-2"></i>
-                    <strong>Nota:</strong> Todos los cambios serán auditados automáticamente en el sistema.
-                    <br><small class="text-muted">* Campos obligatorios</small>
-                </div>
-
-                <div class="row g-3 mt-2">
-                    <div class="col-md-6 mb-2"><a href="./inicio.php" class="btn btn-outline-secondary w-100"><i
-                                class="bi bi-x-circle me-2"></i>Cancelar</a></div>
-                    <div class="col-md-6 mb-2"><button type="submit" class="btn btn-primary btn-lg w-100"
-                            style="background-color: #d18819; border: none;"><i
-                                class="bi bi-check-circle me-2"></i>Guardar
-                            Cambios</button></div>
-                </div>
-
-            </form>
+        <?php if ($mensaje): ?>
+        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+            <i
+                class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
+            <?php echo htmlspecialchars($mensaje); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <?php endif; ?>
 
-        <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+        <form action="./editar_perfil.php" method="POST" id="formEditar">
+            <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Datos Personales</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-4"><label class="form-label">Nombre(s) *</label><input type="text" name="nombre"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                </div>
+                <div class="col-md-4"><label class="form-label">Apellido Paterno *</label><input type="text"
+                        name="paterno" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['apellido_paterno']); ?>" required></div>
+                <div class="col-md-4"><label class="form-label">Apellido Materno *</label><input type="text"
+                        name="materno" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['apellido_materno']); ?>" required></div>
+            </div>
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Información de Contacto</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Correo Personal *</label><input type="email"
+                        name="correo_personal" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['correo_personal'] ?? ''); ?>" required></div>
+                <div class="col-md-6"><label class="form-label">Correo Institucional *</label><input type="email"
+                        name="correo_institucional" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['correo_institucional'] ?? ''); ?>" required>
+                </div>
+                <div class="col-md-6"><label class="form-label">Teléfono</label><input type="text" name="telefono"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['telefono'] ?? ''); ?>"
+                        placeholder="Número celular (10 dígitos)" maxlength="15"></div>
+                <div class="col-md-6"><label class="form-label">RFC</label><input type="text" name="rfc"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['rfc'] ?? ''); ?>"
+                        placeholder="RFC (13 caracteres)" maxlength="13"></div>
+                <div class="col-md-6"><label class="form-label">CURP</label><input type="text" name="curp"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['curp'] ?? ''); ?>"
+                        placeholder="CURP (18 caracteres)" maxlength="18"></div>
+            </div>
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Cambiar Contraseña (Opcional)</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Nueva Contraseña</label><input type="password"
+                        name="password" class="form-control" placeholder="Dejar vacío para no cambiar"
+                        minlength="8"><small class="text-muted">Mínimo 8 caracteres. Dejar vacío si no desea
+                        cambiarla.</small></div>
+                <div class="col-md-6"><label class="form-label">Confirmar Contraseña</label><input type="password"
+                        name="confirm_password" class="form-control" placeholder="Confirmar nueva contraseña"></div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <strong>Nota:</strong> Todos los cambios serán auditados automáticamente en el sistema.
+                <br><small class="text-muted">* Campos obligatorios</small>
+            </div>
+
+            <div class="row g-3 mt-2">
+                <div class="col-md-6 mb-2"><a href="./inicio.php" class="btn btn-outline-secondary w-100"><i
+                            class="bi bi-x-circle me-2"></i>Cancelar</a></div>
+                <div class="col-md-6 mb-2"><button type="submit" class="btn btn-primary btn-lg w-100"
+                        style="background-color: #d18819; border: none;"><i class="bi bi-check-circle me-2"></i>Guardar
+                        Cambios</button></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
