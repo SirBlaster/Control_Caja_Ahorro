@@ -12,11 +12,20 @@ if (!isset($_SESSION['id_usuario']) || !in_array($_SESSION['id_rol'], [1])) {
     exit();
 }
 
-// Obtener nombre para mostrar (Ajustado a nuevas columnas: nombre, apellido_paterno)
+// Obtener nombre para mostrar
 $nombreUsuario = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . " " . ($_SESSION['apellido_paterno'] ?? '') : 'Usuario';
 
-// 2. REGLA DE NEGOCIO: FECHAS Y PLAZOS (Audio)
-// Los préstamos se cierran el 30 de Noviembre. Diciembre es corte de caja.
+// --- NUEVO: OBTENER TASA DE INTERÉS DINÁMICA ---
+try {
+    $stmtConfig = $pdo->query("SELECT tasa_interes_general FROM datos_sistema WHERE id_datos = 1");
+    $config = $stmtConfig->fetch(PDO::FETCH_ASSOC);
+    // Si encuentra el valor lo usa, si no, usa 30% por defecto. Se divide entre 100 para decimal (30.00 -> 0.30)
+    $tasa_interes = ($config && isset($config['tasa_interes_general'])) ? ($config['tasa_interes_general'] / 100) : 0.30;
+} catch (Exception $e) {
+    $tasa_interes = 0.30; // Fallback en caso de error
+}
+
+// 2. REGLA DE NEGOCIO: FECHAS Y PLAZOS
 $mesActual = intval(date('m'));
 $diaActual = intval(date('d'));
 
@@ -27,25 +36,20 @@ $mensajeAviso = "";
 
 if ($esDiciembre) {
     // --- DICIEMBRE (LISTA DE ESPERA) ---
-    // Calculamos para el próximo ciclo (Enero - Noviembre = 22 quincenas aprox)
     $quincenasRestantes = 22; 
     $mensajeAviso = "AVISO DE CIERRE: Estamos en corte de caja. Puedes enviar tu solicitud, pero entrará en <strong>LISTA DE ESPERA</strong> y será procesada por el administrador hasta <strong>ENERO</strong>.";
 } else {
     // --- RESTO DEL AÑO (Hasta 30 Nov) ---
-    // Meses completos faltantes hasta Noviembre (Mes 11)
     $mesesFaltantes = 11 - $mesActual; 
     $quincenasRestantes = $mesesFaltantes * 2;
     
     // Sumar quincenas del mes actual
     if ($diaActual <= 15) {
-        $quincenasRestantes += 2; // Faltan la del 15 y la del 30
+        $quincenasRestantes += 2; 
     } else {
-        $quincenasRestantes += 1; // Solo falta la del 30
+        $quincenasRestantes += 1; 
     }
 }
-
-// Tasa de interés fija: 30%
-$tasa_interes = 0.30;
 ?>
 
 <!doctype html>
@@ -56,7 +60,8 @@ $tasa_interes = 0.30;
   <title>Solicitud de Préstamo</title>
   <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="../css/prestamo.css"> </head>
+  <link rel="stylesheet" href="../css/prestamo.css"> 
+</head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light header">
@@ -162,7 +167,7 @@ $tasa_interes = 0.30;
                     <span>Monto Solicitado:</span> <span class="fw-bold" id="lbl_solicitado">$0.00</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>Interés (30%):</span> <span class="fw-bold text-danger" id="lbl_interes">$0.00</span>
+                    <span>Interés (<?php echo ($tasa_interes * 100); ?>%):</span> <span class="fw-bold text-danger" id="lbl_interes">$0.00</span>
                 </div>
                 <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
                     <span>Total a Pagar:</span> <span class="fw-bold text-dark" id="lbl_total">$0.00</span>
@@ -178,7 +183,7 @@ $tasa_interes = 0.30;
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="acceptTerms" required>
                 <label class="form-check-label" for="acceptTerms">
-                  Acepto los términos y condiciones del préstamo.
+                  Acepto los términos y condiciones del préstamo (Tasa de interés: <?php echo ($tasa_interes * 100); ?>%).
                 </label>
               </div>
             </div>
@@ -199,6 +204,7 @@ $tasa_interes = 0.30;
   <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
   
   <script>
+      // Pasamos la variable PHP $tasa_interes (que ya es decimal, ej: 0.30) a JS
       const TASA_INTERES = <?php echo $tasa_interes; ?>;
       const PLAZO = <?php echo $quincenasRestantes; ?>;
       const inputMonto = document.getElementById('monto');
