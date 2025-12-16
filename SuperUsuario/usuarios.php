@@ -36,12 +36,53 @@ $actividades = obtener_actividades_recientes(10);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios - SETDITSX</title>
-    <link rel="stylesheet" href="../../css/Super.css">
-    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/Super.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
     
 </head>
+<style>
+    /* Botón "Crear Nuevo Administrador" */
+.btn-crear-admin {
+    background: linear-gradient(135deg, #d18819 0%, #b37415 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.btn-crear-admin:hover {
+    color: white;
+    background: linear-gradient(135deg, #d18819 0%, #b37415 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+}
+.btn-editar-usuario {
+    background: linear-gradient(135deg, #6c757d 0%, #5c636a 100%);
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-editar-usuario::before {
+    content: "\f4cb";
+    font-family: "bootstrap-icons";
+    font-size: 16px;
+}
+</style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light header">
         <div class="container-fluid">
@@ -323,7 +364,7 @@ $actividades = obtener_actividades_recientes(10);
         </div>
     </div>
 
-    <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
     <script>
         function filtrarUsuarios() {
             var input = document.getElementById("buscarUsuario");

@@ -8,8 +8,6 @@ require_once '../includes/init.php';
 secure_session_start();
 check_login(3);
 
-// Debug: Verificar que estamos aquí
-echo "<!-- Debug 1: Pasó los includes -->";
 
 // Obtener datos del superusuario logueado
 $id_usuario = $_SESSION['id_usuario'] ?? 0;
@@ -22,8 +20,6 @@ if ($id_usuario <= 0) {
     exit();
 }
 
-echo "<!-- Debug 3: ID de usuario es $id_usuario -->";
-
 // Obtener datos del usuario usando la función CORRECTA
 $usuario = obtener_superusuario_completo($id_usuario);
 
@@ -34,8 +30,6 @@ if (!$usuario) {
     header('Location: inicio.php');
     exit();
 }
-
-echo "<!-- Debug 5: Usuario obtenido correctamente -->";
 
 // Manejar mensajes de sesión
 $mensaje = '';
@@ -216,11 +210,11 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         '<span class="text-success"><i class="bi bi-check-circle"></i> Habilitado</span>' : 
                         '<span class="text-danger"><i class="bi bi-x-circle"></i> Deshabilitado</span>'; ?>
                 </p>
-                <p class="mb-0"><strong>Última actualización:</strong> 
-                    <?php echo !empty($usuario['fecha_actualizacion']) ? 
-                        date('d/m/Y H:i', strtotime($usuario['fecha_actualizacion'])) : 
-                        'No disponible'; ?>
-                </p>
+                <!-- <p class="mb-0"><strong>Última actualización:</strong> 
+                    <?php //echo !empty($usuario['fecha_actualizacion']) ? 
+                        //date('d/m/Y H:i', strtotime($usuario['fecha_actualizacion'])) : 
+                        //'No disponible'; ?>
+                </p> -->
             </div>
         </div>
 
@@ -290,10 +284,11 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Estado de la Cuenta *</label>
-                    <select class="form-select" name="habilitado" required>
+                    <select class="form-select" name="habilitado" required disabled>
                         <option value="1" <?php echo $usuario['habilitado'] == 1 ? 'selected' : ''; ?>>Habilitado</option>
                         <option value="0" <?php echo $usuario['habilitado'] == 0 ? 'selected' : ''; ?>>Deshabilitado</option>
                     </select>
+                    <small class="text-muted">El rol de SuperUsuario no puede ser Deshabilitado</small>
                 </div>
             </div>
 
