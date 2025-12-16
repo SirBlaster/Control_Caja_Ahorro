@@ -39,7 +39,7 @@ function registrar_administrador($datos) {
                     telefono,
                     id_rol,
                     habilitado
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, 2, 1)";
         
         $stmt = $pdo->prepare($sql);
         
@@ -90,7 +90,7 @@ function obtener_admin_por_id($id_usuario) {
             SELECT u.*, r.rol 
             FROM usuario u 
             LEFT JOIN rol r ON u.id_rol = r.id_rol 
-            WHERE u.id_usuario = ? AND u.id_rol = 1
+            WHERE u.id_usuario = ? AND u.id_rol = 2
         ");
         $stmt->execute([$id_usuario]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
