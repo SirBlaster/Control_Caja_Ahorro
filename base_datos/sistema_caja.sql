@@ -30,6 +30,10 @@ CREATE TABLE IF NOT EXISTS usuario (
     tarjeta VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     habilitado TINYINT NOT NULL DEFAULT 1,
     id_rol INT NOT NULL,
+    UNIQUE (correo_institucional),
+    UNIQUE (correo_personal),
+    UNIQUE (rfc),
+    UNIQUE (curp),
     PRIMARY KEY (id_usuario),
     CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol)
         REFERENCES rol(id_rol)
@@ -52,6 +56,8 @@ CREATE TABLE IF NOT EXISTS ahorro (
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE ahorro ADD COLUMN fecha_ultima_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP;
 
 INSERT INTO ahorro (monto_ahorrado, id_usuario) VALUES (0.00, 2);
 
@@ -315,6 +321,9 @@ BEGIN
              CURRENT_USER());
     END IF;
 END $$
+
+DELIMITER ;
+
 
 -- 1. Asegurar que datos_sistema tenga todas las columnas necesarias
 ALTER TABLE datos_sistema 

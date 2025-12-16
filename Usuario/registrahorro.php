@@ -1,6 +1,7 @@
 <?php
-session_start();
 require_once '../includes/init.php';
+secure_session_start();
+check_login(1);
 
 // 1. Seguridad
 if (!isset($_SESSION['id_usuario'])) {
@@ -38,13 +39,14 @@ if ($ultima_solicitud) {
         $mensaje_estado = "Ya tienes una solicitud en espera de revisión. Por favor espera a que sea atendida.";
         $clase_alerta = "alert-warning";
     }
-    // Estado 2 = Aprobado
-    elseif ($estado == 2) {
-        $puede_solicitar = false;
-        $mensaje_estado = "¡Felicidades! Tu solicitud de ahorro ya fue APROBADA y está activa. No es necesario enviar otra.";
-        $clase_alerta = "alert-success";
+
+        elseif ($estado == 2) {
+        $puede_solicitar = true; // Lo dejamos pasar
+        $mensaje_estado = "Tu solicitud anterior fue aceptada. Si haces otra solicitud remplazara a la anterior (solo puede aumentar el monto ahorrar si es en el mismo ciclo administrativo).";
+        $clase_alerta = "alert-danger"; // Rojo para avisar, pero mostramos el form
     }
-    // Estado 3 = Rechazado (Permitimos solicitar de nuevo)
+
+    // Estado 2 = Rechazado (Permitimos solicitar de nuevo)
     elseif ($estado == 3) {
         $puede_solicitar = true; // Lo dejamos pasar
         $mensaje_estado = "Tu solicitud anterior fue rechazada. Puedes corregir tus datos y enviar una nueva solicitud aquí.";
@@ -60,39 +62,63 @@ if ($ultima_solicitud) {
 <title>Solicitud Ahorro - registrar nómina</title>
 <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../css/estilo_ahorrador.css">
 <link rel="stylesheet" href="../css/ahorro-nomina.css">
 </head>
 <body>
 
-  <header class="pn-header">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
-                <span class="fw-bold text-dark">Historial de Solicitudes</span>
-            </a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
+        </a>
 
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-none d-md-block text-end">
-                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
-                        <?php echo get_user_name(); ?>
-                    </div>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-                </form>
-                
-            </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Apartados (Ahorrador)
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="user-details text-end d-none d-md-block">
+            <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
+            <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+          </div>
+          <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+          </a>
+        </div>
+      </div>
     </nav>
-  </header>
 
 
   <main class="container my-5">
-      <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
     <div class="row justify-content-center">
       <div class="col-lg-9">
 
@@ -137,7 +163,10 @@ if ($ultima_solicitud) {
                 </div>
 
                 <div class="col-12 d-flex gap-3 flex-wrap">
+                <div class="col-12 d-flex gap-3 flex-wrap align-items-center mt-4">
+                  <a href="panelAhorrador.php" class="btn btn-outline-dark btn-cancel px-4">Cancelar</a>
                   <button type="submit" id="btnEnviar" class="btn btn-confirm ms-auto btn-success">Confirmar y enviar solicitud</button>
+                </div>
                 </div>
               </form>
 

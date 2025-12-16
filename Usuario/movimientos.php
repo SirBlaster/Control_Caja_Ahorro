@@ -1,138 +1,168 @@
 <?php
 require_once '../includes/init.php';
 secure_session_start();
+check_login(1); // Rol 2: Ahorrador
+
+// Cargar la lógica de datos
+require_once '../includes/Usuario/logica_mov_ahorro.php';
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Movimientos - Caja de Ahorro</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Movimientos de Ahorro - SETDITSX</title>
+    
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
+    <style>
+.navbar.header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
 
-  <!-- Bootstrap (local en tu proyecto) -->
-  <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-  <!-- Estilos locales -->
-  <link rel="stylesheet" href="../css/movimientos.css">
+body {
+    padding-top: 70px !important;
+}
+    </style>
 
 </head>
-<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
+          </a>
 
-  <!-- Header -->
-  <header class="app-header">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="../img/NewLogo - 1.png" alt="logo" height="40">
-                <span class="fw-bold text-dark">Historial de Solicitudes</span>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Apartados (Ahorrador)
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/historial_completo.php">Historial completo</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="d-flex align-items-center gap-3">
+            <div class="user-details text-end d-none d-md-block">
+              <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
+              <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            </div>
+            <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
             </a>
+          </div>
+        </div>
+      </nav>
+<body class="pt-5">
+    <div class="container mt-5 pt-4 mb-5">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold text-dark mb-0">Cuenta de Ahorro</h3>
+                <p class="text-muted mb-0">Historial exclusivo de depósitos y retiros</p>
+            </div>
+            <a href="panelAhorrador.php" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Regresar
+            </a>
+        </div>
 
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-none d-md-block text-end">
-                    <div class="fw-bold" style="font-size: 0.9rem; color: #153b52;">
-                        <?php echo get_user_name(); ?>
-                    </div>
-                    <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-                </div>
-                <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-                </form>
-                
+        <div class="card card-ahorro bg-white">
+            <div class="card-header header-ahorro d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-piggy-bank me-2"></i> Movimientos Registrados</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-secondary text-uppercase small">Fecha</th>
+                            <th class="py-3 text-secondary text-uppercase small">Concepto</th>
+                            <th class="py-3 text-secondary text-uppercase small text-center">Tipo</th>
+                            <th class="pe-4 py-3 text-secondary text-uppercase small text-end">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($movimientos_ahorro)): ?>
+                            <?php foreach ($movimientos_ahorro as $mov): ?>
+                                <?php 
+                                    // Lógica visual
+                                    $es_deposito = ($mov['id_tipo_movimiento'] == 1);
+                                    
+                                    $clase_monto = $es_deposito ? 'text-success' : 'text-danger';
+                                    $signo       = $es_deposito ? '+' : '-';
+                                    $clase_badge = $es_deposito ? 'badge-deposito' : 'badge-retiro';
+                                    $icono       = $es_deposito ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle';
+                                ?>
+                                <tr>
+                                    <td class="ps-4 fw-bold text-muted">
+                                        <?php echo date("d/m/Y", strtotime($mov['fecha'])); ?>
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi <?php echo $icono; ?> <?php echo $es_deposito ? 'text-success' : 'text-danger'; ?>"></i>
+                                            <?php echo htmlspecialchars($mov['concepto']); ?>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <span class="badge <?php echo $clase_badge; ?> rounded-pill px-3">
+                                            <?php echo htmlspecialchars($mov['tipo_movimiento']); ?>
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="pe-4 text-end fw-bold <?php echo $clase_monto; ?>" style="font-size: 1.1rem;">
+                                        <?php echo $signo . '$' . number_format($mov['monto'], 2); ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4" class="text-center py-5">
+                                    <div class="text-muted opacity-50 mb-2">
+                                        <i class="bi bi-wallet2 fs-1"></i>
+                                    </div>
+                                    <h6 class="text-muted">No hay movimientos de ahorro</h6>
+                                    <small class="text-secondary">Aquí aparecerán tus nóminas registradas y retiros.</small>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </nav>
-  </header>
-
-  <!-- Main -->
-  <main class="container my-5">
-    <br>
-    <a href="panelAhorrador.php" class="btn btn-secondary btn-sm mb-3">&larr; Regresar</a>
-    <div class="card main-card p-4">
-      <h1 class="mb-4 movimientos-title">Movimientos</h1>
-
-      <!-- Filtros -->
-      <div class="row align-items-center mb-4 g-3">
-        <div class="col-lg-4 col-md-6">
-          <label class="form-label fw-bold small">Filtrar por Tipo</label>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipo" id="tipo1" checked>
-            <label class="form-check-label" for="tipo1">Depósito</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipo" id="tipo2">
-            <label class="form-check-label" for="tipo2">Retiro</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipo" id="tipo3">
-            <label class="form-check-label" for="tipo3">Transferencia</label>
-          </div>
-        </div>
-
-        <div class="col-lg-5 col-md-6">
-          <label class="form-label fw-bold small">Rango de Fechas</label>
-          <div class="d-flex gap-2">
-            <input type="date" class="form-control form-control-sm">
-            <input type="date" class="form-control form-control-sm">
-            <button class="btn btn-apply btn-sm">Aplicar Filtros</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabla -->
-      <div class="table-wrap">
-        <table class="table table-sm table-borderless mb-0">
-          <thead class="table-head">
-            <tr>
-              <th style="width:6%;">ID</th>
-              <th style="width:18%;">Fecha y Hora</th>
-              <th>Concepto</th>
-              <th class="text-end" style="width:12%;">Monto</th>
-              <th style="width:18%;">Tipo de Movimiento</th>
-              <th class="text-end" style="width:12%;">Saldo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1A</td>
-              <td>20/11/25 2:13 PM</td>
-              <td>Depósito Nómina</td>
-              <td class="text-end text-success">+$7,500.00</td>
-              <td>Depósito</td>
-              <td class="text-end">$17,500.00</td>
-            </tr>
-            <tr>
-              <td>2B</td>
-              <td>7/11/25 12:54 PM</td>
-              <td>Retiro Emergencia</td>
-              <td class="text-end text-danger">-$1,000.00</td>
-              <td>Retiro</td>
-              <td class="text-end">$16,500.00</td>
-            </tr>
-            <tr>
-              <td>3C</td>
-              <td>2/11/25 2:48 PM</td>
-              <td>Préstamo</td>
-              <td class="text-end text-danger">-$450.00</td>
-              <td>Pago</td>
-              <td class="text-end">$16,050.00</td>
-            </tr>
-            <tr>
-              <td>4D</td>
-              <td>28/10/25 6:34 PM</td>
-              <td>Suscripción</td>
-              <td class="text-end text-danger">-$299.00</td>
-              <td>Pago</td>
-              <td class="text-end">$15,751.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
     </div>
-  </main>
 
-<script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

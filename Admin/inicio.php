@@ -5,8 +5,28 @@ require_once '../includes/init.php';
 secure_session_start();
 check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
-// Aquí después puedes traer datos reales desde BD
+
+// --- PAGINACIÓN ---
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$registros_por_pagina = 10;
+
+// Obtener solicitudes
+$result = obtener_solicitudes($pdo, $pagina, $registros_por_pagina);
+$solicitudes = $result['solicitudes'];
+$total_paginas = $result['total_paginas'];
+
+// Calcular paginación avanzada
+$max_enlaces = 5;
+$start = max(1, $pagina - floor($max_enlaces / 2));
+$end = min($total_paginas, $start + $max_enlaces - 1);
+if ($end - $start + 1 < $max_enlaces) {
+    $start = max(1, $end - $max_enlaces + 1);
+}
+
+// --- TOTAL PENDIENTES ---
+$pendientes = total_pendientes($pdo); // ['ahorro'=>x, 'prestamo'=>y, 'total'=>z]
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -24,7 +44,7 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
     <!-- HEADER -->
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <img src="../img/logoChico.png" alt="SETDITSX" width="70" class="me-3" />
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 
@@ -58,7 +78,7 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
             <!-- Gestión de Préstamos -->
             <div class="dashboard-card">
                 <div class="card-title">Gestión de Préstamos</div>
-                <div class="card-count">4</div>
+                <div class="card-count"><?php echo $pendientes['total']; ?></div>
                 <div class="card-description">Solicitudes por revisar</div>
                 <a href="gestion_prestamos.php" class="btn btn-manage">
                     Gestionar
@@ -67,10 +87,10 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
             <!-- Gestión de Ahorradores -->
             <div class="dashboard-card">
+                <div class="card-title">Gestión de usuarios</div>
                 <div class="card-icon">
                     <i class="bi bi-person-fill"></i>
                 </div>
-                <div class="card-title">Gestión de Ahorradores</div>
                 <div class="card-description">
                     Consultar perfiles y registrar nómina
                 </div>
@@ -81,10 +101,10 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
 
             <!-- Reportes -->
             <div class="dashboard-card">
+                <div class="card-title">Reportes</div>
                 <div class="card-icon">
                     <i class="bi bi-receipt-cutoff"></i>
                 </div>
-                <div class="card-title">Reportes</div>
                 <div class="card-description">Generar y descargar</div>
                 <a href="reportes.php" class="btn btn-manage">
                     Emitir
@@ -101,32 +121,61 @@ check_login(2); // Nivel 2 = Administrador (ajusta si usas otro)
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Solicitante</th>
+                        <th>RFC</th>
                         <th>Tipo</th>
                         <th>Monto</th>
                         <th>Estado</th>
-                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php if (!empty($solicitudes)): ?>
+                    <?php foreach ($solicitudes as $sol): ?>
                     <tr>
-                        <td>1A</td>
-                        <td>Joaquín Cázares</td>
-                        <td>Préstamo</td>
-                        <td>$2,300.00</td>
-                        <td class="status-pending">Pendiente</td>
-                        <td>
-                            <button class="btn-details">Ver detalles</button>
-                        </td>
+                        <td><?php echo htmlspecialchars($sol['nombre_completo']); ?></td>
+                        <td><?php echo htmlspecialchars($sol['rfc']); ?></td>
+                        <td><?php echo htmlspecialchars($sol['tipo']); ?></td>
+                        <td>$<?php echo number_format($sol['monto'], 2); ?></td>
+                        <td class="<?php echo estado_class($sol['estado']); ?>">
+                            <?php echo htmlspecialchars($sol['estado']); ?></td>
                     </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="7" class="text-center">No hay solicitudes recientes</td>
+                    </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-        <a href="#" class="view-all">
-            <i class="bi bi-list-ul"></i> Ver todas las solicitudes
-        </a>
+        <!-- Paginación avanzada -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <!-- Botón anterior -->
+                <li class="page-item <?php echo ($pagina <= 1) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?pagina=<?php echo max(1, $pagina-1); ?>" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- Números de página -->
+                <?php for($i=$start; $i<=$end; $i++): ?>
+                <li class="page-item <?php echo ($i==$pagina)?'active':''; ?>">
+                    <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+                <?php endfor; ?>
+
+                <!-- Botón siguiente -->
+                <li class="page-item <?php echo ($pagina >= $total_paginas) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?pagina=<?php echo min($total_paginas, $pagina+1); ?>"
+                        aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
     </div>
 
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>

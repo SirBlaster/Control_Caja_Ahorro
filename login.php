@@ -18,7 +18,7 @@
 
 <body>
     <div class="page-header">
-        <img src="img/NewLogo - 1.png" alt="logo" class="brand-logo" />
+        <img src="img/LogoChico.png" alt="logo" class="brand-logo" />
         <div>
             <div style="font-weight:700;color:#153b52;">SETDITSX - Sindicato ITSX</div>
         </div>

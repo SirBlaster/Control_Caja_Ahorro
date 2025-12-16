@@ -1,7 +1,5 @@
 <?php
-// =========================================================
-// LÓGICA PHP (BACKEND)
-// =========================================================
+// Admin/gestion_prestamos.php
 require_once '../includes/init.php';
 
 // Verificar Admin
@@ -10,21 +8,58 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
     exit();
 }
 
-// Regla Diciembre
+// Regla Diciembre (Bloqueo solo para préstamos, pero lo dejamos como variable global)
 $mesActual = intval(date('m'));
 $bloqueoCierre = ($mesActual == 12);
 
-// Consulta SQL
-$sql = "SELECT s.id_solicitud_prestamo, s.monto_solicitado, s.plazo_quincenas, s.fecha_solicitud, 
-               u.nombre, u.apellido_paterno, u.apellido_materno 
-        FROM solicitud_prestamo s
-        JOIN usuario u ON s.id_usuario = u.id_usuario
-        WHERE s.id_estado = 1 ORDER BY s.fecha_solicitud DESC";
+// FILTRO: ¿Qué quiere ver el admin? (prestamo, ahorro, todos)
+$filtroTipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'todos';
+
+// CONSULTA UNIFICADA (UNION)
+// Usamos alias 'tipo_solicitud' para diferenciar: 'prestamo' o 'ahorro'
+// Estado 1 = Pendiente
+$sql = "
+    SELECT 
+        'prestamo' as tipo_solicitud,
+        s.id_solicitud_prestamo as id,
+        s.monto_solicitado as monto,
+        s.plazo_quincenas as plazo,
+        s.fecha_solicitud as fecha,
+        s.id_estado,
+        u.nombre, u.apellido_paterno, u.apellido_materno, u.rfc
+    FROM solicitud_prestamo s
+    JOIN usuario u ON s.id_usuario = u.id_usuario
+    WHERE s.id_estado = 1
+
+    UNION ALL
+
+    SELECT 
+        'ahorro' as tipo_solicitud,
+        a.id_solicitud_ahorro as id,
+        a.monto_solicitado as monto,
+        0 as plazo,  -- Ahorro no tiene plazo en quincenas
+        a.fecha as fecha,
+        a.id_estado,
+        u.nombre, u.apellido_paterno, u.apellido_materno, u.rfc
+    FROM solicitud_ahorro a
+    JOIN usuario u ON a.id_usuario = u.id_usuario
+    WHERE a.id_estado = 1
+";
+
+// Aplicar ordenamiento
+$sql .= " ORDER BY fecha DESC";
 
 $stmt = $pdo->query($sql);
-$solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$todasLasSolicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Nombre del admin para el header
+// Filtrar array en PHP según lo seleccionado (más sencillo que modificar el SQL dinámico complejo)
+$solicitudesFiltradas = [];
+foreach ($todasLasSolicitudes as $sol) {
+    if ($filtroTipo == 'todos' || $sol['tipo_solicitud'] == $filtroTipo) {
+        $solicitudesFiltradas[] = $sol;
+    }
+}
+
 $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador';
 ?>
 
@@ -38,217 +73,85 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
 
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
 
     <style>
-    body {
-        background: #f5f7fa;
-        font-family: Arial, sans-serif;
-    }
-
-    .header {
-        background: linear-gradient(to bottom, #ffffff, #e8edf5);
-        padding: 20px 40px;
-        border-bottom: 2px solid #2a3472;
-    }
-
-    .header h4 {
-        color: #2a3472;
-        font-weight: bold;
-    }
-
-    .card-form {
-        max-width: 1200px;
-        margin: 40px auto;
-        background: white;
-        border-radius: 12px;
-        padding: 30px 40px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-        text-align: center;
-        font-weight: bold;
-        color: #2a3472;
-        margin-bottom: 25px;
-    }
-
-    .section-title {
-        font-weight: bold;
-        color: #2a3472;
-        margin-top: 20px;
-        margin-bottom: 15px;
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .user-details {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .user-name {
-        font-weight: 500;
-        margin: 0;
-        color: #2a3472;
-    }
-
-    .user-icon {
-        font-size: 1.8rem;
-        color: #2a3472;
-    }
-
-    .btn-logout {
-        border: 1px solid #dc3545;
-        color: #dc3545;
-        background: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        transition: 0.3s;
-    }
-
-    .btn-logout:hover {
-        background: #dc3545;
-        color: white;
-    }
-
-    /* TABLA */
-    .table-container {
-        overflow-x: auto;
-        margin-top: 20px;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table th {
-        background-color: #2a3472;
-        color: white;
-        font-weight: 600;
-        padding: 12px 15px;
-        text-align: left;
-    }
-
-    .table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #dee2e6;
-        vertical-align: middle;
-    }
-
-    .table tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .status-pending {
-        background-color: #fff3cd;
-        color: #856404;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.85rem;
-    }
-
-    /* BOTONES DE ACCIÓN */
-    .btn-action {
-        padding: 6px 12px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-decoration: none;
-        border: none;
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    .btn-approve {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .btn-approve:hover {
-        background-color: #218838;
-        color: white;
-    }
-
-    .btn-reject {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .btn-reject:hover {
-        background-color: #c82333;
-        color: white;
-    }
-
-    .btn-back {
-        color: #2a3472;
-        text-decoration: none;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 20px;
-    }
-
-    .btn-back:hover {
-        text-decoration: underline;
-        color: #1e2660;
-    }
+        .badge-prestamo { background-color: #ffc107; color: #000; } /* Amarillo */
+        .badge-ahorro { background-color: #0d6efd; color: #fff; }   /* Azul */
     </style>
+
 </head>
 
 <body>
 
+    <!-- HEADER -->
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3" />
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
             <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
         </div>
 
         <div class="user-info">
             <i class="bi bi-person-square user-icon"></i>
+
             <div class="user-details">
-                <p class="user-name"><?php echo htmlspecialchars($nombreAdmin); ?></p>
+                <p class="user-name">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
             </div>
-            <a href="../logout.php" class="btn btn-logout text-decoration-none">
-                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-            </a>
+
+            <!-- CERRAR SESIÓN -->
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    Cerrar Sesión
+                </button>
+            </form>
         </div>
     </div>
 
     <div class="card-form">
-
+        <a href="Inicio.php" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Volver al menú principal
+        </a>
         <?php if ($bloqueoCierre): ?>
         <div class="alert alert-warning text-center fw-bold shadow-sm">
-            <i class="bi bi-lock-fill"></i> MODO CIERRE DE CAJA ACTIVADO (DICIEMBRE)
+            <i class="bi bi-lock-fill"></i> CIERRE DE CAJA ACTIVADO
         </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['msg'])): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_GET['msg']); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="bi bi-check-circle-fill"></i> <?php echo htmlspecialchars($_GET['msg']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
-        <h2>Gestión de Préstamos</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold" style="color: #2a3472;">Gestión de Solicitudes</h3>
+            
+            <form method="GET" class="d-flex gap-2 align-items-center">
+                <label class="fw-bold">Ver:</label>
+                <select name="tipo" class="form-select form-select-sm" onchange="this.form.submit()" style="width: 150px;">
+                    <option value="todos" <?php echo $filtroTipo == 'todos' ? 'selected' : ''; ?>>Todos</option>
+                    <option value="prestamo" <?php echo $filtroTipo == 'prestamo' ? 'selected' : ''; ?>>Préstamos</option>
+                    <option value="ahorro" <?php echo $filtroTipo == 'ahorro' ? 'selected' : ''; ?>>Ahorros</option>
+                </select>
+            </form>
+        </div>
 
-        <h5 class="section-title">Solicitudes pendientes de revisión</h5>
-
-        <div class="table-container">
-            <table class="table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Solicitante</th>
-                        <th>Fecha Solicitud</th>
+                        <th>Nombre</th>
+                        <th>RFC</th>
+                        <th>Tipo Movimiento</th>
+                        <th>Fecha</th>
                         <th>Monto</th>
                         <th>Plazo</th>
                         <th>Estado</th>
@@ -256,53 +159,48 @@ $nombreAdmin = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Administrador
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($solicitudes)): ?>
-                    <?php foreach ($solicitudes as $sol): ?>
-                    <tr>
-                        <td><strong>#<?php echo $sol['id_solicitud_prestamo']; ?></strong></td>
-                        <td><?php echo $sol['nombre'] . ' ' . $sol['apellido_paterno']; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($sol['fecha_solicitud'])); ?></td>
-                        <td class="fw-bold text-dark">$<?php echo number_format($sol['monto_solicitado'], 2); ?></td>
-                        <td><?php echo $sol['plazo_quincenas']; ?> Q</td>
-                        <td><span class="status-pending">Pendiente</span></td>
-                        <td>
-                            <?php if ($bloqueoCierre): ?>
-                            <button class="btn btn-secondary btn-sm" disabled title="Bloqueado por cierre">
-                                <i class="bi bi-lock"></i>
-                            </button>
-                            <?php else: ?>
-                            <a href="aprobar_solicitud.php?id=<?php echo $sol['id_solicitud_prestamo']; ?>"
-                                class="btn-action btn-approve"
-                                onclick="return confirm('¿Confirmar aprobación y generar pagaré?')">
-                                <i class="bi bi-check-lg"></i> Aprobar
-                            </a>
-                            <a href="rechazar_solicitud.php?id=<?php echo $sol['id_solicitud_prestamo']; ?>"
-                                class="btn-action btn-reject"
-                                onclick="return confirm('¿Seguro que deseas rechazar y eliminar esta solicitud?')">
-                                <i class="bi bi-x-lg"></i> Rechazar
-                            </a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                    <?php if (!empty($solicitudesFiltradas)): ?>
+                        <?php foreach ($solicitudesFiltradas as $sol): 
+                            $esPrestamo = ($sol['tipo_solicitud'] == 'prestamo');
+                            $etiqueta = $esPrestamo ? 'PRÉSTAMO' : 'AHORRO';
+                            $claseBadge = $esPrestamo ? 'badge-prestamo' : 'badge-ahorro';
+                            // URL para aprobar/rechazar enviando ID y TIPO
+                            $urlAprobar = "./aprobar_solicitud.php?id=" . $sol['id'] . "&tipo=" . $sol['tipo_solicitud'];
+                            $urlRechazar = "./rechazar_solicitud.php?id=" . $sol['id'] . "&tipo=" . $sol['tipo_solicitud'];
+                        ?>
+                        <tr>
+                            <td><strong>#<?php echo $sol['id']; ?></strong></td>
+                            <td><?php echo $sol['nombre'] . ' ' . $sol['apellido_paterno']; ?></td>
+                            <td><?php echo $sol['rfc']; ?></td>
+                            <td><span class="badge <?php echo $claseBadge; ?>"><?php echo $etiqueta; ?></span></td>
+                            <td><?php echo date('d/m/Y', strtotime($sol['fecha'])); ?></td>
+                            <td class="fw-bold text-success">$<?php echo number_format($sol['monto'], 2); ?></td>
+                            <td><?php echo $esPrestamo ? $sol['plazo'] . ' Q' : 'N/A'; ?></td>
+                            <td><span class="badge bg-secondary">Pendiente</span></td>
+                            <td>
+                                <?php if ($esPrestamo && $bloqueoCierre): ?>
+                                    <button class="btn btn-secondary btn-sm" disabled title="Préstamos cerrados en Dic">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </button>
+                                <?php else: ?>
+                                    <a href="<?php echo $urlAprobar; ?>" class="btn btn-success btn-action" onclick="return confirm('¿Aprobar solicitud de <?php echo $etiqueta; ?>?')">
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                    <a href="<?php echo $urlRechazar; ?>" class="btn btn-danger btn-action" onclick="return confirm('¿Rechazar solicitud de <?php echo $etiqueta; ?>?')">
+                                        <i class="bi bi-x-lg"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
                     <?php else: ?>
-                    <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">
-                            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
-                            No hay solicitudes pendientes por el momento.
-                        </td>
-                    </tr>
+                        <tr><td colspan="9" class="text-center py-4 text-muted">No hay solicitudes pendientes con este filtro.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
-
-        <a href="Inicio.php" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver al menú principal
-        </a>
     </div>
 
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

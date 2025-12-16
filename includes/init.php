@@ -18,7 +18,7 @@ require_once __DIR__ . '/security.php';
 // Incluir funciones de usuario
 require_once __DIR__ . '/user_functions.php';
 
-require_once 'admin_user_handlers.php';
+require_once __DIR__ . '/admin_user_handlers.php';
 
 require_once __DIR__ . '/admin_functions.php';
 require_once __DIR__ . '/audit_functions.php';

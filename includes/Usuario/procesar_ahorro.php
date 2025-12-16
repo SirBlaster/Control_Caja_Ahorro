@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // 2. RECEPCIÓN DE DATOS
     $sueldo = $_POST['sueldo'];
-    $monto = $_POST['monto'];
+    $monto_solicitado = $_POST['monto'];
 
-    if ($monto > ($sueldo * 0.30)) {
-        die("<script>alert('Error: El monto supera el 30% permitido.'); window.history.back();</script>");
+    if ($monto_solicitado > ($sueldo * 0.30)) {
+        die("<script>alert('Error: El monto solicitado supera el 30% permitido.'); window.history.back();</script>");
     }
 
     // 3. SUBIDA DE ARCHIVO (Ruta Corregida)
@@ -44,11 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (move_uploaded_file($_FILES['archivo_nomina']['tmp_name'], $ruta_destino)) {
             
             try {
-                $sql = "INSERT INTO Solicitud_Ahorro (Fecha, Monto, Nomina, ArchivoNomina, ArchivoSolicitud, Id_Ahorrador, Id_Estado) 
+                $sql = "INSERT INTO Solicitud_Ahorro (fecha, monto_solicitado, Nomina, archivo_nomina, archivo_solicitud, id_usuario, id_estado) 
                         VALUES (NOW(), ?, ?, ?, 'GENERANDO...', ?, 1)";
                 
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$monto, $sueldo, $nombre_archivo_nomina, $id_usuario]);
+                $stmt->execute([$monto_solicitado, $sueldo, $nombre_archivo_nomina, $id_usuario]);
 
                 $id_solicitud = $pdo->lastInsertId();
                 

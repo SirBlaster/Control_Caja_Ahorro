@@ -13,7 +13,7 @@
 <body>
 
     <div class="header d-flex align-items-center p-3">
-        <img src="img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
+        <img src="img/LogoChico.png" alt="SETDITSX" width="70" class="me-3">
         <h4>SETDITSX - Sindicato ITSX</h4>
     </div>
 

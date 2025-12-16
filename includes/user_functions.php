@@ -11,8 +11,8 @@ function get_user_role_text() {
     }
     
     $roles = [
-        1 => 'Administrador',
-        2 => 'Ahorrador',
+        1 => 'Ahorrador',
+        2 => 'Administrador',
         3 => 'SuperUsuario'
     ];
     
