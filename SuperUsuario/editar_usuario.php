@@ -45,10 +45,11 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Editar Usuario - SETDITSX</title>
+    <link rel="stylesheet" href="../css/Super.css">
     <link rel="stylesheet" href="../css/registrar.css">
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../../css/Super.css">
+    
 </head>
 
 <body>
