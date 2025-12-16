@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sistema_caja;
-USE sistema_caja;
+CREATE DATABASE IF NOT EXISTS caja_ahorro;
+USE caja_ahorro;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS rol(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO rol (rol) VALUES 
-('Ahorrador'),
 ('Administrador'),
+('Ahorrador'),
 ('Super Usuario');
 
 CREATE TABLE IF NOT EXISTS usuario (
@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS usuario (
     contrasena VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     tarjeta VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     habilitado TINYINT NOT NULL DEFAULT 1,
-    tasa_interes DECIMAL(5,2) NOT NULL DEFAULT 0.00,
     id_rol INT NOT NULL,
     UNIQUE (correo_institucional),
     UNIQUE (correo_personal),
@@ -44,8 +43,8 @@ CREATE TABLE IF NOT EXISTS usuario (
 
 
 INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, correo_institucional, correo_personal, rfc, curp, telefono, contrasena, tarjeta, id_rol) VALUES
-('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 2),
-('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 1);
+('Administrador', 'General', 'Sistema', 'admin@itsx.edu.mx', NULL, NULL, NULL, '0000000000', '12345', NULL, 1),
+('Juan', 'Bello', 'Zuñiga', '227O02930@itsx.edu.mx', 'bellozun12@gmail.com', 'BEZJ040831B99', 'BEZJ040831HVZLXNA8', '7841310586', 'contraseña1234', '4217470088983305', 2);
 
 CREATE TABLE IF NOT EXISTS ahorro (
     id_ahorro INT NOT NULL AUTO_INCREMENT,
@@ -151,8 +150,6 @@ CREATE TABLE IF NOT EXISTS datos_sistema (
     nombre_director VARCHAR(200) DEFAULT NULL,
     periodo VARCHAR(50) DEFAULT NULL,
     nombre_enc_personal VARCHAR(200) DEFAULT NULL,
-    correo_soporte VARCHAR(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    UNIQUE (correo_soporte),
     PRIMARY KEY (id_datos)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -339,6 +336,6 @@ ADD COLUMN fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CUR
 -- 2. Actualizar valores por defecto si ya existe la tabla
 UPDATE datos_sistema SET 
     tasa_interes_general = 30.00,
-    rendimiento_anual_ahorros = 5.00,
+    rendimiento_anual_ahorros = 10.00,
     correo_soporte = 'soporte@itsx.com'
 WHERE id_datos = 1;

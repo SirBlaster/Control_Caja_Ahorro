@@ -24,43 +24,139 @@ if (isset($_SESSION['mensaje'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro de Administrador - SETDITSX</title>
-    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../css/Super.css">
-
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/Super.css">
+    
 </head>
 
 <body>
-    <div class="header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <img src="../img/NewLogo - 1.png" alt="SETDITSX" width="70" class="me-3">
-            <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../SuperUsuario/inicio.php">
+                <img src="../img/NewLogo - 1.png" width="50" height="50" class="d-inline-block align-items-center"
+                    alt=""> SETDITSX
+            </a>
 
-        <div class="user-info">
-            <i class="bi bi-person-square user-icon"></i>
-            <div class="user-details">
-                <p class="user-name"><?php echo get_user_name(); ?></p>
-                <small class="text-muted"><?php echo get_user_role_text(); ?></small>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Panel Principal
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../SuperUsuario/editar_perfil.php">Editar Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/usuarios.php">Gestionar Usuarios</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/parametros.php">Modificar Parámetros</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../SuperUsuario/auditoria_completa.php">Auditoría</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Administrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Admin/gestion_ahorradores.php">Gestionar
+                                    Ahorradores</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/gestion_prestamos.php">Gestionar Préstamos</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Admin/reportes.php">Reportes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Apartados (Ahorrador)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Usuario/registrahorro.php">Solicitar Ahorro</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/solicitud_prestamo.php">Solicitar préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/movimientos.php">Ver movimientos</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/Estado_Prestamo.php">Estado de mi préstamo</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="../Usuario/historial_completo.php">Historial completo</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <form action="../logout.php" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
-                </button>
-            </form>
+            <div class="d-flex align-items-center gap-3">
+                <div class="user-details text-end d-none d-md-block">
+                    <div class="d-flex align-items-center gap-2">
+                        <p class="user-name mb-0 fw-bold"><?php echo htmlspecialchars(get_user_name()); ?></p>
+                        <?php if ($_SESSION['id_rol'] == 3): // Solo para Super Usuario ?>
+                            <a href="../SuperUsuario/editar_perfil.php" class="btn btn-link btn-sm p-0"
+                                title="Editar perfil">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+                </div>
+                <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
         </div>
-    </div>
+    </nav>
 
     <!-- Alertas de mensajes -->
     <?php if ($mensaje): ?>
-    <div class="alert-container">
-        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
-            <i
-                class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
-            <?php echo htmlspecialchars($mensaje); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-container">
+            <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+                <i class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
+                <?php echo htmlspecialchars($mensaje); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
     <div class="card-form">
@@ -83,20 +179,23 @@ if (isset($_SESSION['mensaje'])) {
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="nombre" class="form-label required-field">Nombre(s)</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej. Juan Carlos"
-                            required maxlength="50" onkeyup="validarNombre(this)">
+                        <input type="text" id="nombre" name="nombre" class="form-control" 
+                               placeholder="Ej. Juan Carlos" required maxlength="50"
+                               onkeyup="validarNombre(this)">
                         <small class="text-muted" id="nombreError"></small>
                     </div>
                     <div class="col-md-4">
                         <label for="paterno" class="form-label required-field">Apellido Paterno</label>
-                        <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Ej. Pérez"
-                            required maxlength="50" onkeyup="validarApellido(this)">
+                        <input type="text" id="paterno" name="paterno" class="form-control" 
+                               placeholder="Ej. Pérez" required maxlength="50"
+                               onkeyup="validarApellido(this)">
                         <small class="text-muted" id="paternoError"></small>
                     </div>
                     <div class="col-md-4">
                         <label for="materno" class="form-label">Apellido Materno</label>
-                        <input type="text" id="materno" name="materno" class="form-control" placeholder="Ej. López"
-                            maxlength="50" onkeyup="validarApellido(this)">
+                        <input type="text" id="materno" name="materno" class="form-control" 
+                               placeholder="Ej. López" maxlength="50"
+                               onkeyup="validarApellido(this)">
                         <small class="text-muted" id="maternoError"></small>
                     </div>
                 </div>
@@ -110,21 +209,24 @@ if (isset($_SESSION['mensaje'])) {
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="correo_institucional" class="form-label required-field">Correo Institucional</label>
-                        <input type="email" id="correo_institucional" name="correo_institucional" class="form-control"
-                            placeholder="usuario@itsx.edu.mx" required onkeyup="validarCorreoInstitucional(this)">
+                        <input type="email" id="correo_institucional" name="correo_institucional" 
+                               class="form-control" placeholder="usuario@itsx.edu.mx" required
+                               onkeyup="validarCorreoInstitucional(this)">
                         <small class="text-muted">Debe ser un correo válido del dominio ITSX</small>
                         <small class="text-danger" id="correoInstError"></small>
                     </div>
                     <div class="col-md-6">
                         <label for="correo_personal" class="form-label required-field">Correo Personal</label>
-                        <input type="email" id="correo_personal" name="correo_personal" class="form-control"
-                            placeholder="usuario@gmail.com" required onkeyup="validarCorreoPersonal(this)">
+                        <input type="email" id="correo_personal" name="correo_personal" 
+                               class="form-control" placeholder="usuario@gmail.com" required
+                               onkeyup="validarCorreoPersonal(this)">
                         <small class="text-danger" id="correoPersError"></small>
                     </div>
                     <div class="col-md-6">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" id="telefono" name="telefono" class="form-control"
-                            placeholder="Ej. 5512345678" maxlength="15" onkeyup="validarTelefono(this)">
+                        <input type="tel" id="telefono" name="telefono" class="form-control" 
+                               placeholder="Ej. 5512345678" maxlength="15"
+                               onkeyup="validarTelefono(this)">
                         <small class="text-muted">Opcional - 10 dígitos mínimo</small>
                         <small class="text-danger" id="telefonoError"></small>
                     </div>
@@ -134,13 +236,14 @@ if (isset($_SESSION['mensaje'])) {
             <!-- Sección 3: Seguridad -->
             <div class="form-section">
                 <h5 class="section-title">
-                    <i></i>Seguridad
+                    <i ></i>Seguridad
                 </h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="password" class="form-label required-field">Contraseña</label>
-                        <input type="password" id="password" name="password" class="form-control"
-                            placeholder="Mínimo 8 caracteres" required minlength="8" onkeyup="validarPassword(this)">
+                        <input type="password" id="password" name="password" class="form-control" 
+                               placeholder="Mínimo 8 caracteres" required minlength="8"
+                               onkeyup="validarPassword(this)">
                         <div class="password-requirements">
                             <small>Debe contener al menos:</small>
                             <ul class="mb-0">
@@ -152,8 +255,9 @@ if (isset($_SESSION['mensaje'])) {
                     </div>
                     <div class="col-md-6">
                         <label for="confirm_password" class="form-label required-field">Confirmar Contraseña</label>
-                        <input type="password" id="confirm_password" name="confirm_password" class="form-control"
-                            placeholder="Repita la contraseña" required onkeyup="validarConfirmacionPassword(this)">
+                        <input type="password" id="confirm_password" name="confirm_password" 
+                               class="form-control" placeholder="Repita la contraseña" required
+                               onkeyup="validarConfirmacionPassword(this)">
                         <small class="text-danger" id="confirmError"></small>
                     </div>
                 </div>
@@ -190,5 +294,4 @@ if (isset($_SESSION['mensaje'])) {
     <script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../../js/registro_admin.js"></script>
 </body>
-
 </html>

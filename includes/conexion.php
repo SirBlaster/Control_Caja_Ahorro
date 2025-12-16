@@ -2,8 +2,8 @@
 // C:\laragon\www\ControlCajadeAhorro\includes\conexion.php
 
 $host = '127.0.0.1'; // IP de Docker
-$port = '3306';
-$db   = 'sistema_caja';
+$port = '3308';
+$db   = 'caja_ahorro';
 $user = 'root';
 $pass = 'password123'; // La contraseña de tu docker-compose.yml
 $charset = 'utf8mb4';
@@ -15,7 +15,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    // ESTO TE MOSTRARÁ EL ERROR REAL EN PANTALLA
-    die("<h1>Error Real:</h1> " . $e->getMessage()); 
+    die("<h1>Error de Conexión</h1><p>No se pudo conectar a la base de datos en Docker.</p>" . $e->getMessage());
 }
 ?>
