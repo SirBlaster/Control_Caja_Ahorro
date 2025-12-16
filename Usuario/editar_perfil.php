@@ -1,0 +1,256 @@
+<?php
+require_once '../includes/init.php';
+require_once '../includes/user_functions.php';
+
+secure_session_start();
+check_login(1);
+
+$id_usuario = get_current_user_id();
+if ($id_usuario <= 0) {
+    $_SESSION['mensaje'] = 'No se pudo determinar el usuario logeado.';
+    $_SESSION['tipo_mensaje'] = 'danger';
+    header('Location: inicio.php');
+    exit();
+}
+
+// Manejar POST (guardar cambios)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = [
+        'nombre' => $_POST['nombre'] ?? '',
+        'paterno' => $_POST['paterno'] ?? '',
+        'materno' => $_POST['materno'] ?? '',
+        'correo_personal' => $_POST['correo_personal'] ?? '',
+        'correo_institucional' => $_POST['correo_institucional'] ?? '',
+        'telefono' => $_POST['telefono'] ?? '',
+        'rfc' => $_POST['rfc'] ?? '',
+        'curp' => $_POST['curp'] ?? '',
+        'password' => $_POST['password'] ?? ''
+    ];
+
+    // Validar contraseña
+    if (!empty($data['password']) && ($_POST['confirm_password'] ?? '') !== $data['password']) {
+        $_SESSION['mensaje'] = 'Las contraseñas no coinciden';
+        $_SESSION['tipo_mensaje'] = 'danger';
+        header('Location: editar_perfil.php');
+        exit();
+    }
+
+    $result = actualizar_perfil_usuario($id_usuario, $data);
+
+    $_SESSION['mensaje'] = $result['message'];
+    $_SESSION['tipo_mensaje'] = $result['success'] ? 'success' : 'danger';
+    header('Location: editar_perfil.php');
+    exit();
+}
+
+// Obtener datos del usuario
+$usuario = obtener_usuario_completo($id_usuario);
+if (!$usuario) {
+    $_SESSION['mensaje'] = 'Usuario no encontrado.';
+    $_SESSION['tipo_mensaje'] = 'danger';
+    header('Location: inicio.php');
+    exit();
+}
+
+// Manejar mensajes de sesión
+$mensaje = $_SESSION['mensaje'] ?? '';
+$tipo_mensaje = $_SESSION['tipo_mensaje'] ?? '';
+unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']);
+
+// Obtener roles
+global $pdo;
+$stmt = $pdo->query("SELECT id_rol, rol FROM rol WHERE id_rol != 3 ORDER BY id_rol");
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - SETDITSX</title>
+    <link rel="stylesheet" href="../css/registrar.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/logoChico.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Sindicato ITSX</h4>
+        </div>
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+            <div class="user-details me-3">
+                <p class="user-name mb-0"><?php echo htmlspecialchars(get_full_name()); ?></p>
+                <small class="text-muted"><?php echo htmlspecialchars(get_user_role_text()); ?></small>
+            </div>
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NAVBAR AHORRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAhorrador"
+                aria-controls="navbarAhorrador" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarAhorrador">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ================= PANEL PRINCIPAL ================= -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../includes/redirect_inicio.php">
+                            <i class="bi bi-house-door-fill me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <!-- ================= EDITAR PERFIL ================= -->
+                    <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                            href="editar_perfil.php">
+                            <i class="bi bi-person-gear me-1"></i>Editar perfil
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- ================= AHORRO ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-piggy-bank me-1"></i>Ahorro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./registrahorro.php">
+                                    <i class="bi bi-plus-circle me-1"></i>Solicitar Ahorro
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="./movimientos.php">
+                                    <i class="bi bi-list-ul me-1"></i>Ver movimientos
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= PRÉSTAMOS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-cash-stack me-1"></i>Préstamos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./solicitud_prestamo.php">
+                                    <i class="bi bi-currency-dollar me-1"></i>Solicitar préstamo
+                                </a></li>
+                            <li><a class="dropdown-item" href="./Estado_Prestamo.php">
+                                    <i class="bi bi-clipboard-check me-1"></i>Estado de mi préstamo
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= CONSULTAS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Consultas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./mis_solicitudes.php">
+                                    <i class="bi bi-clock-history me-1"></i>Mis solicitudes
+                                </a></li>
+                            <li><a class="dropdown-item" href="./historial_completo.php">
+                                    <i class="bi bi-journal-text me-1"></i>Historial completo
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="card card-form container mt-4 p-4 shadow-sm" style="max-width: 800px;">
+        <h2 class="text-center mb-4">Editar Perfil</h2>
+
+        <?php if ($mensaje): ?>
+        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+            <i
+                class="bi <?php echo $tipo_mensaje == 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?> me-1"></i>
+            <?php echo htmlspecialchars($mensaje); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php endif; ?>
+
+        <form action="./editar_perfil.php" method="POST" id="formEditar">
+            <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Datos Personales</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-4"><label class="form-label">Nombre(s) *</label><input type="text" name="nombre"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                </div>
+                <div class="col-md-4"><label class="form-label">Apellido Paterno *</label><input type="text"
+                        name="paterno" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['apellido_paterno']); ?>" required></div>
+                <div class="col-md-4"><label class="form-label">Apellido Materno *</label><input type="text"
+                        name="materno" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['apellido_materno']); ?>" required></div>
+            </div>
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Información de Contacto</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Correo Personal *</label><input type="email"
+                        name="correo_personal" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['correo_personal'] ?? ''); ?>" required></div>
+                <div class="col-md-6"><label class="form-label">Correo Institucional *</label><input type="email"
+                        name="correo_institucional" class="form-control"
+                        value="<?php echo htmlspecialchars($usuario['correo_institucional'] ?? ''); ?>" required>
+                </div>
+                <div class="col-md-6"><label class="form-label">Teléfono</label><input type="text" name="telefono"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['telefono'] ?? ''); ?>"
+                        placeholder="Número celular (10 dígitos)" maxlength="15"></div>
+                <div class="col-md-6"><label class="form-label">RFC</label><input type="text" name="rfc"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['rfc'] ?? ''); ?>"
+                        placeholder="RFC (13 caracteres)" maxlength="13"></div>
+                <div class="col-md-6"><label class="form-label">CURP</label><input type="text" name="curp"
+                        class="form-control" value="<?php echo htmlspecialchars($usuario['curp'] ?? ''); ?>"
+                        placeholder="CURP (18 caracteres)" maxlength="18"></div>
+            </div>
+
+            <h5 class="section-title border-bottom pb-2 mb-3">Cambiar Contraseña (Opcional)</h5>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Nueva Contraseña</label><input type="password"
+                        name="password" class="form-control" placeholder="Dejar vacío para no cambiar"
+                        minlength="8"><small class="text-muted">Mínimo 8 caracteres. Dejar vacío si no desea
+                        cambiarla.</small></div>
+                <div class="col-md-6"><label class="form-label">Confirmar Contraseña</label><input type="password"
+                        name="confirm_password" class="form-control" placeholder="Confirmar nueva contraseña"></div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <strong>Nota:</strong> Todos los cambios serán auditados automáticamente en el sistema.
+                <br><small class="text-muted">* Campos obligatorios</small>
+            </div>
+
+            <div class="row g-3 mt-2">
+                <div class="col-md-6 mb-2"><a href="./inicio.php" class="btn btn-outline-secondary w-100"><i
+                            class="bi bi-x-circle me-2"></i>Cancelar</a></div>
+                <div class="col-md-6 mb-2"><button type="submit" class="btn btn-primary btn-lg w-100"
+                        style="background-color: #d18819; border: none;"><i class="bi bi-check-circle me-2"></i>Guardar
+                        Cambios</button></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

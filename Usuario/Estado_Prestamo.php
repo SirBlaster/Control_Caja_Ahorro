@@ -73,215 +73,262 @@ if ($esActivo) {
 
 <!doctype html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Estado de Préstamo - Ahorrador</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Estado de Préstamo - Ahorrador</title>
 
-  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
-  <link rel="stylesheet" href="../css/estilo_ahorrador.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/Bootstrap-icons/font/Bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../css/estilo_ahorrador.css">
 </head>
+
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light header">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="../img/LogoChico.png" width="50" height="50" class="d-inline-block align-items-center" alt=""> SETDITSX
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="panelAhorrador.php">Panel Principal</a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Apartados (Ahorrador)
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><h6 class="dropdown-header text-primary">Ahorro</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/registrahorro.php">Solicitar Ahorro</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Préstamos</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/solicitud_prestamo.php">Solicitar préstamo</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/Estado_Prestamo.php">Estado de mi préstamo</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        
-                        <li><h6 class="dropdown-header text-primary">Movimientos y Consultas</h6></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/movimientos.php">Ver movimientos</a></li>
-                        <li><a class="dropdown-item" href="/ControlCajadeAhorro/Usuario/mis_solicitudes.php">Mis solicitudes</a></li>
-              </ul>
-            </li>
-          </ul>
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+            <img src="../img/LogoChico.png" alt="SETDITSX" width="70" class="me-3" />
+            <h4 class="mb-0">SETDITSX - Panel Ahorrador</h4>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
-          <div class="user-details text-end d-none d-md-block">
-            <p class="user-name mb-0 fw-bold"><?php echo get_user_name(); ?></p>
-            <small class="text-muted"><?php echo get_user_role_text(); ?></small>
-          </div>
-          <a href="../logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2">
-            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-          </a>
+        <div class="user-info d-flex align-items-center">
+            <i class="bi bi-person-square user-icon me-2"></i>
+
+            <div class="user-details me-3 text-end">
+                <p class="user-name mb-0">
+                    <?php echo htmlspecialchars(get_user_name()); ?>
+                </p>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars(get_user_role_text()); ?>
+                </small>
+            </div>
+
+            <form action="../logout.php" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('¿Deseas cerrar sesión?')">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión
+                </button>
+            </form>
         </div>
-      </div>
+    </div>
+
+    <!-- NAVBAR AHORRADOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAhorrador"
+                aria-controls="navbarAhorrador" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarAhorrador">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ================= PANEL PRINCIPAL ================= -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../includes/redirect_inicio.php">
+                            <i class="bi bi-house-door-fill me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <!-- ================= EDITAR PERFIL ================= -->
+                    <?php if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if(basename($_SERVER['PHP_SELF'])=='editar_perfil.php') echo 'active'; ?>"
+                            href="editar_perfil.php">
+                            <i class="bi bi-person-gear me-1"></i>Editar perfil
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- ================= AHORRO ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-piggy-bank me-1"></i>Ahorro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./registrahorro.php">
+                                    <i class="bi bi-plus-circle me-1"></i>Solicitar Ahorro
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="./movimientos.php">
+                                    <i class="bi bi-list-ul me-1"></i>Ver movimientos
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= PRÉSTAMOS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-cash-stack me-1"></i>Préstamos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./solicitud_prestamo.php">
+                                    <i class="bi bi-currency-dollar me-1"></i>Solicitar préstamo
+                                </a></li>
+                            <li><a class="dropdown-item" href="./Estado_Prestamo.php">
+                                    <i class="bi bi-clipboard-check me-1"></i>Estado de mi préstamo
+                                </a></li>
+                        </ul>
+                    </li>
+                    <!-- ================= CONSULTAS ================= -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Consultas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./mis_solicitudes.php">
+                                    <i class="bi bi-clock-history me-1"></i>Mis solicitudes
+                                </a></li>
+                            <li><a class="dropdown-item" href="./historial_completo.php">
+                                    <i class="bi bi-journal-text me-1"></i>Historial completo
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-  <div class="main-container">
-      
-      <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-          <h2 class="page-title m-0 text-start fs-3">Estado de mi Préstamo</h2>
-          <a href="panelAhorrador.php" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-              <i class="bi bi-arrow-left"></i> Volver al Panel
-          </a>
-      </div>
-
-      <?php if ($esActivo): ?>
-          
-          <div class="dashboard-cards mb-4">
-              <div class="info-card text-center">
-                  <h6 class="card-label">TOTAL A PAGAR (DEUDA)</h6>
-                  <div class="card-amount" style="color: var(--primary-blue);">
-                      $ <?php echo number_format($totalAPagar, 2); ?>
-                  </div>
-                  <div class="text-muted small">Capital + Interés 30%</div>
-              </div>
-
-              <div class="info-card text-center" style="border: 1px solid #ffc107;">
-                  <h6 class="card-label text-warning">SALDO PENDIENTE</h6>
-                  <div class="card-amount amount-warning">
-                      $ <?php echo number_format($saldoPendiente, 2); ?>
-                  </div>
-                  <div class="text-muted small fw-bold">Falta por liquidar</div>
-              </div>
-
-              <div class="info-card text-center">
-                  <h6 class="card-label">MONTO PAGADO</h6>
-                  <div class="card-amount amount-success">
-                      $ <?php echo number_format($pagado, 2); ?>
-                  </div>
-                  <div class="text-muted small">Abonado vía nómina</div>
-              </div>
-          </div>
-
-          <?php if (!empty($archivoPagare)): ?>
-            <div class="text-center mb-4">
-                <a href="../<?php echo htmlspecialchars($archivoPagare); ?>" target="_blank" 
-                   class="btn btn-danger btn-custom d-inline-flex align-items-center gap-2 shadow-sm px-4">
-                    <i class="bi bi-file-earmark-pdf-fill fs-5"></i> Descargar mi Pagaré (PDF)
-                </a>
+    <!-- CONTENIDO -->
+    <?php if ($esActivo): ?>
+    <div class="dashboard-cards mb-4">
+        <div class="info-card text-center">
+            <h6 class="card-label">TOTAL A PAGAR (DEUDA)</h6>
+            <div class="card-amount" style="color: var(--primary-blue);">
+                $ <?php echo number_format($totalAPagar, 2); ?>
             </div>
-          <?php endif; ?>
+            <div class="text-muted small">Capital + Interés 30%</div>
+        </div>
 
-          <div class="card p-4 border-0 shadow-sm mb-5">
-              <h6 class="form-label mb-3">Progreso de liquidación</h6>
-              <div class="progress" style="height: 25px;">
-                  <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
-                       role="progressbar" 
-                       style="width: <?php echo $progreso; ?>%">
-                       <?php echo round($progreso); ?>%
-                  </div>
-              </div>
-          </div>
+        <div class="info-card text-center" style="border: 1px solid #ffc107;">
+            <h6 class="card-label text-warning">SALDO PENDIENTE</h6>
+            <div class="card-amount amount-warning">
+                $ <?php echo number_format($saldoPendiente, 2); ?>
+            </div>
+            <div class="text-muted small fw-bold">Falta por liquidar</div>
+        </div>
 
-          <section>
-              <h6 class="section-title">Historial de Pagos</h6>
-              <div class="table-container">
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th>Fecha</th>
-                              <th>Concepto</th>
-                              <th class="text-end">Monto Abonado</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <?php if (!empty($historialPagos)): ?>
-                              <?php foreach ($historialPagos as $pago): ?>
-                              <tr>
-                                  <td class="fw-bold text-muted">
-                                      <?php echo date('d/m/Y', strtotime($pago['fecha'])); ?>
-                                  </td>
-                                  <td><?php echo htmlspecialchars($pago['concepto']); ?></td>
-                                  <td class="text-end fw-bold text-success">
-                                      - $ <?php echo number_format($pago['monto'], 2); ?>
-                                  </td>
-                              </tr>
-                              <?php endforeach; ?>
-                          <?php else: ?>
-                              <tr>
-                                  <td colspan="3" class="text-center py-5 text-muted">
-                                      <i class="bi bi-clock-history fs-1 mb-2"></i><br>
-                                      Aún no se registran pagos para este préstamo.
-                                  </td>
-                              </tr>
-                          <?php endif; ?>
-                      </tbody>
-                  </table>
-              </div>
-          </section>
+        <div class="info-card text-center">
+            <h6 class="card-label">MONTO PAGADO</h6>
+            <div class="card-amount amount-success">
+                $ <?php echo number_format($pagado, 2); ?>
+            </div>
+            <div class="text-muted small">Abonado vía nómina</div>
+        </div>
+    </div>
 
-      <?php elseif ($esPendiente): ?>
-          
-          <div class="alert alert-warning shadow-sm p-4 rounded-3 border-0">
-              <div class="d-flex align-items-center gap-3 mb-3">
-                  <i class="bi bi-hourglass-split fs-1 text-warning"></i>
-                  <div>
-                      <h4 class="alert-heading fw-bold m-0">Solicitud en Revisión</h4>
-                      <p class="mb-0">El administrador aún no aprueba tu préstamo.</p>
-                  </div>
-              </div>
-              <hr>
-              <p class="mb-2">Detalles de tu solicitud:</p>
-              
-              <div class="row g-3">
-                  <div class="col-md-4">
-                      <div class="p-3 bg-white rounded border">
-                          <small class="text-muted d-block fw-bold">MONTO SOLICITADO</small>
-                          <span class="fs-4 fw-bold text-dark">$ <?php echo number_format($montoSolicitado, 2); ?></span>
-                      </div>
-                  </div>
-                  <div class="col-md-4">
-                      <div class="p-3 bg-white rounded border border-warning">
-                          <small class="text-muted d-block fw-bold">TOTAL A PAGAR (30% INT)</small>
-                          <span class="fs-4 fw-bold text-primary">$ <?php echo number_format($totalAPagar, 2); ?></span>
-                      </div>
-                  </div>
-                  <div class="col-md-4">
-                      <div class="p-3 bg-white rounded border">
-                          <small class="text-muted d-block fw-bold">PLAZO</small>
-                          <span class="fs-4 fw-bold text-dark"><?php echo $plazo; ?> Quincenas</span>
-                      </div>
-                  </div>
-              </div>
-              
-              <div class="mt-4 text-end">
-                  <button class="btn btn-secondary disabled">Esperando aprobación...</button>
-              </div>
-          </div>
+    <?php if (!empty($archivoPagare)): ?>
+    <div class="text-center mb-4">
+        <a href="../<?php echo htmlspecialchars($archivoPagare); ?>" target="_blank"
+            class="btn btn-danger btn-custom d-inline-flex align-items-center gap-2 shadow-sm px-4">
+            <i class="bi bi-file-earmark-pdf-fill fs-5"></i> Descargar mi Pagaré (PDF)
+        </a>
+    </div>
+    <?php endif; ?>
 
-      <?php else: ?>
-          
-          <div class="card-form text-center py-5">
-              <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
-              <h3 class="mt-3 text-primary fw-bold">¡Sin deudas activas!</h3>
-              <p class="text-muted mb-4">No tienes préstamos activos ni solicitudes pendientes.</p>
-              <a href="solicitud_prestamo.php" class="btn btn-gold btn-custom d-inline-flex">
-                  Solicitar Préstamo Ahora
-              </a>
-          </div>
+    <div class="card p-4 border-0 shadow-sm mb-5">
+        <h6 class="form-label mb-3">Progreso de liquidación</h6>
+        <div class="progress" style="height: 25px;">
+            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar"
+                style="width: <?php echo $progreso; ?>%">
+                <?php echo round($progreso); ?>%
+            </div>
+        </div>
+    </div>
 
-      <?php endif; ?>
+    <section>
+        <h6 class="section-title">Historial de Pagos</h6>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Concepto</th>
+                        <th class="text-end">Monto Abonado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($historialPagos)): ?>
+                    <?php foreach ($historialPagos as $pago): ?>
+                    <tr>
+                        <td class="fw-bold text-muted">
+                            <?php echo date('d/m/Y', strtotime($pago['fecha'])); ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($pago['concepto']); ?></td>
+                        <td class="text-end fw-bold text-success">
+                            - $ <?php echo number_format($pago['monto'], 2); ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="3" class="text-center py-5 text-muted">
+                            <i class="bi bi-clock-history fs-1 mb-2"></i><br>
+                            Aún no se registran pagos para este préstamo.
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-  </div>
+    <?php elseif ($esPendiente): ?>
 
-  <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <div class="alert alert-warning shadow-sm p-4 rounded-3 border-0">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <i class="bi bi-hourglass-split fs-1 text-warning"></i>
+            <div>
+                <h4 class="alert-heading fw-bold m-0">Solicitud en Revisión</h4>
+                <p class="mb-0">El administrador aún no aprueba tu préstamo.</p>
+            </div>
+        </div>
+        <hr>
+        <p class="mb-2">Detalles de tu solicitud:</p>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded border">
+                    <small class="text-muted d-block fw-bold">MONTO SOLICITADO</small>
+                    <span class="fs-4 fw-bold text-dark">$ <?php echo number_format($montoSolicitado, 2); ?></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded border border-warning">
+                    <small class="text-muted d-block fw-bold">TOTAL A PAGAR (30% INT)</small>
+                    <span class="fs-4 fw-bold text-primary">$ <?php echo number_format($totalAPagar, 2); ?></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded border">
+                    <small class="text-muted d-block fw-bold">PLAZO</small>
+                    <span class="fs-4 fw-bold text-dark"><?php echo $plazo; ?> Quincenas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button class="btn btn-secondary disabled">Esperando aprobación...</button>
+        </div>
+    </div>
+
+    <?php else: ?>
+
+    <div class="card-form text-center py-5">
+        <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
+        <h3 class="mt-3 text-primary fw-bold">¡Sin deudas activas!</h3>
+        <p class="text-muted mb-4">No tienes préstamos activos ni solicitudes pendientes.</p>
+        <a href="solicitud_prestamo.php" class="btn btn-gold btn-custom d-inline-flex">
+            Solicitar Préstamo Ahora
+        </a>
+    </div>
+
+    <?php endif; ?>
+
+    </div>
+
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
