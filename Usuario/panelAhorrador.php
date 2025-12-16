@@ -141,16 +141,35 @@ if ($miPrestamo) {
 
     
     <div class="dashboard-cards">
+
       <div class="info-card">
          <h6 class="card-label">CAJA DE AHORRO</h6>
          <div class="card-amount amount-success">
              $ <?php echo number_format($saldo_total, 2); ?> <span class="fs-6 text-muted">MXN</span>
-             <h6 class="card-label">Rendimiento:</h6>
-             $ <?php echo number_format($porcentaje_Rendimiento); ?> <span class="fs-6 text-muted">%</span>
+             
+             <?php 
+             $mes_actual = date('n');
+             if ($mes_actual == 12): 
+             ?>
+                <hr class="my-2" style="opacity: 0.1"> <h6 class="card-label" style="font-size: 0.8rem;">Rendimiento (<?php echo $porcentaje_Rendimiento; ?>%):</h6>
+                <div class="text-success fw-bold">
+                    <?php 
+                        $ganancia = ($saldo_total * $porcentaje_Rendimiento) / 100;
+                        echo '+ $ ' . number_format($ganancia, 2); 
+                    ?> 
+                    <span class="fs-6 text-muted">MXN</span>
+                </div>
+
+                <h6 class="card-label mt-2" style="font-size: 0.8rem;">Total al cierre:</h6>
+                <div class="fw-bold" style="color: #153b52;">
+                    $ <?php echo number_format($saldo_total + $ganancia, 2); ?> 
+                    <span class="fs-6 text-muted">MXN</span>
+                </div>
+             <?php endif; ?>
          </div>
          <div class="text-muted small">Saldo total disponible</div>
-        <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
-        </div>
+         <a href="movimientos.php" class="btn btn-outline-primary mt-3 btn-sm w-100">Ver movimientos</a>
+      </div>
 
       <div class="info-card" style="<?php echo $esPendiente ? 'border: 1px solid #0d6efd;' : ''; ?>">
          <h6 class="card-label">
