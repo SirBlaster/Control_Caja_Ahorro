@@ -295,10 +295,6 @@ if ($miPrestamo) {
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3 text-end">
-                <a href="historial_completo.php" class="text-primary fw-bold text-decoration-none"> Ver historial
-                    completo &rarr;</a>
-            </div>
         </section>
 
     </div>

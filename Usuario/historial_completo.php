@@ -136,7 +136,7 @@ check_login(1);
 
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold text-dark mb-0">Movimientos Generales</h2>
-                <a href="historial_completo.php" class="btn btn-primary btn-sm rounded-pill px-4">
+                <a href="logica_movimitosgnrl.php" class="btn btn-primary btn-sm rounded-pill px-4">
                     <i class="bi bi-calculator"></i> Ver con Saldos
                 </a>
             </div>
